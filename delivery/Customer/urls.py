@@ -13,3 +13,4 @@ urlpatterns = [
     re_path(r'^payment/success_message/', name='payment_success'),
     re_path(r'^payment/failure_message/', name='payment_fail'),
     re_path(r'^closed_message/', name='store_closed')
+]
