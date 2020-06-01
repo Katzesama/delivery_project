@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Menu{% endblock %}
+
+{% load static %}
+
+{% block content %}
+const csrf_token = "{{ csrf_token }}";
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">Menu</h1>
+  <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
+
+  <div id="holder"></div>
+  <script type="text/javascript">
+  request_sender = {}
+
+  function show_request(data) {
+      var holder = document.getElementById("holder");
+        for (var i = 0; i < data.serializer.length; i++) {
+          let friend_request = document.createElement("div");
+          holder.appendChild(friend_request);
+
+          var sender = document.createElement("p");
+          sender.innerHTML = data.serializer[i].displayName;
+          sender.style.fontSize='25px';
+          sender.style.display = "inline-block";
+          friend_request.appendChild(sender);
+          var line = document.createElement("br");
+          friend_request.appendChild(line);
+          var sender_url = document.createElement("a");
+          sender_url.innerHTML = data.serializer[i].url;
+          sender_url.href = data.serializer[i].url;
+          friend_request.appendChild(sender_url);
+          var line = document.createElement("br");
+          var decline = document.createElement("button");
+          decline.innerHTML = 'Decline';
+          var accept = document.createElement("button");
+          accept.innerHTML = 'Accept';
+          friend_request.appendChild(decline);
+          friend_request.appendChild(accept);
+          decline.addEventListener("click", function(e){
+            HandleFriendRequest('/updatefriend/', 'decline', this.parentNode.getElementsByTagName('a')[0].innerHTML);
+          });
+          accept.addEventListener("click", function(e){
+              // alert(sender_url)
+              var url_string = this.parentNode.getElementsByTagName('a')[0].innerHTML;
+            HandleFriendRequest('/updatefriend/', 'accept', url_string);
+          });
+
+          function HandleFriendRequest(url, decision, friend_url) {
+            console.info(decision);
+            console.info(JSON.stringify(friend_url));
+            var request = new Request(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': '{{ csrf_token }}',
+                             'Content-Type': 'application/json',
+
+
+                        },
+                       body: JSON.stringify({'decision': decision,
+                              'friend_url': JSON.stringify(friend_url)}),
+                        });
+            return fetch(request).then((response) => {
+              if (response.status === 200) { // OK
+                alert("done");// return a Promise
+              } else {
+                alert("fetch request then response fail: " + response.error);
+              }
+            });
+          }
+          var line = document.createElement("hr");
+          friend_request.appendChild(line);
+    }
+  }
+
+  // https://uofa-cmput404.github.io/cmput404-slides/08-AJAX.html#/9
+  // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+  function fetchJSON(url) {
+    var request = new Request(url, {
+                method: 'GET',
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("Something went wrong: " + response.status);
+      }
+    });
+  }
+
+
+  function get_data_display(url) {
+      fetchJSON(url).then(show_request);
+  }
+
+  get_data_display("{{fetch_url}}");
+
+
+</script>
+
+
+{% endblock %}
