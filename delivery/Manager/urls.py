@@ -19,10 +19,10 @@ urlpatterns = [
     re_path(r'^orders/processing/api/', Orders.ProceOrdersList.as_view(), name='proceorder_api'),
     re_path(r'^orders/delivery/api/', Orders.DeliverOrdersList.as_view(), name='deliverorder_api'),
     re_path(r'^orders/history/api/', Orders.HisOrdersList.as_view(), name='hisorder_api'),
-    re_path(r'^orders/processing/', views.processorder_render, name='order_processing'),
-    re_path(r'^orders/delivery/', views.deliverorder_render, name='order_delivering'),
-    re_path(r'^orders/history/', views.historyorder_render, name='order_history'),
-    re_path(r'^orders/processing/<int:pk>/', Orders.ProcessOrder.as_view(), name=''),
-    re_path(r'^orders/delivery/<int:pk>/', Orders.DeliverOrder.as_view(), name='order_delivering'),
-    re_path(r'^orders/history/<int:pk>/', Orders.HistoryOrder.as_view(), name='order_history')
+    re_path(r'^orders/processing/', views.processorder_render, name='proceorder'),
+    re_path(r'^orders/delivery/', views.deliverorder_render, name='deliverorder'),
+    re_path(r'^orders/history/', views.historyorder_render, name='hisorder'),
+    re_path(r'^orders/processing/<int:pk>/', Orders.ProcessOrder.as_view(), name='proceorder_detail'),
+    re_path(r'^orders/delivery/<int:pk>/', Orders.DeliverOrder.as_view(), name='deliverorder_detail'),
+    re_path(r'^orders/history/<int:pk>/', Orders.HistoryOrder.as_view(), name='hisorder_detail')
 ]
