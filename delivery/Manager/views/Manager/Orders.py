@@ -22,35 +22,7 @@ class HisOrdersList(APIView):
         res = CommentSerializer(pg_res, many=True)
         print(res.data)
         return pg_obj.get_paginated_response(res.data)
-
-class HistoryOrder(APIView):
-    def get(self, request, post_id, **kwargs):
-        try:
-            current_user_profile = request.user.author
-            post = get_object_or_404(Post, pk = post_id)
-        except:
-            return HttpResponse(status=404)
-        new_comment = Comment.objects.create(post_id=post, author=current_user_profile)
-        request.session["Comment_id"] = str(new_comment.id)
-        serializer = CommentSerializer(new_comment)
-        return Response({"serializer": serializer})
-
-    def post(self, request, post_id, **kwargs):
-
-        post = get_object_or_404(Post, pk = post_id)
-        try:
-            id = uuid.UUID(request.session['Comment_id']).hex
-            new_comment = Comment.objects.get(id=id)
-        except:
-            new_comment = Comment.objects.create(post_id = post, author=request.user.author)
-        serializer = CommentSerializer(new_comment, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect("get_one_post", post.id)
-
-        print("awsl")
-        print(serializer.errors)
-        return Response({'serializer': serializer})
+        
 
 class DeliverOrdersList(APIView):
     def get(self, request, post_id, **kwargs):
@@ -65,34 +37,6 @@ class DeliverOrdersList(APIView):
         print(res.data)
         return pg_obj.get_paginated_response(res.data)
 
-class DeliverOrder(APIView):
-    def get(self, request, post_id, **kwargs):
-        try:
-            current_user_profile = request.user.author
-            post = get_object_or_404(Post, pk = post_id)
-        except:
-            return HttpResponse(status=404)
-        new_comment = Comment.objects.create(post_id=post, author=current_user_profile)
-        request.session["Comment_id"] = str(new_comment.id)
-        serializer = CommentSerializer(new_comment)
-        return Response({"serializer": serializer})
-
-    def post(self, request, post_id, **kwargs):
-
-        post = get_object_or_404(Post, pk = post_id)
-        try:
-            id = uuid.UUID(request.session['Comment_id']).hex
-            new_comment = Comment.objects.get(id=id)
-        except:
-            new_comment = Comment.objects.create(post_id = post, author=request.user.author)
-        serializer = CommentSerializer(new_comment, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect("get_one_post", post.id)
-
-        print("awsl")
-        print(serializer.errors)
-        return Response({'serializer': serializer})
 
 class ProceOrdersList(APIView):
     def get(self, request, post_id, **kwargs):
@@ -107,7 +51,7 @@ class ProceOrdersList(APIView):
         print(res.data)
         return pg_obj.get_paginated_response(res.data)
 
-class ProcessOrder(APIView):
+class OrderDetail(APIView):
     def get(self, request, post_id, **kwargs):
         try:
             current_user_profile = request.user.author
@@ -135,3 +79,15 @@ class ProcessOrder(APIView):
         print("awsl")
         print(serializer.errors)
         return Response({'serializer': serializer})
+
+class SearchOrder(APIView):
+    def get(self, request, post_id, **kwargs):
+        try:
+            current_user_profile = request.user.author
+            post = get_object_or_404(Post, pk = post_id)
+        except:
+            return HttpResponse(status=404)
+        new_comment = Comment.objects.create(post_id=post, author=current_user_profile)
+        request.session["Comment_id"] = str(new_comment.id)
+        serializer = CommentSerializer(new_comment)
+        return Response({"serializer": serializer})

@@ -71,7 +71,7 @@ class ResSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class SellerSerializer(serializers.ModelSerializer):
-    #restaurant = ResSerializer(read_only=True)
+    restaurant = ResSerializer(read_only=True)
     class Meta:
         model = Order
         fields = "__all__"

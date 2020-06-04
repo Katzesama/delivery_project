@@ -14,5 +14,8 @@ def deliverorder_render(request):
 def processorder_render(request):
     return #render(request, 'posts.html', {'fetch_url': '/posts/', 'is_my_post': "false"})
 
+def search_order_render(request):
+    return 
+
 def home(request):
     return #render(request, 'home.html', {'user_id':request.user.author.id})

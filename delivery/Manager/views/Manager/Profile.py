@@ -11,21 +11,21 @@ import uuid
 
 class UserProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'EditProfile.html'
+    template_name = 'editUserProfile.html'
 
     def get(self, request, **kwargs):
         try:
-            current_user_profile = request.user.author
+            current_user_profile = Seller.objects.get(id = user_id)
         except:
             return HttpResponse(status=404)
 
-        serializer = AuthorSerializer(current_user_profile)
+        serializer = SellerSerializer(current_user_profile)
 
         return Response({'serializer':serializer,'profile':current_user_profile})
 
     def post(self, request, **kwargs):
-        current_user_profile = request.user.author
-        serializer = AuthorSerializer(current_user_profile, data = request.data)
+        current_user_profile = request.user.seller
+        serializer = SellerSerializer(current_user_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()
             return redirect("profile", current_user_profile.id)
@@ -35,24 +35,24 @@ class UserProfile(APIView):
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'EditProfile.html'
+    template_name = 'editResProfile.html'
 
     def get(self, request, **kwargs):
         try:
-            current_user_profile = request.user.author
+            current_res_profile = request.user.seller.restaurant
         except:
             return HttpResponse(status=404)
 
-        serializer = AuthorSerializer(current_user_profile)
+        serializer = ResSerializer(current_res_profile)
 
-        return Response({'serializer':serializer,'profile':current_user_profile})
+        return Response({'serializer':serializer,'profile':current_res_profile})
 
     def post(self, request, **kwargs):
-        current_user_profile = request.user.author
-        serializer = AuthorSerializer(current_user_profile, data = request.data)
+        current_res_profile = request.user.seller.restaurant
+        serializer = ResSerializer(current_res_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return redirect("profile", current_user_profile.id)
+            return redirect("profile", current_res_profile.id)
 
         print(serializer.errors)
-        return Response({'serializer': serializer, 'profile': current_user_profile})
+        return Response({'serializer': serializer, 'profile': current_res_profile})

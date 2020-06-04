@@ -39,7 +39,7 @@ class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     name = models.CharField(max_length=200,blank=False,null=False)
     image = models.ImageField(null=True, blank=True, upload_to="profile_pics")
-    #restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):  # __unicode__ for Python 2
         return self.name
