@@ -3,7 +3,7 @@ from .models import *
 
 # Create your views here.
 def menu_render(request):
-    return #render(request, 'posts.html', {'fetch_url': '/posts/', 'is_my_post': "false"})
+    return render(request, 'editMenu.html', {'fetch_url': '/menu/api/'})
 
 def historyorder_render(request):
     return #render(request, 'posts.html', {'fetch_url': '/author/myPosts/', 'is_my_post': "true"})
@@ -15,7 +15,7 @@ def processorder_render(request):
     return #render(request, 'posts.html', {'fetch_url': '/posts/', 'is_my_post': "false"})
 
 def search_order_render(request):
-    return 
+    return
 
 def home(request):
     return #render(request, 'home.html', {'user_id':request.user.author.id})

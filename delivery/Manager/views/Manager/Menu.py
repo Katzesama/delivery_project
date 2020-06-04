@@ -9,34 +9,23 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 import uuid
 
+
 class Menu(APIView):
+    """
+    get all the dish objects and paginate them and
+    return it as api to the html that renders the menu
+    page (editMenu.html)
+    """
     def get(self, request, post_id, **kwargs):
-        try:
-            current_user_profile = request.user.author
-            post = get_object_or_404(Post, pk = post_id)
-        except:
-            return HttpResponse(status=404)
-        new_comment = Comment.objects.create(post_id=post, author=current_user_profile)
-        request.session["Comment_id"] = str(new_comment.id)
-        serializer = CommentSerializer(new_comment)
-        return Response({"serializer": serializer})
+        if not request.user.is_authenticated():
+            return redirect('login')
+        else:
+            menu = Dish.objects.all()
+            pg_obj=PaginationModel()
+            pg_res=pg_obj.paginate_queryset(queryset=menu, request=request)
+            res=DishSerializer(instance=pg_res, many=True)
+            return pg_obj.get_paginated_response(res.data)
 
-    def post(self, request, post_id, **kwargs):
-
-        post = get_object_or_404(Post, pk = post_id)
-        try:
-            id = uuid.UUID(request.session['Comment_id']).hex
-            new_comment = Comment.objects.get(id=id)
-        except:
-            new_comment = Comment.objects.create(post_id = post, author=request.user.author)
-        serializer = CommentSerializer(new_comment, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return redirect("get_one_post", post.id)
-
-        print("awsl")
-        print(serializer.errors)
-        return Response({'serializer': serializer})
 
 class Dish(APIView):
     """
