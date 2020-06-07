@@ -29,13 +29,13 @@ class Menu(APIView):
 
 class Dish(APIView):
     """
-    Retrieve, update or delete a snippet instance.
+    Retrieve, update or delete a dish instance.
     """
     def get_object(self, pk):
         try:
             return Dish.objects.get(pk=pk)
         except Dish.DoesNotExist:
-            raise Http404
+            return HttpResponse(status=404)
 
     def get(self, request, pk, format=None):
         snippet = self.get_object(pk)
