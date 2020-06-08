@@ -15,9 +15,14 @@ const csrf_token = "{{ csrf_token }}";
   <div id="holder" class="row"></div>
   <script type="text/javascript">
   request_sender = {}
+  var holder = document.getElementById("holder");
 
   function show_dish(data) {
-    var holder = document.getElementById("holder");
+    //clear the older content from last request
+    while(holder.hasChildNodes()){
+			holder.removeChild(holder.firstChild);
+    }
+
     // loop through and create a section for each dish sent by at the current page
     for (var i = 0; i < data.menu.length; i++) {
       // most outter container of the dish section
@@ -82,11 +87,15 @@ const csrf_token = "{{ csrf_token }}";
       var del_button = document.createElement("button");
       del_button.innerHTML = '删除';
       del_button.class = "mr-2 mt-2 btn btn-danger";
+      let dish_id = data.menu[i].id;
       save_button.onclick=function(){
+        // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
+        //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
         location.href = '/posts/' + postid + '/edit_post/';
       };
       del_button.onclick=function(){
-        location.href = '/posts/' + postid + '/del_post/';
+        let del_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id)
+        delDish(del_url);
       };
       ava_button.onclick=function(){
         location.href = '/posts/' + postid + '/comments/view/';
@@ -96,24 +105,60 @@ const csrf_token = "{{ csrf_token }}";
       body.appendChild(del_button);
     }
 
+    // get next page
     if (data.next != null)
     {
       var nextButton = document.createElement("button");
-      nextButton.innerHTML = 'next page';
+      nextButton.innerHTML = '后一页';
       nextButton.onclick=function(){
         get_data_display(data.next);
       };
       holder.appendChild(nextButton);
     }
+    // TODO page number button
+
+    // get previous page
     if (data.previous != null)
     {
       var preButton = document.createElement("button");
-      preButton.innerHTML = 'previous page';
+      preButton.innerHTML = '前一页';
       preButton.onclick=function(){
         get_data_display(data.previous);
       };
       holder.appendChild(preButton);
       }
+}
+
+
+function updateDish(url) {
+  var request = new Request(url, {
+              method: 'POST',
+              headers: {
+              },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
+}
+
+
+function delDish(url) {
+  var request = new Request(url, {
+              method: 'DELETE',
+              headers: {
+              },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
 }
 
   // https://uofa-cmput404.github.io/cmput404-slides/08-AJAX.html#/9
