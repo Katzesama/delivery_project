@@ -28,7 +28,7 @@ class Restaurant(models.Model):
     name = models.CharField(max_length = 100, default='No Name')
     phone = models.CharField(max_length=12)
     wechat = models.CharField(max_length=20)
-    wechatcode = models.ImageField(null=True, blank=True, upload_to="wechat_code")
+    wechatcode = models.ImageField(null=True, blank=True, upload_to="wechat_code/")
     description = models.CharField(max_length =100)
     openning_times = models.ManyToManyField(OpenningTime)
     image = models.ImageField(null=True, blank=True)
@@ -38,7 +38,7 @@ class Seller(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     name = models.CharField(max_length=200,blank=False,null=False)
-    image = models.ImageField(null=True, blank=True, upload_to="profile_pics")
+    image = models.ImageField(null=True, blank=True, upload_to="profile_pics/")
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
     def __str__(self):  # __unicode__ for Python 2
@@ -59,6 +59,7 @@ class Type(models.Model):
 
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    picture = models.ImageField(null=True, blank=True, upload_to="dish_images/")
     type = models.ForeignKey(Type, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(..., max_digits=5, decimal_places=2)

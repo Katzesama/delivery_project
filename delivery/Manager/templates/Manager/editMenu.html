@@ -19,7 +19,7 @@ const csrf_token = "{{ csrf_token }}";
   function show_dish(data) {
     var holder = document.getElementById("holder");
     // loop through and create a section for each dish sent by at the current page
-    for (var i = 0; i < data.posts.length; i++) {
+    for (var i = 0; i < data.menu.length; i++) {
       // most outter container of the dish section
       let dish = document.createElement("div");
       dish.class = "card shadow mb-4";
@@ -31,6 +31,7 @@ const csrf_token = "{{ csrf_token }}";
       dish.appendChild(header_ct);
       let header = document.createElement("h6");
       header.class = "m-0 font-weight-bold shadow text-primary";
+      header.innerHTML = data.menu[i].name;
       header.contenteditable = "true";
       header_ct.appendChild(header);
 
@@ -38,50 +39,61 @@ const csrf_token = "{{ csrf_token }}";
       let body = document.createElement("div");
       body.class = "card-body row no-gutters align-items-center";
       dish.appendChild(body);
+      // display dish
+      let dish_pic = document.createElement("img");
+      dish_pic.class = "dropdown-list-image col-md-5 mr-2";
+      dish_pic.src = data.menu[i].picture;
+      body.appendChild(dish_pic);
+      // TODO: dish_image edit button
 
-      data.posts[i]['author']['id'];
-      console.info(data.posts[i].author.displayName);
-      author.innerHTML = 'Author: ' + data.posts[i].author.displayName;
-      author.href = '/author/' + author_id +'/';
-      author.style.fontSize='25px';
-      author.style.display = "inline-block";
-      post.appendChild(author);
-      var line = document.createElement("br");
-      post.appendChild(line);
-      var post_link = document.createElement("a");
-      let postid = data.posts[i].id
-      post_link.innerHTML = "Post title: " + data.posts[i].title;
-      post_link.href = '/posts/' + postid + '/';
-      post.appendChild(post_link);
-      var line = document.createElement("br");
-      post.appendChild(line);
-      var description = document.createElement("p");
-      description.innerHTML = "description: " + data.posts[i].description
-      post.appendChild(description);
+      // display and edit the information of the dish
+      let dish_info = document.createElement("div");
+      dish_info.class = "col-6 mr-2";
+      body.appendChild(dish_info);
+      // price of dish
+      let dish_price = document.createElement("div");
+      dish_price.class = "h5 mb-2 mt-2 font-weight-bold text-gray-800";
+      dish_price.innerHTML = "$";
+      dish_info.appendChild(dish_price);
+      let dish_price_num = document.createElement("p");
+      dish_price_num.class = "shadow";
+      dish_price_num.style = "display:inline";
+      dish_price_num.innerHTML = data.menu[i].price;
+      dish_price_num.contenteditable= "true";
+      dish_price.appendChild(dish_price_num);
+      // description of the dish
+      let dish_descr_header = document.createElement("div");
+      dish_descr_header.class = "h5 font-weight-bold text-primary mb-1";
+      dish_descr_header.innerHTML = "描述";
+      dish_info.appendChild(dish_descr_header);
+      let dish_descr = document.createElement("div");
+      dish_descr.class = "h6 font-weight-bold text-black-50 mb-1 shadow";
+      dish_descr.contenteditable = "true";
+      dish_descr.innerHTML = data.menu[i].description;
+      dish_info.appendChild(dish_descr);
 
-      var edit_button = document.createElement("button");
-      edit_button.innerHTML = 'Edit';
+      // buttons to manipulate the dish info
+      var save_button = document.createElement("button");
+      save_button.innerHTML = '储存';
+      save_button.class = "mr-2 mt-2 btn btn-success";
+      var ava_button = document.createElement("button");
+      ava_button.innerHTML = '售罄';
+      ava_button.class = "mr-2 mt-2 btn btn-warning";
       var del_button = document.createElement("button");
-      del_button.innerHTML = 'Delete';
-      del_button.style.color = "#DD678C";
-      var com_button = document.createElement("button");
-      com_button.innerHTML = 'Comments';
-      edit_button.onclick=function(){
+      del_button.innerHTML = '删除';
+      del_button.class = "mr-2 mt-2 btn btn-danger";
+      save_button.onclick=function(){
         location.href = '/posts/' + postid + '/edit_post/';
       };
       del_button.onclick=function(){
         location.href = '/posts/' + postid + '/del_post/';
       };
-      com_button.onclick=function(){
+      ava_button.onclick=function(){
         location.href = '/posts/' + postid + '/comments/view/';
       }
-      post.appendChild(edit_button);
-      post.appendChild(com_button);
-      post.appendChild(del_button);
-
-
-      var line = document.createElement("hr");
-      post.appendChild(line);
+      body.appendChild(save_button);
+      body.appendChild(ava_button);
+      body.appendChild(del_button);
     }
 
     if (data.next != null)

@@ -54,6 +54,7 @@ class TypeSerializer(serializers.ModelSerializer):
 
 class DishSerializer(serializers.ModelSerializer):
     type = TypeSerializer(read_only=True)
+    picture = serializer.ImageField(required=False)
     class Meta:
         model = Dish
         fields = "__all__"
@@ -65,6 +66,7 @@ class OpenTimeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ResSerializer(serializers.ModelSerializer):
+    wechatcode = serializer.ImageField(required=False)
     openning_times = OpenTimeSerializer(read_only=False)
     class Meta:
         model = Restaurant
@@ -72,6 +74,7 @@ class ResSerializer(serializers.ModelSerializer):
 
 class SellerSerializer(serializers.ModelSerializer):
     restaurant = ResSerializer(read_only=True)
+    image = serializer.ImageField(required=False)
     class Meta:
         model = Order
         fields = "__all__"
