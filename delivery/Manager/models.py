@@ -64,7 +64,7 @@ class Dish(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(..., max_digits=5, decimal_places=2)
     description = models.CharField(max_length=2000, null=True, blank=True)
-    avalibility = models.BooleanField(default=True)
+    availability = models.BooleanField(default=True)
 
 class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)

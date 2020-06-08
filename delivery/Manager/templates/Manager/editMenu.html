@@ -77,31 +77,42 @@ const csrf_token = "{{ csrf_token }}";
       dish_descr.innerHTML = data.menu[i].description;
       dish_info.appendChild(dish_descr);
 
+      // select the availability of the dish
+      let dish_availability = document.createElement("select");
+      dish_availability.class = "mr-2 mt-2";
+      dish_availability.id = "alvaliblity";
+      body.appendChild(dish_availability);
+      let sold_out = document.createElement("option");
+      sold_out.value = "False";
+      let available = document.createElement("option");
+      available.value = "True";
+      if (data.menu[i].availability){
+        available.selected = true;
+      } else{
+        sold_out.selected = true;
+      }
+      dish_availability.appendChild(sold_out);
+      dish_availability.appendChild(available);
+
       // buttons to manipulate the dish info
       var save_button = document.createElement("button");
       save_button.innerHTML = '储存';
       save_button.class = "mr-2 mt-2 btn btn-success";
-      var ava_button = document.createElement("button");
-      ava_button.innerHTML = '售罄';
-      ava_button.class = "mr-2 mt-2 btn btn-warning";
       var del_button = document.createElement("button");
       del_button.innerHTML = '删除';
       del_button.class = "mr-2 mt-2 btn btn-danger";
       let dish_id = data.menu[i].id;
+      let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id);
       save_button.onclick=function(){
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
         //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
-        location.href = '/posts/' + postid + '/edit_post/';
+        let dish_data = {};
+        updateDish(dish_url, dish_data);
       };
       del_button.onclick=function(){
-        let del_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id)
-        delDish(del_url);
+        delDish(dish_url);
       };
-      ava_button.onclick=function(){
-        location.href = '/posts/' + postid + '/comments/view/';
-      }
       body.appendChild(save_button);
-      body.appendChild(ava_button);
       body.appendChild(del_button);
     }
 
@@ -130,11 +141,13 @@ const csrf_token = "{{ csrf_token }}";
 }
 
 
-function updateDish(url) {
+function updateDish(url, dish_data) {
   var request = new Request(url, {
               method: 'POST',
               headers: {
+                'Content-Type': 'application/json'
               },
+              data: dish_data,
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
