@@ -44,12 +44,31 @@ const csrf_token = "{{ csrf_token }}";
       let body = document.createElement("div");
       body.class = "card-body row no-gutters align-items-center";
       dish.appendChild(body);
-      // display dish
+      // display dish picture
+      let pic_holder = document.createElement("div");
+      pic_holder.class = "col-md-5 mr-2";
+      body.appendChild(pic_holder);
       let dish_pic = document.createElement("img");
-      dish_pic.class = "dropdown-list-image col-md-5 mr-2";
+      dish_pic.class = "dropdown-list-image col-md-11";
       dish_pic.src = data.menu[i].picture;
-      body.appendChild(dish_pic);
-      // TODO: dish_image edit button
+      pic_holder.appendChild(dish_pic);
+      // button to upload the new image
+      let pic_upload = document.createElement("input");
+      pic_upload.id = "image" + i.toString();
+      pic_upload.type = "file";
+      pic_upload.style = "display:none;";
+      pic_holder.appendChild(pic_upload);
+      let pic_upload_label = document.createElement("label");
+      pic_upload_label.for = pic_upload.id;
+      pic_upload_label.class = "btn btn-primary";
+      pic_upload_label.style = "width=auto;display:inline-block;";
+      pic_upload_label.innerHTML = "图片";
+      pic_holder.appendChild(pic_upload_label);
+      // change the image when a new image is uploaded
+      pic_upload.addEventListener('drop', function(e){
+          e.preventDefault();
+      }
+
 
       // display and edit the information of the dish
       let dish_info = document.createElement("div");
