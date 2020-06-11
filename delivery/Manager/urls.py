@@ -12,8 +12,9 @@ urlpatterns = [
     #
     re_path(r'^userprofile/<uuid:pk>/', name='uprofile', Profile.UserProfile.as_view(), name='userprofile'),
     re_path(r'^resprofile/', name='rprofile', Profile.ResProfile.as_view(), name='resprofile'),
-    re_path(r'^menu/api/', Menu.Menu.as_view(), name='menu_api')
+    re_path(r'^menu/api/', Menu.Menu.as_view(), name='menu_api'),
     re_path(r'^menu/', name='menu', views.menu_render, name='render_menu'),
+    re_path(r'^menu/new/', views.new_dish, name='new_dish'),
     re_path(r'^menu/<uuid:pk>/', Menu.Dish.as_view(), name='menu_dish'),
     #re_path(r'^orders/',name='order_list'),
     re_path(r'^orders/processing/api/', Orders.ProceOrdersList.as_view(), name='proceorder_api'),

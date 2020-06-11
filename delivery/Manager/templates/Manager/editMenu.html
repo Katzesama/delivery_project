@@ -162,7 +162,7 @@ const csrf_token = "{{ csrf_token }}";
     add_dish.innerHTML = '新菜';
     add_dish.class = "mt-2 mb-5 btn btn-info";
     add_dish.onclick=function(){
-      location.href = "{% url 'menu_dish' %}";
+      location.href = "{% url 'new_dish' %}";
     };
     holder.appendChild(add_dish);
 
