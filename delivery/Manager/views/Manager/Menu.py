@@ -33,16 +33,16 @@ class Dish(APIView):
     """
     def get_object(self, pk):
         try:
-            return Dish.objects.get(pk=pk)
+            return Dish.objects.get(id=pk)
         except Dish.DoesNotExist:
             return HttpResponse(status=404)
 
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = SnippetSerializer(snippet)
-        return Response(serializer.data)
+    def get(self, request, pk):
+        dish = self.get_object(pk)
+        dish_serializer = DishSerializer(dish)
+        return Response(serializer.data, status=200)
 
-    def put(self, request, pk, format=None):
+    def put(self, request, pk):
         snippet = self.get_object(pk)
         serializer = SnippetSerializer(snippet, data=request.data)
         if serializer.is_valid():

@@ -10,7 +10,7 @@ urlpatterns = [
     re_path(r'^home/', name='home', views.home, name='home'),
 
     #
-    re_path(r'^userprofile/<uuid:user_id>/', name='uprofile', Profile.UserProfile.as_view(), name='userprofile'),
+    re_path(r'^userprofile/<uuid:pk>/', name='uprofile', Profile.UserProfile.as_view(), name='userprofile'),
     re_path(r'^resprofile/', name='rprofile', Profile.ResProfile.as_view(), name='resprofile'),
     re_path(r'^menu/api/', Menu.Menu.as_view(), name='menu_api')
     re_path(r'^menu/', name='menu', views.menu_render, name='render_menu'),

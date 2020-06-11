@@ -251,7 +251,7 @@ function delDish(url) {
               },
               });
   return fetch(request).then((response) => {
-    if (response.status === 200) { // OK
+    if (response.status === 204) { // OK
       return response.json(); // return a Promise
     } else {
       alert("Something went wrong: " + response.status);

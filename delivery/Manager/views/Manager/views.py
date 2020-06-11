@@ -5,6 +5,9 @@ from .models import *
 def menu_render(request):
     return render(request, 'editMenu.html', {'fetch_url': '/menu/api/'})
 
+def new_dish(request):
+    return render(request, 'addDish.html')
+
 def historyorder_render(request):
     return #render(request, 'posts.html', {'fetch_url': '/author/myPosts/', 'is_my_post': "true"})
 
