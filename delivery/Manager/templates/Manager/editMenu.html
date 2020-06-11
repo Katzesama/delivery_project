@@ -67,7 +67,20 @@ const csrf_token = "{{ csrf_token }}";
       // change the image when a new image is uploaded
       pic_upload.addEventListener('drop', function(e){
           e.preventDefault();
-      }
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            if (testFileType(this.files[0])){
+              reader.readAsDataURL(this.files[0]);
+              reader.onload = function (e) {
+                dish_pic.src = e.target.result;
+              };
+            }
+            else{
+              this.value = null;
+            }
+
+        }
+      }, false);
 
 
       // display and edit the information of the dish
@@ -125,7 +138,16 @@ const csrf_token = "{{ csrf_token }}";
       save_button.onclick=function(){
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
         //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
-        let dish_data = {};
+        let dish_data = {
+          'name': header.innerHTML,
+          'availability': dish_availability.options[dish_availability.selectedIndex].value,
+          'price': dish_price_num.innerHTML,
+          'description': dish_descr.innerHTML
+        };
+        if (pic_upload.value != null){
+          dish_data["picture"] = pic_upload.value;
+        }
+        //JSON.stringify(img);
         updateDish(dish_url, dish_data);
       };
       del_button.onclick=function(){
@@ -135,30 +157,74 @@ const csrf_token = "{{ csrf_token }}";
       body.appendChild(del_button);
     }
 
+    // add new dish
+    let add_dish = document.createElement("button");
+    add_dish.innerHTML = '新菜';
+    add_dish.class = "mt-2 mb-5 btn btn-info";
+    add_dish.onclick=function(){
+      location.href = "{% url 'menu_dish' %}";
+    };
+    holder.appendChild(add_dish);
+
+    let line = document.createElement("br");
+    holder.appendChild(line);
+
+    // get previous page
+    if (data.previous != null)
+    {
+      let preButton = document.createElement("button");
+      preButton.class = "btn btn-light text-grey-600";
+      preButton.style = "width=auto;display:inline-block;";
+      preButton.innerHTML = '前一页';
+      preButton.onclick=function(){
+        get_data_display(data.previous);
+      };
+      holder.appendChild(preButton);
+    }
+
+    // https://stackoverflow.com/questions/30864011/display-only-some-of-the-page-numbers-by-django-pagination
+    // page number buttons
+    for (var i = 0; i < data.count; i++) {
+      let page_button = cocument.createElement("button");
+      page_button.class = "btn btn-light text-grey-600";
+      page_button.style = "width=auto;display:inline-block;";
+      page_button.innerHTML = i.toString();
+      if (i == data.current){
+        page_button.disabled = "true";
+        holder.appendChild(page_button);
+      }
+      else if (i > data.current - 3 || i < data.current + 3) {
+        page_button.onclick = function(){
+          get_data_display('/menu/api/?page=' + i.toString());
+        };
+        holder.appendChild(page_button);
+      }
+    }
+
     // get next page
     if (data.next != null)
     {
-      var nextButton = document.createElement("button");
+      let nextButton = document.createElement("button");
+      nextButton.class = "btn btn-light text-grey-600";
+      nextButton.style = "width=auto;display:inline-block;";
       nextButton.innerHTML = '后一页';
       nextButton.onclick=function(){
         get_data_display(data.next);
       };
       holder.appendChild(nextButton);
     }
-    // TODO page number button
-
-    // get previous page
-    if (data.previous != null)
-    {
-      var preButton = document.createElement("button");
-      preButton.innerHTML = '前一页';
-      preButton.onclick=function(){
-        get_data_display(data.previous);
-      };
-      holder.appendChild(preButton);
-      }
 }
 
+function testFileType(type) {
+  switch (type) {
+     case 'image/jpeg':
+     case 'image/jpg':
+     case 'image/gif':
+     case 'image/png':
+     return true;
+   }
+   return false;
+}
 
 function updateDish(url, dish_data) {
   var request = new Request(url, {

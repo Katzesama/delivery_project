@@ -33,7 +33,8 @@ class PaginationModel(PageNumberPagination):
             type = "order"
         response_body = OrderedDict([
             ("query", type),
-            ('count', self.page.paginator.count),
+            ("count", self.page.paginator.count),
+            ("current", self.page.number),
             ("size", self.page_size),
             ("next", self.get_next_link()),
             ("previous", self.get_previous_link()),
