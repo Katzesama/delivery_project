@@ -10,13 +10,13 @@ class OpenningTime(models.Model):
     #https://stackoverflow.com/questions/49641493/how-to-create-business-hours-via-django
     #author: Rana El-Garem
     WEEKDAYS = (
-    (1, "Monday"),
-    (2, "Tuesday"),
-    (3, "Wednesday"),
-    (4, "Thursday"),
-    (5, "Friday"),
-    (6, "Saturday"),
-    (7, "Sunday"),
+    (1, "星期一"),
+    (2, "星期二"),
+    (3, "星期三"),
+    (4, "星期四"),
+    (5, "星期五"),
+    (6, "星期六"),
+    (7, "星期天"),
     )
 
     weekday = models.IntegerField(choices=WEEKDAYS, unique=True)
@@ -53,18 +53,22 @@ class Image(models.Model):
     id = models.AutoField(primary_key=True)
 """
 
-class Type(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
 
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(null=True, blank=True, upload_to="dish_images/")
-    type = models.ForeignKey(Type, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(..., max_digits=5, decimal_places=2)
     description = models.CharField(max_length=2000, null=True, blank=True)
     availability = models.BooleanField(default=True)
+
+    DISHTYPE = (
+        ('rice', '饭'),
+        ('veg', '菜'),
+        ('drink', '饮料'),
+    )
+    type = models.CharField(default ="rice", max_length=100, choices=DISHTYPE)
+
 
 class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
@@ -75,10 +79,10 @@ class Order(models.Model):
     customer_phone = models.CharField(max_length=12, null=False, blank=False)
     customer_email = models.CharField(max_length=50, null=True, blank=False)
     ORDERSTATUS = (
-        ('PROCESSING', 'PROCESSING'),
-        ('DELIVERING', 'DELIVERING'),
-        ('DONE', 'DONE'),
-        ('REFUNDING', 'REFUNDING'),
-        ('REFUNDED', 'REFUNDED'),
+        ('PROCESSING', '处理中'),
+        ('DELIVERING', '送菜中'),
+        ('DONE', '完成'),
+        ('REFUNDING', '退款中'),
+        ('REFUNDED', '已退款'),
     )
-    status = models.CharField(default ="PROCESSING", max_length=20, choices=ORDERSTATUS)
+    status = models.CharField(default ="PROCESSING", max_length=100, choices=ORDERSTATUS)

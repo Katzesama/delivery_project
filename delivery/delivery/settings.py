@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'Manger.context_processors.get_basic_information',
+                'Manger.context_processors.get_dish_types',
             ],
         },
     },

@@ -47,14 +47,10 @@ class PaginationModel(PageNumberPagination):
             del response_body["next"]
         return Response(response_body)
 
-class TypeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Type
-        fields = "__all__"
 
 
 class DishSerializer(serializers.ModelSerializer):
-    type = TypeSerializer(read_only=True)
+    type = serializers.ChoiceField(choices=Dish.DISHTYPE)
     picture = serializer.ImageField(required=False)
     class Meta:
         model = Dish
