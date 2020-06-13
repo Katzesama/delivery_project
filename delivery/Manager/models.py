@@ -32,6 +32,7 @@ class Restaurant(models.Model):
     description = models.CharField(max_length =100)
     openning_times = models.ManyToManyField(OpenningTime)
     image = models.ImageField(null=True, blank=True)
+    open = models.BooleanField(default=True)
 
 # Create your models here.
 class Seller(models.Model):
@@ -67,7 +68,7 @@ class Dish(models.Model):
         ('veg', '菜'),
         ('drink', '饮料'),
     )
-    type = models.CharField(default ="rice", max_length=100, choices=DISHTYPE)
+    type = models.CharField(default ='饭', max_length=100, choices=DISHTYPE)
 
 
 class Order(models.Model):
@@ -79,10 +80,10 @@ class Order(models.Model):
     customer_phone = models.CharField(max_length=12, null=False, blank=False)
     customer_email = models.CharField(max_length=50, null=True, blank=False)
     ORDERSTATUS = (
-        ('PROCESSING', '处理中'),
-        ('DELIVERING', '送菜中'),
-        ('DONE', '完成'),
-        ('REFUNDING', '退款中'),
-        ('REFUNDED', '已退款'),
+        ('处理中', '处理中'),
+        ('送菜中', '送菜中'),
+        ('完成', '完成'),
+        ('退款中', '退款中'),
+        ('已退款', '已退款'),
     )
-    status = models.CharField(default ="PROCESSING", max_length=100, choices=ORDERSTATUS)
+    status = models.CharField(default ="处理中", max_length=100, choices=ORDERSTATUS)

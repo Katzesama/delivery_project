@@ -18,6 +18,9 @@ const csrf_token = "{{ csrf_token }}";
       <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold shadow text-primary" id="name" contenteditable="true">输入菜名</h6>
         <select class="mt-2" name="type" id="dish_type">
+          {% for term in dish_types %}
+             <option value="{{term}}">{{term}}</option>
+          {% endfor %}
         </select>
       </div>
       <div class="card-body row no-gutters align-items-center">
@@ -47,7 +50,7 @@ const csrf_token = "{{ csrf_token }}";
   // button to upload the new image
   var pic_upload = document.getElementById("image_upload");
   // change the image when a new image is uploaded
-  pic_upload.addEventListener('drop', function(e){
+  pic_upload.addEventListener('change', function(e){
       e.preventDefault();
       if (this.files && this.files[0]) {
         var reader = new FileReader();
@@ -72,12 +75,13 @@ const csrf_token = "{{ csrf_token }}";
     let dish_availability = document.getElementById("availablity");
     let dish_price_num = document.getElementById("price");
     let dish_descr = document.getElementById("description");
-
+    let dish_type = document.getElementById("dish_type");
     let dish_data = {
       'name': header.innerHTML,
       'availability': dish_availability.options[dish_availability.selectedIndex].value,
       'price': dish_price_num.innerHTML,
-      'description': dish_descr.innerHTML
+      'description': dish_descr.innerHTML,
+      'type': dish_type.options[dish_type.selectedIndex].value
     };
     if (pic_upload.value != null){
       dish_data["picture"] = pic_upload.value;
