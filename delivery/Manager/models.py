@@ -79,9 +79,10 @@ class Order(models.Model):
     deliver_address = models.CharField(max_length=500, null=False, blank=False)
     customer_phone = models.CharField(max_length=12, null=False, blank=False)
     customer_email = models.CharField(max_length=50, null=True, blank=False)
+    order_num = models.IntegerField(unique=False)
     ORDERSTATUS = (
         ('处理中', '处理中'),
-        ('送菜中', '送菜中'),
+        ('送餐中', '送餐中'),
         ('完成', '完成'),
         ('退款中', '退款中'),
         ('已退款', '已退款'),

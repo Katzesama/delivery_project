@@ -4,5 +4,257 @@
 
 {% block content %}
 {% load static %}
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">待处理订单</h1>
+  <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
+</div>
 
+  <div id="holder" class="row"></div>
+  <script type="text/javascript">
+  request_sender = {}
+  var holder = document.getElementById("holder");
+
+  function show_order(data) {
+    //clear the older content from last request
+    while(holder.hasChildNodes()){
+			holder.removeChild(holder.firstChild);
+    }
+
+    // loop through and create a section for each dish sent by at the current page
+    for (var i = 0; i < data.menu.length; i++) {
+      // most outter container of the dish section
+      let dish = document.createElement("div");
+      dish.class = "card shadow mb-4";
+      holder.appendChild(dish);
+
+      // add header to the dish section
+      let header_ct = document.createElement("div");
+      header_ct.class = "card-header py-3";
+      dish.appendChild(header_ct);
+      let header = document.createElement("h6");
+      header.class = "m-0 font-weight-bold shadow text-primary";
+      header.innerHTML = data.menu[i].name;
+      header.contenteditable = "true";
+      header_ct.appendChild(header);
+
+      // add the body part to the dish section
+      let body = document.createElement("div");
+      body.class = "card-body row no-gutters align-items-center";
+      dish.appendChild(body);
+      // display dish picture
+      let pic_holder = document.createElement("div");
+      pic_holder.class = "col-md-5 mr-2";
+      body.appendChild(pic_holder);
+      let dish_pic = document.createElement("img");
+      dish_pic.class = "dropdown-list-image col-md-11";
+      dish_pic.src = data.menu[i].picture;
+      pic_holder.appendChild(dish_pic);
+      // button to upload the new image
+      let pic_upload = document.createElement("input");
+      pic_upload.id = "image" + i.toString();
+      pic_upload.type = "file";
+      pic_upload.style = "display:none;";
+      pic_holder.appendChild(pic_upload);
+      let pic_upload_label = document.createElement("label");
+      pic_upload_label.for = pic_upload.id;
+      pic_upload_label.class = "btn btn-primary";
+      pic_upload_label.style = "width=auto;display:inline-block;";
+      pic_upload_label.innerHTML = "图片";
+      pic_holder.appendChild(pic_upload_label);
+      // change the image when a new image is uploaded
+      pic_upload.addEventListener('change', function(e){
+          e.preventDefault();
+          if (this.files && this.files[0]) {
+            var reader = new FileReader();
+            if (testFileType(this.files[0])){
+              reader.readAsDataURL(this.files[0]);
+              reader.onload = function (e) {
+                dish_pic.src = e.target.result;
+              };
+            }
+            else{
+              this.value = null;
+            }
+
+        }
+      }, false);
+
+
+      // display and edit the information of the dish
+      let dish_info = document.createElement("div");
+      dish_info.class = "col-6 mr-2";
+      body.appendChild(dish_info);
+      // price of dish
+      let dish_price = document.createElement("div");
+      dish_price.class = "h5 mb-2 mt-2 font-weight-bold text-gray-800";
+      dish_price.innerHTML = "$";
+      dish_info.appendChild(dish_price);
+      let dish_price_num = document.createElement("p");
+      dish_price_num.class = "shadow";
+      dish_price_num.style = "display:inline";
+      dish_price_num.innerHTML = data.menu[i].price;
+      dish_price_num.contenteditable= "true";
+      dish_price.appendChild(dish_price_num);
+      // description of the dish
+      let dish_descr_header = document.createElement("div");
+      dish_descr_header.class = "h5 font-weight-bold text-primary mb-1";
+      dish_descr_header.innerHTML = "描述";
+      dish_info.appendChild(dish_descr_header);
+      let dish_descr = document.createElement("div");
+      dish_descr.class = "h6 font-weight-bold text-black-50 mb-1 shadow";
+      dish_descr.contenteditable = "true";
+      dish_descr.innerHTML = data.menu[i].description;
+      dish_info.appendChild(dish_descr);
+
+      // select the availability of the dish
+      let dish_availability = document.createElement("select");
+      dish_availability.class = "mr-2 mt-2";
+      dish_availability.id = "alvaliblity";
+      body.appendChild(dish_availability);
+      let sold_out = document.createElement("option");
+      sold_out.value = "False";
+      let available = document.createElement("option");
+      available.value = "True";
+      if (data.menu[i].availability){
+        available.selected = true;
+      } else{
+        sold_out.selected = true;
+      }
+      dish_availability.appendChild(sold_out);
+      dish_availability.appendChild(available);
+
+      // buttons to manipulate the dish info
+      var save_button = document.createElement("button");
+      save_button.innerHTML = '储存';
+      save_button.class = "mr-2 mt-2 btn btn-success";
+      var del_button = document.createElement("button");
+      del_button.innerHTML = '删除';
+      del_button.class = "mr-2 mt-2 btn btn-danger";
+      let dish_id = data.menu[i].id;
+      let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id);
+      save_button.onclick=function(){
+        // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
+        //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
+        let dish_data = {
+          'name': header.innerHTML,
+          'availability': dish_availability.options[dish_availability.selectedIndex].value,
+          'price': dish_price_num.innerHTML,
+          'description': dish_descr.innerHTML
+        };
+        if (pic_upload.value != null){
+          dish_data["picture"] = pic_upload.value;
+        }
+        //JSON.stringify(img);
+        updateDish(dish_url, dish_data);
+      };
+      del_button.onclick=function(){
+        delDish(dish_url);
+      };
+      body.appendChild(save_button);
+      body.appendChild(del_button);
+    }
+
+    // add new dish
+    let add_dish = document.createElement("button");
+    add_dish.innerHTML = '新菜';
+    add_dish.class = "mt-2 mb-5 btn btn-info";
+    add_dish.onclick=function(){
+      location.href = "{% url 'new_dish' %}";
+    };
+    holder.appendChild(add_dish);
+
+    let line = document.createElement("br");
+    holder.appendChild(line);
+
+    // get previous page
+    if (data.previous != null)
+    {
+      let preButton = document.createElement("button");
+      preButton.class = "btn btn-light text-grey-600";
+      preButton.style = "width=auto;display:inline-block;";
+      preButton.innerHTML = '前一页';
+      preButton.onclick=function(){
+        get_data_display(data.previous);
+      };
+      holder.appendChild(preButton);
+    }
+
+    // https://stackoverflow.com/questions/30864011/display-only-some-of-the-page-numbers-by-django-pagination
+    // page number buttons
+    for (var i = 0; i < data.count; i++) {
+      let page_button = cocument.createElement("button");
+      page_button.class = "btn btn-light text-grey-600";
+      page_button.style = "width=auto;display:inline-block;";
+      page_button.innerHTML = i.toString();
+      if (i == data.current){
+        page_button.disabled = "true";
+        holder.appendChild(page_button);
+      }
+      else if (i > data.current - 3 || i < data.current + 3) {
+        page_button.onclick = function(){
+          get_data_display('/menu/api/?page=' + i.toString());
+        };
+        holder.appendChild(page_button);
+      }
+    }
+
+    // get next page
+    if (data.next != null)
+    {
+      let nextButton = document.createElement("button");
+      nextButton.class = "btn btn-light text-grey-600";
+      nextButton.style = "width=auto;display:inline-block;";
+      nextButton.innerHTML = '后一页';
+      nextButton.onclick=function(){
+        get_data_display(data.next);
+      };
+      holder.appendChild(nextButton);
+    }
+}
+
+function updateOrder(url, order_data) {
+  var request = new Request(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              data: order_data,
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
+}
+
+
+  // https://uofa-cmput404.github.io/cmput404-slides/08-AJAX.html#/9
+  // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch
+  function fetchJSON(url) {
+    var request = new Request(url, {
+                method: 'GET',
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("Something went wrong: " + response.status);
+      }
+    });
+  }
+
+
+  function get_data_display(url) {
+      fetchJSON(url).then(show_order);
+  }
+
+  get_data_display("{{fetch_url}}");
+
+
+</script>
 {% endblock %}
