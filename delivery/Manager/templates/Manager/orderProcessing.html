@@ -102,7 +102,6 @@
       // select the status of the order
       let order_status = document.createElement("select");
       order_status.class = "mr-2 mt-2";
-      order_status.id = "alvaliblity";
       body.appendChild(order_status);
       let processing = document.createElement("option");
       processing.value = "处理中";
@@ -116,7 +115,7 @@
       let refunded = document.createElement("option");
       refunded.value = "已退款";
       refunded.innerHTML = "已退款";
-      // only 处理中 and 退款中 will be passed in
+      // only "处理中" and "退款中" orders will be passed in
       if (data.orders[i].status === "处理中"){
         processing.selected = true;
       } else{
@@ -139,7 +138,6 @@
         let order_data = {
           'status': order_status.options[order_status.selectedIndex].value
         };
-        //JSON.stringify(img);
         updateOrder(order_url, order_data);
       };
 
@@ -172,7 +170,7 @@
       }
       else if (i > data.current - 3 || i < data.current + 3) {
         page_button.onclick = function(){
-          get_data_display('/menu/api/?page=' + i.toString());
+          get_data_display('orders/processing/api/?page=' + i.toString());
         };
         holder.appendChild(page_button);
       }
