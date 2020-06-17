@@ -57,7 +57,7 @@ class Image(models.Model):
 
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    picture = models.ImageField(null=True, blank=True, upload_to="dish_images/")
+    picture = models.ImageField(default='static/Manager/images/defaultimage.jpg', upload_to="dish_images/")
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(..., max_digits=5, decimal_places=2)
     description = models.CharField(max_length=2000, null=True, blank=True)
@@ -74,11 +74,12 @@ class Dish(models.Model):
 class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     total_price = models.DecimalField(..., max_digits=6, decimal_places=2)
-    time = models.DateTimeField(auto_now_add=True)
+    ordered_time = models.DateTimeField(auto_now_add=True)
+    #store list of dish name, quantity, price (eg. ["rice", "2", "5.00"])
     detail = models.CharField(max_length=2000, null=False, blank=False)
     deliver_address = models.CharField(max_length=500, null=False, blank=False)
     customer_phone = models.CharField(max_length=12, null=False, blank=False)
-    customer_email = models.CharField(max_length=50, null=True, blank=False)
+    customer_email = models.CharField(max_length=50, null=True, blank=True)
     order_num = models.IntegerField(unique=False)
     ORDERSTATUS = (
         ('处理中', '处理中'),

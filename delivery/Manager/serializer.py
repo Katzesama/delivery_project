@@ -30,7 +30,7 @@ class PaginationModel(PageNumberPagination):
         if "menu" in self.request.path:
             type = "menu"
         else:
-            type = "order"
+            type = "orders"
         response_body = OrderedDict([
             ("query", type),
             ("count", self.page.paginator.count),

@@ -16,7 +16,7 @@ class HisOrdersList(APIView):
         if not request.user.is_authenticated():
             return redirect('login')
         else:
-            orders = Order.objects.filter(Q(status='完成') | Q(status='已退款'))
+            orders = Order.objects.filter(Q(status='完成') | Q(status='已退款')).order_by('-ordered_time')
             pg_obj=PaginationModel()
             pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
             res=OrderSerializer(instance=pg_res, many=True)
@@ -28,7 +28,7 @@ class DeliverOrdersList(APIView):
         if not request.user.is_authenticated():
             return redirect('login')
         else:
-            orders = Order.objects.filter(status='送餐中')
+            orders = Order.objects.filter(status='送餐中').order_by('-ordered_time')
             pg_obj=PaginationModel()
             pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
             res=OrderSerializer(instance=pg_res, many=True)
@@ -40,7 +40,7 @@ class ProceOrdersList(APIView):
         if not request.user.is_authenticated():
             return redirect('login')
         else:
-            orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中'))
+            orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中')).order_by('-ordered_time')
             pg_obj=PaginationModel()
             pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
             res=OrderSerializer(instance=pg_res, many=True)

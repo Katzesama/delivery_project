@@ -11,7 +11,6 @@
 
   <div id="holder" class="row"></div>
   <script type="text/javascript">
-  request_sender = {}
   var holder = document.getElementById("holder");
 
   function show_order(data) {
@@ -20,94 +19,61 @@
 			holder.removeChild(holder.firstChild);
     }
 
-    // loop through and create a section for each dish sent by at the current page
-    for (var i = 0; i < data.menu.length; i++) {
-      // most outter container of the dish section
-      let dish = document.createElement("div");
-      dish.class = "card shadow mb-4";
-      holder.appendChild(dish);
+    // loop through and create a section for each order sent by at the current page
+    for (var i = 0; i < data.orders.length; i++) {
+      // most outter container of the order section
+      let order = document.createElement("div");
+      order.class = "card shadow mb-4";
+      holder.appendChild(order);
 
-      // add header to the dish section
+      // add header to the order section
       let header_ct = document.createElement("div");
       header_ct.class = "card-header py-3";
-      dish.appendChild(header_ct);
+      order.appendChild(header_ct);
       let header = document.createElement("h6");
-      header.class = "m-0 font-weight-bold shadow text-primary";
-      header.innerHTML = data.menu[i].name;
-      header.contenteditable = "true";
+      header.class = "m-0 font-weight-bold text-primary";
+      header.innerHTML = "订单号：" + data.orders[i].order_num;
       header_ct.appendChild(header);
 
-      // add the body part to the dish section
+      // add the body part to the order section
       let body = document.createElement("div");
       body.class = "card-body row no-gutters align-items-center";
-      dish.appendChild(body);
-      // display dish picture
-      let pic_holder = document.createElement("div");
-      pic_holder.class = "col-md-5 mr-2";
-      body.appendChild(pic_holder);
-      let dish_pic = document.createElement("img");
-      dish_pic.class = "dropdown-list-image col-md-11";
-      dish_pic.src = data.menu[i].picture;
-      pic_holder.appendChild(dish_pic);
-      // button to upload the new image
-      let pic_upload = document.createElement("input");
-      pic_upload.id = "image" + i.toString();
-      pic_upload.type = "file";
-      pic_upload.style = "display:none;";
-      pic_holder.appendChild(pic_upload);
-      let pic_upload_label = document.createElement("label");
-      pic_upload_label.for = pic_upload.id;
-      pic_upload_label.class = "btn btn-primary";
-      pic_upload_label.style = "width=auto;display:inline-block;";
-      pic_upload_label.innerHTML = "图片";
-      pic_holder.appendChild(pic_upload_label);
-      // change the image when a new image is uploaded
-      pic_upload.addEventListener('change', function(e){
-          e.preventDefault();
-          if (this.files && this.files[0]) {
-            var reader = new FileReader();
-            if (testFileType(this.files[0])){
-              reader.readAsDataURL(this.files[0]);
-              reader.onload = function (e) {
-                dish_pic.src = e.target.result;
-              };
-            }
-            else{
-              this.value = null;
-            }
-
-        }
-      }, false);
+      order.appendChild(body);
+      // display the information of the order
+      let order_info = document.createElement("div");
+      order_info.class = "col-6 mr-2";
+      body.appendChild(order_info);
+      // deliver address of the order
+      let deliver_addr = document.createElement("div");
+      deliver_addr.class = "h6 mb-1 font-weight-bold text-gray-800";
+      deliver_addr.innerHTML = "" + data.orders[i].deliver_address;
+      order_info.appendChild(deliver_addr);
+      // phone number and the email address of the custormer
+      let customer_phone = document.createElement("div");
+      customer_phone.class = "h6 font-weight-bold text-gray-800 mb-1";
+      customer_phone.innerHTML = "顾客号码：" + data.orders[i].customer_phone;
+      order_info.appendChild(customer_phone);
+      let customer_email = document.createElement("div");
+      customer_email.class = "h6 font-weight-bold text-gray-800 mb-1";
+      customer_email.innerHTML = "顾客邮箱：" + data.orders[i].customer_email;
+      order_info.appendChild(customer_email);
+      // total price and the detail of the order
+      // hide the detail and show when button clicks
+      let order_detail = document.createElement("div");
+      customer_email.class = "h6 font-weight-bold text-gray-800 mb-1";
+      order_info.appendChild(order_detail);
+      let total_price = document.createElement("p");
+      total_price.innerHTML = "总价：" + data.orders[i].total_price;
+      order_detail.appendChild(total_price);
+      let more_detail = document.createElement("div");
+      more_detail.class = "h7 font-weight-light text-gray-800";
+      more_detail.style = "display:none;";
+      more_detail.id = "more_detail";
+      order_detail.appendChild(more_detail);
 
 
-      // display and edit the information of the dish
-      let dish_info = document.createElement("div");
-      dish_info.class = "col-6 mr-2";
-      body.appendChild(dish_info);
-      // price of dish
-      let dish_price = document.createElement("div");
-      dish_price.class = "h5 mb-2 mt-2 font-weight-bold text-gray-800";
-      dish_price.innerHTML = "$";
-      dish_info.appendChild(dish_price);
-      let dish_price_num = document.createElement("p");
-      dish_price_num.class = "shadow";
-      dish_price_num.style = "display:inline";
-      dish_price_num.innerHTML = data.menu[i].price;
-      dish_price_num.contenteditable= "true";
-      dish_price.appendChild(dish_price_num);
-      // description of the dish
-      let dish_descr_header = document.createElement("div");
-      dish_descr_header.class = "h5 font-weight-bold text-primary mb-1";
-      dish_descr_header.innerHTML = "描述";
-      dish_info.appendChild(dish_descr_header);
-      let dish_descr = document.createElement("div");
-      dish_descr.class = "h6 font-weight-bold text-black-50 mb-1 shadow";
-      dish_descr.contenteditable = "true";
-      dish_descr.innerHTML = data.menu[i].description;
-      dish_info.appendChild(dish_descr);
-
-      // select the availability of the dish
-      let dish_availability = document.createElement("select");
+      // select the status of the order
+      let order_status = document.createElement("select");
       dish_availability.class = "mr-2 mt-2";
       dish_availability.id = "alvaliblity";
       body.appendChild(dish_availability);
@@ -127,41 +93,20 @@
       var save_button = document.createElement("button");
       save_button.innerHTML = '储存';
       save_button.class = "mr-2 mt-2 btn btn-success";
-      var del_button = document.createElement("button");
-      del_button.innerHTML = '删除';
-      del_button.class = "mr-2 mt-2 btn btn-danger";
-      let dish_id = data.menu[i].id;
-      let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id);
+      let order_id = data.orders[i].id;
+      let order_url = "{% url 'order_detail' 123 %}".replace(/123/, order_id);
       save_button.onclick=function(){
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
         //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
-        let dish_data = {
+        let order_data = {
           'name': header.innerHTML,
           'availability': dish_availability.options[dish_availability.selectedIndex].value,
           'price': dish_price_num.innerHTML,
           'description': dish_descr.innerHTML
         };
-        if (pic_upload.value != null){
-          dish_data["picture"] = pic_upload.value;
-        }
         //JSON.stringify(img);
-        updateDish(dish_url, dish_data);
+        updateOrder(order_url, order_data);
       };
-      del_button.onclick=function(){
-        delDish(dish_url);
-      };
-      body.appendChild(save_button);
-      body.appendChild(del_button);
-    }
-
-    // add new dish
-    let add_dish = document.createElement("button");
-    add_dish.innerHTML = '新菜';
-    add_dish.class = "mt-2 mb-5 btn btn-info";
-    add_dish.onclick=function(){
-      location.href = "{% url 'new_dish' %}";
-    };
-    holder.appendChild(add_dish);
 
     let line = document.createElement("br");
     holder.appendChild(line);
@@ -222,7 +167,7 @@ function updateOrder(url, order_data) {
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      return response.json(); // return a Promise
+      document.location.reload(true);
     } else {
       alert("Something went wrong: " + response.status);
     }

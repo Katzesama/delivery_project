@@ -8,14 +8,14 @@ def menu_render(request):
 def new_dish(request):
     return render(request, 'addDish.html')
 
-def historyorder_render(request):
-    return #render(request, 'posts.html', {'fetch_url': '/author/myPosts/', 'is_my_post': "true"})
+def processorder_render(request):
+    return render(request, 'orderProcessing.html', {'fetch_url': 'orders/processing/api/'})
 
 def deliverorder_render(request):
     return #render(request, 'otherPosts.html', {'fetch_url': '/author/posts/', 'is_my_post': "false"})
 
-def processorder_render(request):
-    return #render(request, 'posts.html', {'fetch_url': '/posts/', 'is_my_post': "false"})
+def historyorder_render(request):
+    return #render(request, 'posts.html', {'fetch_url': '/author/myPosts/', 'is_my_post': "true"})
 
 def search_order_render(request):
     return
