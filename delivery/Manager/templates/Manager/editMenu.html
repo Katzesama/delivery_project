@@ -115,8 +115,10 @@ const csrf_token = "{{ csrf_token }}";
       body.appendChild(dish_availability);
       let sold_out = document.createElement("option");
       sold_out.value = "False";
+      sold_out.innerHTML = "售罄";
       let available = document.createElement("option");
       available.value = "True";
+      available.innerHTML = "有货";
       if (data.menu[i].availability){
         available.selected = true;
       } else{

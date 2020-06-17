@@ -70,24 +70,62 @@
       more_detail.style = "display:none;";
       more_detail.id = "more_detail";
       order_detail.appendChild(more_detail);
+      // get and paste a list of dish name, quantity, price (eg. ["rice", "2", "5.00"])
+      let dish_list = JSON.parse(data.orders[i].detail);
+      for(let j = 0, count = dish_list.length; j < count; j++) {
+          let dish = JSON.parse(dish_list[j]);
+          let dish_holder = document.createElement("p");
+          more_detail.appendChild(dish_holder);
+          for(let k = 0, count = dish.length; k < count; k++){
+            let dish_info = document.createElement("span");
+            dish_info.class = "mr-3";
+            dish_info.innerHTML = JSON.parse(dish[k]);
+            dish_holder.appendChild(dish_info);
+          }
+      }
+      // show more detail button
+      let show_more = document.createElement("button");
+      show_more.class = "btn btn-light text-grey-600";
+      show_more.innerHTML = "更多细节";
+      show_more.onclick=function(){
+        if (more_detail.style.display === "none") {
+          this.innerHTML = "收起";
+          more_detail.style.display = "inline";
+        } else {
+          this.innerHTML = "更多细节";
+          more_detail.style.display = "none";
+        }
+      }
+      order_detail.appendChild(show_more);
 
 
       // select the status of the order
       let order_status = document.createElement("select");
-      dish_availability.class = "mr-2 mt-2";
-      dish_availability.id = "alvaliblity";
-      body.appendChild(dish_availability);
-      let sold_out = document.createElement("option");
-      sold_out.value = "False";
-      let available = document.createElement("option");
-      available.value = "True";
-      if (data.menu[i].availability){
-        available.selected = true;
+      order_status.class = "mr-2 mt-2";
+      order_status.id = "alvaliblity";
+      body.appendChild(order_status);
+      let processing = document.createElement("option");
+      processing.value = "处理中";
+      processing.innerHTML = "处理中";
+      let delivering = document.createElement("option");
+      delivering.value = "送餐中";
+      delivering.innerHTML = "送餐中";
+      let refunding = document.createElement("option");
+      refunding.value = "退款中";
+      refunding.innerHTML = "退款中";
+      let refunded = document.createElement("option");
+      refunded.value = "已退款";
+      refunded.innerHTML = "已退款";
+      // only 处理中 and 退款中 will be passed in
+      if (data.orders[i].status === "处理中"){
+        processing.selected = true;
       } else{
-        sold_out.selected = true;
+        refunding.selected = true;
       }
-      dish_availability.appendChild(sold_out);
-      dish_availability.appendChild(available);
+      order_status.appendChild(processing);
+      order_status.appendChild(delivering);
+      order_status.appendChild(refunding);
+      order_status.appendChild(refunded);
 
       // buttons to manipulate the dish info
       var save_button = document.createElement("button");
@@ -99,10 +137,7 @@
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
         //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
         let order_data = {
-          'name': header.innerHTML,
-          'availability': dish_availability.options[dish_availability.selectedIndex].value,
-          'price': dish_price_num.innerHTML,
-          'description': dish_descr.innerHTML
+          'status': order_status.options[order_status.selectedIndex].value
         };
         //JSON.stringify(img);
         updateOrder(order_url, order_data);
