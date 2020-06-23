@@ -20,7 +20,7 @@
     }
 
     // loop through and create a section for each order sent by at the current page
-    for (var i = 0; i < data.orders.length; i++) {
+    for (var i = 0; i < data.length; i++) {
       // most outter container of the order section
       let order = document.createElement("div");
       order.class = "card shadow mb-4";
@@ -32,7 +32,7 @@
       order.appendChild(header_ct);
       let header = document.createElement("h6");
       header.class = "m-0 font-weight-bold text-primary";
-      header.innerHTML = "订单号：" + data.orders[i].order_num;
+      header.innerHTML = "订单号：" + data[i].order_num;
       header_ct.appendChild(header);
 
       // add the body part to the order section
@@ -46,16 +46,16 @@
       // deliver address of the order
       let deliver_addr = document.createElement("div");
       deliver_addr.class = "h6 mb-1 font-weight-bold text-gray-800";
-      deliver_addr.innerHTML = "" + data.orders[i].deliver_address;
+      deliver_addr.innerHTML = "" + data[i].deliver_address;
       order_info.appendChild(deliver_addr);
       // phone number and the email address of the custormer
       let customer_phone = document.createElement("div");
       customer_phone.class = "h6 font-weight-bold text-gray-800 mb-1";
-      customer_phone.innerHTML = "顾客号码：" + data.orders[i].customer_phone;
+      customer_phone.innerHTML = "顾客号码：" + data[i].customer_phone;
       order_info.appendChild(customer_phone);
       let customer_email = document.createElement("div");
       customer_email.class = "h6 font-weight-bold text-gray-800 mb-1";
-      customer_email.innerHTML = "顾客邮箱：" + data.orders[i].customer_email;
+      customer_email.innerHTML = "顾客邮箱：" + data[i].customer_email;
       order_info.appendChild(customer_email);
       // total price and the detail of the order
       // hide the detail and show when button clicks
@@ -63,7 +63,7 @@
       customer_email.class = "h6 font-weight-bold text-gray-800 mb-1";
       order_info.appendChild(order_detail);
       let total_price = document.createElement("p");
-      total_price.innerHTML = "总价：" + data.orders[i].total_price;
+      total_price.innerHTML = "总价：" + data[i].total_price;
       order_detail.appendChild(total_price);
       let more_detail = document.createElement("div");
       more_detail.class = "h7 font-weight-light text-gray-800";
@@ -71,7 +71,7 @@
       more_detail.id = "more_detail";
       order_detail.appendChild(more_detail);
       // get and paste a list of dish name, quantity, price (eg. ["rice", "2", "5.00"])
-      let dish_list = JSON.parse(data.orders[i].detail);
+      let dish_list = JSON.parse(data[i].detail);
       for(let j = 0, count = dish_list.length; j < count; j++) {
           let dish = JSON.parse(dish_list[j]);
           let dish_holder = document.createElement("p");
@@ -112,12 +112,25 @@
       let refunded = document.createElement("option");
       refunded.value = "已退款";
       refunded.innerHTML = "已退款";
-      // only "完成" and "已退款" orders will be passed in
-      if (data.orders[i].status === "完成"){
+      let delivering = document.createElement("option");
+      delivering.value = "送餐中";
+      delivering.innerHTML = "送餐中";
+      let processing = document.createElement("option");
+      processing.value = "处理中";
+      processing.innerHTML = "处理中";
+      if (data[i].status === "完成"){
         done.selected = true;
-      } else{
+      } else if (data[i].status === "处理中") {
+        processing.selected = true;
+      } else if (data.[i].status === "送餐中") {
+        delivering.selected = true;
+      }else if (data[i].status === "退款中") {
+        refunding.selected = true;
+      }else{
         refunded.selected = true;
       }
+      order_status.appendChild(processing);
+      order_status.appendChild(delivering);
       order_status.appendChild(done);
       order_status.appendChild(refunding);
       order_status.appendChild(refunded);

@@ -79,7 +79,5 @@ class SearchOrder(APIView):
             return redirect('login')
         else:
             orders = Order.objects.filter(order_num=kwargs['ordernum']).order_by('-ordered_time')
-            pg_obj=PaginationModel()
-            pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
-            res=OrderSerializer(instance=pg_res, many=True)
-            return pg_obj.get_paginated_response(res.data)
+            serializer = OrderSerializer(orders, many=True)
+            return pg_obj.get_paginated_response(serializer.data)
