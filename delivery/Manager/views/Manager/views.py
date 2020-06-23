@@ -9,16 +9,16 @@ def new_dish(request):
     return render(request, 'addDish.html')
 
 def processorder_render(request):
-    return render(request, 'orderProcessing.html', {'fetch_url': 'orders/processing/api/'})
+    return render(request, 'orderProcessing.html', {'fetch_url': '/orders/processing/api/'})
 
 def deliverorder_render(request):
-    return #render(request, 'otherPosts.html', {'fetch_url': '/author/posts/', 'is_my_post': "false"})
+    return render(request, 'orderDelivering.html', {'fetch_url': '/orders/delivery/api/'})
 
-def historyorder_render(request):
-    return #render(request, 'posts.html', {'fetch_url': '/author/myPosts/', 'is_my_post': "true"})
+def historyorder_render(request, ordernum):
+    return render(request, 'orderHistory.html', {'fetch_url': '/orders/history/api/' + str(ordernum) + '/'})
 
 def search_order_render(request):
-    return
+    return render(request, )
 
 def home(request):
     return #render(request, 'home.html', {'user_id':request.user.author.id})

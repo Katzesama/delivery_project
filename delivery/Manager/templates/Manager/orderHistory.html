@@ -166,7 +166,7 @@
       }
       else if (i > data.current - 3 || i < data.current + 3) {
         page_button.onclick = function(){
-          get_data_display('orders/processing/api/?page=' + i.toString());
+          get_data_display('orders/history/api/?page=' + i.toString());
         };
         holder.appendChild(page_button);
       }
