@@ -21,4 +21,4 @@ def search_order_render(request):
     return render(request, )
 
 def home(request):
-    return #render(request, 'home.html', {'user_id':request.user.author.id})
+    return render(request, 'home.html', {'user_id':request.user.author.id})
