@@ -145,12 +145,12 @@
 
             <!-- Nav Item - Moreinfo -->
             <li class="nav-item dropdown no-arrow">
-              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
               </a>
               <!-- Dropdown - More Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="#" id="store_info_link" onclick="store_info_onclick()">
+                <a class="dropdown-item" id="store_info_link" onclick="store_info_onclick()">
                   <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
                   商家信息
                 </a>
@@ -159,10 +159,9 @@
               <script>
                 function store_info_onclick() {
                   var store_info = document.getElementById("store_info");
-
-                  if (store_info.style.display === "none") {
                     store_info.style.display = "block";
-                  }
+                  var body = document.getElementById("page-top");
+                  body.classList.add("modal-open");
                 }
 
                 function cart_onclick() {
@@ -185,10 +184,11 @@
 
 
           <!-- Earnings (Monthly) Card Example -->
-        <div class="pop-layout align-items-center justify-content-between" style="display:none;" id="store_info">
-          <div class="card shadow">
+        <div class="modal align-items-center justify-content-between" id="store_info">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content card shadow">
               <div class="card-header d-flex flex-row align-items-center">
-                <a id="store_info_close" class="mr-5" href="#" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
+                <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
                 <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
               </div>
               <div class="card-body">
@@ -212,6 +212,7 @@
                 </div>
               </div>
             </div>
+          </div>
         </div>
 
         <script>
@@ -219,6 +220,8 @@
             var store_info = document.getElementById("store_info");
 
             store_info.style.display = "none";
+            var body = document.getElementById("page-top");
+            body.classList.remove("modal-open");
           }
         </script>
 
