@@ -6,10 +6,10 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" type="text/css" href="{% static 'Manager/vendor/fontawesome-free/css/all.min.css'%} ">
+  <link rel="stylesheet" type="text/css" href="{% static 'Customer/vendor/fontawesome-free/css/all.min.css'%} ">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-  <link rel="stylesheet" type="text/css" href="{% static 'Manager/css/sb-admin-2.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Customer/css/sb-admin-2.min.css' %}">
 </head>
 
 <body>
@@ -48,6 +48,24 @@
       <!-- Main Content -->
       <div id="content">
 
+        <!-- Shopping cart Sidebar -->
+        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:30%;">
+          <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;" id="shopping_cart_content">
+
+          <!-- Nav Item - Close button -->
+          <li class="nav-item active" style="padding-bottom:30px;">
+            <a id="cart_close" class="mb-5" onclick="cart_close()"> <i class="fa fa-times"></i></a>
+          </li>
+
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active">
+              <h6 class="font-weight-bold text-primary">订单</h6>
+          </li>
+
+        </ul>
+      </nav>
+        <!-- End of Shopping cart Sidebar -->
+
           <!-- Topbar -->
           <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -61,7 +79,7 @@
 
               <!-- Nav Item - Shoppingcart -->
               <li class="nav-item no-arrow">
-                <button id="shopping_cart" class="btn btn-link" role="button">
+                <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
                   <i class="fa fa-shopping-cart"></i>
                 </button>
               </li>
@@ -70,27 +88,16 @@
 
               <!-- Nav Item - Moreinfo -->
               <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="fa fa-info-circle" aria-hidden="true"></i>
                 </a>
                 <!-- Dropdown - More Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                  <a class="dropdown-item" href="#" id="store_info_link" onclick="store_info_onclick()">
+                  <a class="dropdown-item" id="store_info_link" onclick="store_info_onclick()">
                     <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
                     商家信息
                   </a>
                 </div>
-
-                <script>
-                  function store_info_onclick() {
-                    var store = document.getElementById("store_info_link");
-                    var store_info = document.getElementById("store_info");
-
-                    if (store_info.style.display === "none") {
-                      store_info.style.display = "block";
-                    }
-                  }
-                </script>
 
               </li>
 
@@ -102,34 +109,58 @@
       <!-- Begin Page Content -->
       <div class="container-fluid">
 
-        <!-- Pop Out Store Info -->
-        <div class="pop-layout align-items-center justify-content-between" style="display:none;" id="store_info">
-          <div class="card shadow">
-              <div class="card-header d-flex flex-row align-items-center">
-                <a id="store_info_close" class="mr-5" href="#" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
-                <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
+        <!-- Store_info Popup -->
+      <div class="modal align-items-center justify-content-between" id="store_info">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content card shadow">
+            <div class="card-header d-flex flex-row align-items-center">
+              <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
+              <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
+            </div>
+            <div class="card-body">
+              <h5>联系方式</h5>
+              <div class="card">
+                <span>粥不出户</span>
+                <span>微信号：zhoubuchuhu</span>
+                <span>电话：604-587-9897</span>
+                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="https://techcrunch.com/wp-content/uploads/2017/02/chrome-qr-reader1.png" alt="">
               </div>
-              <div class="card-body">
-                <div class="text-center">
-                  <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="img/undraw_posting_photo.svg" alt="">
-                </div>
-                <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a constantly updated collection of beautiful svg images that you can use completely free and without attribution!</p>
-                <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
+            </br>
+              <h5>营业时间</h5>
+              <div class="card">
               </div>
             </div>
+          </div>
         </div>
-        <script>
-          function store_info_close() {
-            var close_butt = document.getElementById("store_info_close");
-            var store_info = document.getElementById("store_info");
-            
-            if (store_info.style.display === "block") {
-              store_info.style.display = "none";
-            }
-          }
-        </script>
+      </div>
 
+
+      <!-- Dish_info Popup -->
+    <div class="modal align-items-center justify-content-between" id="dish_info">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content card shadow">
+          <div class="card-header d-flex flex-row align-items-center">
+            <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
+            <h6 class="m-0 font-weight-bold text-primary">菜名</h6>
+          </div>
+          <div class="card-body">
+            <h5>选项</h5>
+            <div class="card">
+              <span>粥不出户</span>
+              <span>微信号：zhoubuchuhu</span>
+              <span>电话：604-587-9897</span>
+              <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="https://techcrunch.com/wp-content/uploads/2017/02/chrome-qr-reader1.png" alt="">
+            </div>
+          </br>
+          <div class="card-header align-items-center">
+            <button class="btn btn-light rounded">-</button>
+              </div>
+            </div>
+          </div>
         </div>
+      </div>
+
+      </div>
       <!-- End of Main Content -->
 
       </div>
@@ -140,20 +171,22 @@
 
   </main>
 
+  <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
+
 <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
       <!-- jQuery -->
     <!-- jQuery -->
-    <script  type="text/javascript" src="{% static 'Manager/vendor/jquery/jquery.min.js' %}"></script>
+    <script  type="text/javascript" src="{% static 'Customer/vendor/jquery/jquery.min.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script type="text/javascript" src="{% static 'Manager/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script type="text/javascript" src="{% static 'Manager/vendor/chart.js/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/vendor/chart.js/Chart.min.js' %}"></script>
 
     <!-- Custom Theme JavaScript -->
-	<script type="text/javascript" src="{% static 'Manager/js/sb-admin-2.js' %}"></script>
+	<script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
 </body>
 </html>
