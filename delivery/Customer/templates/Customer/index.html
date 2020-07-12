@@ -14,7 +14,7 @@
 
 <body>
 
-  <main>
+<main>
     <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -101,10 +101,10 @@
 
               </li>
 
-            </ul>
+          </ul>
 
-          </nav>
-          <!-- End of Topbar -->
+        </nav>
+        <!-- End of Topbar -->
 
       <!-- Begin Page Content -->
       <div class="container-fluid">
@@ -119,15 +119,12 @@
             </div>
             <div class="card-body">
               <h5>联系方式</h5>
-              <div class="card">
+              <div class="card" id="store_contact_info">
                 <span>粥不出户</span>
-                <span>微信号：zhoubuchuhu</span>
-                <span>电话：604-587-9897</span>
-                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="https://techcrunch.com/wp-content/uploads/2017/02/chrome-qr-reader1.png" alt="">
               </div>
             </br>
               <h5>营业时间</h5>
-              <div class="card">
+              <div class="card" id="store_open_info">
               </div>
             </div>
           </div>
@@ -135,33 +132,24 @@
       </div>
 
 
-      <!-- Dish_info Popup -->
-    <div class="modal align-items-center justify-content-between" id="dish_info">
-      <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content card shadow">
-          <div class="card-header d-flex flex-row align-items-center">
-            <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
-            <h6 class="m-0 font-weight-bold text-primary">菜名</h6>
-          </div>
-          <div class="card-body">
-            <h5>选项</h5>
-            <div class="card">
-              <span>粥不出户</span>
-              <span>微信号：zhoubuchuhu</span>
-              <span>电话：604-587-9897</span>
-              <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="https://techcrunch.com/wp-content/uploads/2017/02/chrome-qr-reader1.png" alt="">
+        <!-- Dish_info Popup -->
+      <div class="modal align-items-center justify-content-between" id="dish_info">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content card shadow">
+            <div class="card-header d-flex flex-row align-items-center">
+              <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
+              <h6 class="m-0 font-weight-bold text-primary" id="dish_name">菜名</h6>
             </div>
-          </br>
-          <div class="card-header align-items-center">
-            <button class="btn btn-light rounded">-</button>
-              </div>
+            <div class="card-body" id="dish_info_content">
+            </div>
             </div>
           </div>
         </div>
-      </div>
 
       </div>
       <!-- End of Main Content -->
+
+      </div>
 
       </div>
       <!-- End of Content Wrapper -->
@@ -169,7 +157,7 @@
     </div>
     <!-- End of Page Wrapper -->
 
-  </main>
+</main>
 
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 
