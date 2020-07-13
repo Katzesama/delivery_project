@@ -12,9 +12,8 @@
   <link rel="stylesheet" type="text/css" href="{% static 'Customer/css/sb-admin-2.min.css' %}">
 </head>
 
-<body>
+<body id="page-top">
 
-<main>
     <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -61,6 +60,8 @@
           <li class="nav-item active">
               <h6 class="font-weight-bold text-primary">订单</h6>
           </li>
+
+          <!-- dynamically adding content -->
 
         </ul>
       </nav>
@@ -121,10 +122,16 @@
               <h5>联系方式</h5>
               <div class="card" id="store_contact_info">
                 <span>粥不出户</span>
+
+                <!-- dynamically adding content -->
+
               </div>
             </br>
               <h5>营业时间</h5>
               <div class="card" id="store_open_info">
+
+                <!-- dynamically adding content -->
+
               </div>
             </div>
           </div>
@@ -132,19 +139,32 @@
       </div>
 
 
-        <!-- Dish_info Popup -->
-      <div class="modal align-items-center justify-content-between" id="dish_info">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content card shadow">
-            <div class="card-header d-flex flex-row align-items-center">
-              <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
-              <h6 class="m-0 font-weight-bold text-primary" id="dish_name">菜名</h6>
+      <!-- Dish_info Popup -->
+    <div class="modal align-items-center justify-content-between" id="dish_info">
+      <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content card shadow">
+          <div class="card-header d-flex flex-row align-items-center">
+            <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
+            <h6 class="m-0 font-weight-bold text-primary" id="dish_name"></h6>
+          </div>
+          <div class="card-body" id="dish_info_content">
+
+          <!-- dynamically adding content -->
+
+          </div>
+          <div class="card-header d-flex flex-row align-items-center justify-content-between">
+            <div class="d-flex flex-row">
+              <a class="mr-2" id="dish_quan_minus"><i class="fa fa-minus"></i></a>
+              <input id="dish_quantity" class="text-center" value="1" type="number" style="width: 2em;">
+              <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
             </div>
-            <div class="card-body" id="dish_info_content">
-            </div>
-            </div>
+            <button id="dish_info_submit" class="btn btn-primary">添加</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- dynamically adding dishes here -->
 
       </div>
       <!-- End of Main Content -->
@@ -157,7 +177,6 @@
     </div>
     <!-- End of Page Wrapper -->
 
-</main>
 
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 

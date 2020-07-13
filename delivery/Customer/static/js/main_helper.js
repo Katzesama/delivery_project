@@ -1,18 +1,19 @@
-function cart_close() {
-  var cart_info = document.getElementById("shopping_cart");
+var cart_info = document.getElementById("shopping_cart");
+var store_info = document.getElementById("store_info");
+var dish_info = document.getElementById("dish_info");
 
+var body = document.getElementById("page-top");
+
+function cart_close() {
   cart_info.style.display = "none";
 }
 
 function store_info_onclick() {
-  var store_info = document.getElementById("store_info");
-    store_info.style.display = "block";
-  var body = document.getElementById("page-top");
+  store_info.style.display = "block";
   body.classList.add("modal-open");
 }
 
 function cart_onclick() {
-  var cart_info = document.getElementById("shopping_cart");
 
   if (cart_info.style.display === "none") {
     cart_info.style.display = "block";
@@ -20,25 +21,18 @@ function cart_onclick() {
 }
 
 function store_info_close() {
-  var store_info = document.getElementById("store_info");
 
   store_info.style.display = "none";
-  var body = document.getElementById("page-top");
   body.classList.remove("modal-open");
 }
 
 function dish_info() {
-  var dish_info = document.getElementById("dish_info");
-    dish_info.style.display = "block";
-  var body = document.getElementById("page-top");
+  dish_info.style.display = "block";
   body.classList.add("modal-open");
 }
 
 function dish_info_close() {
-  var dish_info = document.getElementById("dish_info");
-
   dish_info.style.display = "none";
-  var body = document.getElementById("page-top");
   body.classList.remove("modal-open");
 }
 
