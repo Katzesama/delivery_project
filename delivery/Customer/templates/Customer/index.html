@@ -28,7 +28,10 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
+      <div id="category_content">
       <!-- Nav Item - Add types dynamically in js to here -->
+
+      </div>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
@@ -164,7 +167,11 @@
       </div>
     </div>
 
+    <div id="dishes_holder">
+
     <!-- dynamically adding dishes here -->
+
+    </div>
 
       </div>
       <!-- End of Main Content -->
@@ -180,6 +187,13 @@
 
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 
+  <script type="text/javascript">
+    function get_dishes_display(url){
+      fetchJSON(url).then(display_dishes_by_kind);
+    }
+
+    get_dishes_display("{{fetch_url}}");
+  </script>
 <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->

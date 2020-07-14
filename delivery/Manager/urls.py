@@ -7,13 +7,13 @@ urlpatterns = [
     #
     re_path(r'^login/', auth_views.LoginView.as_view(), name='login'),
     re_path(r'^logout/', auth_views.LogoutView.as_view(), name='logout'),
-    re_path(r'^home/', name='home', views.home, name='home'),
+    re_path(r'^home/', views.home, name='home'),
 
     #
-    re_path(r'^userprofile/<uuid:pk>/', name='uprofile', Profile.UserProfile.as_view(), name='userprofile'),
-    re_path(r'^resprofile/', name='rprofile', Profile.ResProfile.as_view(), name='resprofile'),
+    re_path(r'^userprofile/<uuid:pk>/', Profile.UserProfile.as_view(), name='userprofile'),
+    re_path(r'^resprofile/', Profile.ResProfile.as_view(), name='resprofile'),
     re_path(r'^menu/api/', Menu.Menu.as_view(), name='menu_api'),
-    re_path(r'^menu/', name='menu', views.menu_render, name='render_menu'),
+    re_path(r'^menu/', views.menu_render, name='render_menu'),
     re_path(r'^menu/new/', views.new_dish, name='new_dish'),
     re_path(r'^menu/<uuid:pk>/', Menu.Dish.as_view(), name='menu_dish'),
     #re_path(r'^orders/',name='order_list'),

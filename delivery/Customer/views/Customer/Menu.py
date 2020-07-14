@@ -17,9 +17,6 @@ class Menu(APIView):
     page (editMenu.html)
     """
     def get(self, request, post_id, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect('login')
-        else:
-            menu = Dish.objects.all().order_by()
-            serializer = DishSerializer(menu, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        menu = Kind.objects.all()
+        serializer = KindSerializer(menu, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
