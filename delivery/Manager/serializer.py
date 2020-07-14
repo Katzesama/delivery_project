@@ -48,13 +48,34 @@ class PaginationModel(PageNumberPagination):
         return Response(response_body)
 
 
+class OptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Option
+        fields = "__all__"
+
 
 class DishSerializer(serializers.ModelSerializer):
-    type = serializers.ChoiceField(choices=Dish.DISHTYPE)
     picture = serializer.ImageField(required=False)
+    options = serializers.SerializerMethodField()
     class Meta:
         model = Dish
         fields = "__all__"
+
+    def get_options(self, obj):
+        options = Option.objects.filter(dish=obj)
+        serializer = OptionSerializer(options, many=True)
+        return serializer.data
+
+class KindSerializer(serializers.ModelSerializer):
+    dishes = serializers.SerializerMethodField()
+    class Meta:
+        model = Dish
+        fields = "__all__"
+
+    def get_dishes(self, obj):
+        dishes = Dish.objects.filter(kind=obj)
+        serializer = DishSerializer(dishes, many=True)
+        return serializer.data
 
 class OpenTimeSerializer(serializers.ModelSerializer):
     weekdays = serializers.ChoiceField(choices=OpenningTime.WEEKDAYS)

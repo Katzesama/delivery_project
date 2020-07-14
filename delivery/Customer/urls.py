@@ -4,10 +4,8 @@ from django.contrib.auth import views as auth_view
 
 urlpatterns = [
     #
-    re_path(r'^menu/', name='menu'),
-    re_path(r'^cart/', name='order'),
-    re_path(r'^cart/information/', name='deliver_information'),
-
+    re_path(r'^menu/', name='menu', ),
+    re_path(r'^order/', name='order'),
     #
     re_path(r'^payment/', name='payment'),
     re_path(r'^payment/success_message/', name='payment_success'),

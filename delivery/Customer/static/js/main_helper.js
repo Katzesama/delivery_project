@@ -29,6 +29,7 @@ function store_info_close() {
 function dish_info() {
   dish_info.style.display = "block";
   body.classList.add("modal-open");
+  display_dish_info(dishurl);
 }
 
 function dish_info_close() {
@@ -36,7 +37,30 @@ function dish_info_close() {
   body.classList.remove("modal-open");
 }
 
+function display_dish_info(url){
+  var data = fetchJSON(url);
 
+}
+
+function display_dishes(url){
+  var data = fetchJSON(url);
+}
+
+function fetchJSON(url) {
+  var request = new Request(url, {
+              method: 'GET',
+              headers: {
+                   'Content-Type': 'application/json'
+              },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
+}
 /*
 https://stackoverflow.com/questions/56449599/how-to-get-input-from-dynamically-created-checkboxes-and-radio-buttons-in-javasc
 function radiobutton(d) {

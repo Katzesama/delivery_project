@@ -80,4 +80,4 @@ class SearchOrder(APIView):
         else:
             orders = Order.objects.filter(order_num=kwargs['ordernum']).order_by('-ordered_time')
             serializer = OrderSerializer(orders, many=True)
-            return pg_obj.get_paginated_response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
