@@ -64,6 +64,11 @@
               <h6 class="font-weight-bold text-primary">订单</h6>
           </li>
 
+          <!-- Nav Item - Checkout -->
+          <li class="nav-item active">
+            <a id="checkout" class="mt-2 mb-4 btn btn-primary" href="#">结账</a>
+          </li>
+
           <!-- dynamically adding content -->
 
         </ul>
@@ -161,7 +166,7 @@
               <input id="dish_quantity" class="text-center" value="1" type="number" style="width: 2em;">
               <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
             </div>
-            <button id="dish_info_submit" class="btn btn-primary">添加</button>
+            <button id="dish_submit" class="btn btn-primary">添加 - $<span id="dish_total_price"></span></button>
           </div>
         </div>
       </div>

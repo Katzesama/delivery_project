@@ -10,10 +10,12 @@ function cart_close() {
   cart_info.style.display = "none";
 }
 
+
 function store_info_onclick() {
   store_info.style.display = "block";
   body.classList.add("modal-open");
 }
+
 
 function cart_onclick() {
 
@@ -21,6 +23,7 @@ function cart_onclick() {
     cart_info.style.display = "block";
   }
 }
+
 
 function store_info_close() {
 
@@ -31,7 +34,7 @@ function store_info_close() {
 function dish_info(id) {
   dish_info.style.display = "block";
   body.classList.add("modal-open");
-  let dishurl = "{% url 'menu_dish' 123 %}".replace(/123/, id);
+  let dishurl = "{% url 'customer_dish_api' 123 %}".replace(/123/, id);
   display_dish_info(dishurl);
 }
 
@@ -41,13 +44,88 @@ function dish_info_close() {
 }
 
 function display_dish_info(url){
-  var data = fetchJSON(url);
+  let data = fetchJSON(url);
+  let submit_button = document.getElementById("dish_submit");
+  let minus_dish_button = document.getElementById("dish_quan_minus");
+  let plus_dish_button = document.getElementById("dish_quan_plus");
+  let dish_quantity = document.getElementById("dish_quantity");
+
+  let dish_name = document.getElementById("dish_name");
+  dish_name.innerHTML = data.name;
+
+  let content_holder = document.getElementById("dish_info_content");
+  let dish_image = document.creatElement("img");
+  dish_image.class = "dropdown-list-image col-md-12";
+  dish_image.src = data.picture;
+  content_holder.appendChild(dish_image);
+  let options_holder = document.creatElement("div");
+  content_holder.appendChild(options_holder);
+  let header = document.creatElement("h5");
+  header.class = "mt-3";
+  header.innerHTML = "选项";
+  options_holder.appendChild(header);
+  for (let i=0; i < data.options.length; i++){
+    /*
+    <div class="d-flex">
+      <div>
+      <input type="checkbox" name="option1" value="可乐">
+      </div>
+      <div class="col-md-11">
+      <label class="d-flex justify-content-between" for="option1">
+        <span>可乐</span>
+        <div><span>+$0.6</span></div>
+      </label>
+      </div>
+    </div>
+    */
+    /*
+    https://stackoverflow.com/questions/56449599/how-to-get-input-from-dynamically-created-checkboxes-and-radio-buttons-in-javasc
+    function radiobutton(d) {
+      var output = "";
+
+      for (var i = 0; i < d.length; i++) {
+        output += '<input type="radio" value="' + d[i] + '" name="box2">' + d[i] +  '<br><br>';
+
+      }
+      return output;
+    }
+
+    function check() {
+      var elements = document.getElementsByTagName("input");
+      for (var a = 0; a < elements.length; a++) {
+            if (elements[a].checked) {
+              console.log(elements[a].value + " is checked");
+            }
+      }
+    }
+    */
+    let option = data.options[i];
+    let option_holder = document.creatElement("div");
+    option_holder.class = "d-flex";
+    options_holder.appendChild(option_holder);
+    // input checkbox part
+    let input_holder = document.creatElement("div");
+    option.appendChild(input_holder);
+    let input_checkbox = document.createElement("input");
+    input_checkbox.type = "checkbox";
+    input_checkbox.name = "option" + i.toString();
+    input_checkbox.value = option.name;
+    input_holder.appendChild(input_checkbox);
+
+  }
+
+
+  submit_button.addEventListener('click', function(e){
+          e.preventDefault();
+        }, false);
 
 }
 
+
+
 function display_dishes_by_kind(data){
 
-  for (var i=0; i < data.length; i++){
+  for (let i=0; i < data.length; i++){
     // category sidebar
     let kind = document.creatElement("li");
     kind.class = "nav-item active";
@@ -75,7 +153,7 @@ function display_dishes_by_kind(data){
     header.innerHTML = data[i].name;
     header_holder.appendChild(header);
     // dishes for the section
-    for (var j=0; j < data[i].dishes.length; j++){
+    for (let j=0; j < data[i].dishes.length; j++){
       let dish = data[i].dishes[j];
       let dish_holder = document.creatElement("div");
       dish_holder.class = "col-xl-3 col-md-6 mb-4";
@@ -130,24 +208,3 @@ function fetchJSON(url) {
     }
   });
 }
-/*
-https://stackoverflow.com/questions/56449599/how-to-get-input-from-dynamically-created-checkboxes-and-radio-buttons-in-javasc
-function radiobutton(d) {
-  var output = "";
-
-  for (var i = 0; i < d.length; i++) {
-    output += '<input type="radio" value="' + d[i] + '" name="box2">' + d[i] +  '<br><br>';
-
-  }
-  return output;
-}
-
-function check() {
-  var elements = document.getElementsByTagName("input");
-  for (var a = 0; a < elements.length; a++) {
-        if (elements[a].checked) {
-          console.log(elements[a].value + " is checked");
-        }
-  }
-}
-*/

@@ -20,3 +20,18 @@ class Menu(APIView):
         menu = Kind.objects.all()
         serializer = KindSerializer(menu, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class Dish(APIView):
+    """
+    Retrieve, update or delete a dish instance.
+    """
+    def get_object(self, pk):
+        try:
+            return Dish.objects.get(id=pk)
+        except Dish.DoesNotExist:
+            return HttpResponse(status=404)
+
+    def get(self, request, pk):
+        dish = self.get_object(pk)
+        dish_serializer = DishSerializer(dish)
+        return Response(serializer.data, status=200)
