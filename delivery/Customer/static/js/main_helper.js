@@ -28,9 +28,10 @@ function store_info_close() {
   body.classList.remove("modal-open");
 }
 
-function dish_info() {
+function dish_info(id) {
   dish_info.style.display = "block";
   body.classList.add("modal-open");
+  let dishurl = "{% url 'menu_dish' 123 %}".replace(/123/, id);
   display_dish_info(dishurl);
 }
 
@@ -84,7 +85,7 @@ function display_dishes_by_kind(data){
       dish_holder.appendChild(inner_holder);
       let dish_link = document.creatElement("button");
       dish_link.class = "btn";
-      dish_link.onclick = function() {dish_info()};
+      dish_link.onclick = function() {dish_info(dish.id)};
       inner_holder.appendChild(dish_link);
       let content_holder = document.creatElement("div");
       content_holder.class = "card-body row no-gutters align-items-center";
