@@ -76,7 +76,7 @@ class Option(models.Model):
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, blank=False, null=False, default='选项')
     # store the list in JSON
-    price = models.DecimalField(..., max_digits=5, decimal_places=2)
+    price = models.DecimalField(..., max_digits=5, decimal_places=2, default=Decimal('0.00'))
 
 class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)

@@ -49,6 +49,9 @@ function display_dish_info(url){
   let minus_dish_button = document.getElementById("dish_quan_minus");
   let plus_dish_button = document.getElementById("dish_quan_plus");
   let dish_quantity = document.getElementById("dish_quantity");
+  let total_price_tag = document.getElementById("dish_total_price");
+  let dish_price = data.price;
+  let total_price = data.price;
 
   let dish_name = document.getElementById("dish_name");
   dish_name.innerHTML = data.name;
@@ -65,19 +68,6 @@ function display_dish_info(url){
   header.innerHTML = "选项";
   options_holder.appendChild(header);
   for (let i=0; i < data.options.length; i++){
-    /*
-    <div class="d-flex">
-      <div>
-      <input type="checkbox" name="option1" value="可乐">
-      </div>
-      <div class="col-md-11">
-      <label class="d-flex justify-content-between" for="option1">
-        <span>可乐</span>
-        <div><span>+$0.6</span></div>
-      </label>
-      </div>
-    </div>
-    */
     /*
     https://stackoverflow.com/questions/56449599/how-to-get-input-from-dynamically-created-checkboxes-and-radio-buttons-in-javasc
     function radiobutton(d) {
@@ -105,19 +95,57 @@ function display_dish_info(url){
     options_holder.appendChild(option_holder);
     // input checkbox part
     let input_holder = document.creatElement("div");
-    option.appendChild(input_holder);
+    option_holder.appendChild(input_holder);
     let input_checkbox = document.createElement("input");
     input_checkbox.type = "checkbox";
     input_checkbox.name = "option" + i.toString();
     input_checkbox.value = option.name;
     input_holder.appendChild(input_checkbox);
+    let after_part = document.creatElement("div");
+    after_part.class = "col-md-11";
+    option_holder.appendChild(after_part);
+    let input_label = document.creatElement("label");
+    input_label.class = "d-flex justify-content-between";
+    input_label.for = "option" + i.toString();
+    after_part.appendChild(input_label);
+    let label_title = document.creatElement("span");
+    label_title.innerHTML = option.name;
+    input_label.appendChild(label_title);
+    if (option.price > 0){
+      let label_price_part = document.creatElement("div");
+      input_label.appendChild(label_price_part);
+      let label_price = document.creatElement("span");
+      label_price.innerHTML = option.price;
+      label_price_part.appendChild(label_price);
+      input_checkbox.addEventListener('change', function() {
+        if(this.checked) {
+          dish_price = dish_price + option.price;
+        } else {
+          dish_price = dish_price - option.price;
+        }
+        total_price = parseInt(dish_quantity.value, 10) * dish_price;
+        total_price_tag.innerHTML = total_price;
+      }, false);
+    }
+
 
   }
 
+  dish_quantity.addEventListener('change', function(){
+    total_price = parseInt(dish_quantity.value, 10) * dish_price;
+    total_price_tag.innerHTML = total_price;
+  }, false);
+
+  minus_dish_button.addEventListener('click', function(){
+  }, false);
+
+  plus_dish_button.addEventListener('click', function(){
+          e.preventDefault();
+  }, false);
 
   submit_button.addEventListener('click', function(e){
           e.preventDefault();
-        }, false);
+  }, false);
 
 }
 
