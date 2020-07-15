@@ -133,14 +133,21 @@ function display_dish_info(url){
 
   dish_quantity.addEventListener('change', function(){
     total_price = parseInt(dish_quantity.value, 10) * dish_price;
-    total_price_tag.innerHTML = total_price;
+    total_price_tag.innerHTML = total_price.toFixed(2);
   }, false);
 
   minus_dish_button.addEventListener('click', function(){
+    if (parseInt(dish_quantity.value, 10) > 1){
+      dish_quantity.value = parseInt(dish_quantity.value, 10) - 1;
+      total_price = parseInt(dish_quantity.value, 10) * dish_price;
+      total_price_tag.innerHTML = total_price.toFixed(2);
+    }
   }, false);
 
   plus_dish_button.addEventListener('click', function(){
-          e.preventDefault();
+    dish_quantity.value = parseInt(dish_quantity.value, 10) + 1;
+    total_price = parseInt(dish_quantity.value, 10) * dish_price;
+    total_price_tag.innerHTML = total_price.toFixed(2);
   }, false);
 
   submit_button.addEventListener('click', function(e){

@@ -286,17 +286,47 @@
             </div>
             <div class="card-header d-flex flex-row align-items-center justify-content-between">
               <div class="d-flex flex-row">
-                <a class="mr-2"><i class="fa fa-minus"></i></a>
-                <input class="text-center" value="1" type="number" style="width: 2em;">
-                <a class="ml-2"><i class="fa fa-plus"></i></a>
+                <a class="mr-2" id="dish_quan_minus"><i class="fa fa-minus"></i></a>
+                <input class="text-center" id="dish_quantity" value="1" type="number" style="width: 2em;">
+                <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
               </div>
-              <button class="btn btn-primary">添加 - $<span>23.00</span></button>
+              <button class="btn btn-primary">添加 - $<span id="dish_total_price"></span></button>
             </div>
           </div>
         </div>
       </div>
 
       <script>
+      function change_dish_quantity(){
+        let minus_dish_button = document.getElementById("dish_quan_minus");
+        let plus_dish_button = document.getElementById("dish_quan_plus");
+        let dish_quantity = document.getElementById("dish_quantity");
+        let total_price_tag = document.getElementById("dish_total_price");
+        let dish_price = 20.67;
+        let total_price = dish_price;
+
+        dish_quantity.addEventListener('change', function(){
+          total_price = parseInt(dish_quantity.value, 10) * dish_price;
+          total_price_tag.innerHTML = total_price.toFixed(2);
+        }, false);
+
+        minus_dish_button.addEventListener('click', function(){
+          if (parseInt(dish_quantity.value, 10) > 1){
+            dish_quantity.value = parseInt(dish_quantity.value, 10) - 1;
+            total_price = parseInt(dish_quantity.value, 10) * dish_price;
+            total_price_tag.innerHTML = total_price.toFixed(2);
+          }
+        }, false);
+
+        plus_dish_button.addEventListener('click', function(){
+          dish_quantity.value = parseInt(dish_quantity.value, 10) + 1;
+          total_price = parseInt(dish_quantity.value, 10) * dish_price;
+          total_price_tag.innerHTML = total_price.toFixed(2);
+        }, false);
+      }
+
+      change_dish_quantity();
+
         function dish_info_close() {
           var dish_info = document.getElementById("dish_info");
 
