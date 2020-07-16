@@ -6,14 +6,12 @@ var kind_holder = document.getElementById("category_content");
 
 var body = document.getElementById("page-top");
 
+/*
+shopping cart sidebar popup
+*/
+
 function cart_close() {
   cart_info.style.display = "none";
-}
-
-
-function store_info_onclick() {
-  store_info.style.display = "block";
-  body.classList.add("modal-open");
 }
 
 
@@ -24,12 +22,36 @@ function cart_onclick() {
   }
 }
 
+function display_cart(){
+
+}
+
+/*
+store information window popup
+*/
+
+function store_info_onclick() {
+  store_info.style.display = "block";
+  body.classList.add("modal-open");
+  display_store_info();
+}
+
 
 function store_info_close() {
 
   store_info.style.display = "none";
   body.classList.remove("modal-open");
 }
+
+function display_store_info(){
+  var data = fetchJSON('/store/');
+  
+}
+
+
+/*
+dish information window popup
+*/
 
 function dish_info(id) {
   dish_info.style.display = "block";
@@ -155,7 +177,6 @@ function display_dish_info(url){
   }, false);
 
 }
-
 
 
 function display_dishes_by_kind(data){

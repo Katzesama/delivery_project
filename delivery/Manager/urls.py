@@ -27,5 +27,5 @@ urlpatterns = [
     #re_path(r'^orders/delivery/<int:pk>/', Orders.DeliverOrder.as_view(), name='deliverorder_detail'),
     #re_path(r'^orders/history/<int:pk>/', Orders.HistoryOrder.as_view(), name='hisorder_detail'),
     re_path(r'^orders/search/api/(?P<ordernum>.+)/$'), Order.SearchOrder.as_view(), name="search_order"),
-    re_path(r'^orders/search/'), views.search_order_render, name="search_order_render")
+    re_path(r'^orders/search/(?P<ordernum>.+)/$'), views.search_order_render, name="search_order_render")
 ]

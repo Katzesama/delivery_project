@@ -13,11 +13,11 @@ def processorder_render(request):
 def deliverorder_render(request):
     return render(request, 'orderDelivering.html', {'fetch_url': '/orders/delivery/api/'})
 
-def historyorder_render(request, ordernum):
-    return render(request, 'orderHistory.html', {'fetch_url': '/orders/history/api/' + str(ordernum) + '/'})
+def historyorder_render(request):
+    return render(request, 'orderHistory.html', {'fetch_url': '/orders/history/api/'})
 
-def search_order_render(request):
-    return render(request, )
+def search_order_render(request, ordernum):
+    return render(request, 'searchOrder.html', {'fetch_url': '/orders/search/api/'+ str(ordernum) + '/'})
 
 def home(request):
     return render(request, 'home.html', {'user_id':request.user.author.id})

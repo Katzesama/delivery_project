@@ -16,7 +16,7 @@ class Menu(APIView):
     return it as api to the html that renders the menu
     page (editMenu.html)
     """
-    def get(self, request, post_id, **kwargs):
+    def get(self, request, **kwargs):
         menu = Kind.objects.all()
         serializer = KindSerializer(menu, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
