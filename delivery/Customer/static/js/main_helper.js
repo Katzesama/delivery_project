@@ -26,6 +26,22 @@ function display_cart(){
 
 }
 
+function fetchOrder(url) {
+  var request = new Request(url, {
+              method: 'GET',
+              headers: {
+                   'Content-Type': 'application/json'
+              },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      return [];
+    }
+  });
+}
+
 /*
 store information window popup
 */
@@ -45,7 +61,7 @@ function store_info_close() {
 
 function display_store_info(){
   var data = fetchJSON('/store/');
-  
+
 }
 
 

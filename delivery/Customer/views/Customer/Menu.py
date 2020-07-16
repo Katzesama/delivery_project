@@ -1,9 +1,8 @@
-from Manager.models import Dish
-from Manager.serializer import *
+from Manager.models import Dish, Kind, Option
+from Manager.serializer import DishSerializer, KindSerializer, OptionSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404, redirect
-from .serializer import AuthorSerializer, FriendSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer

@@ -3,7 +3,6 @@ from .serializer import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404, redirect
-from .serializer import AuthorSerializer, FriendSerializer
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
@@ -43,7 +42,7 @@ class Dish(APIView):
 
     def get(self, request, pk):
         dish = self.get_object(pk)
-        dish_serializer = DishSerializer(dish)
+        serializer = DishSerializer(dish)
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):

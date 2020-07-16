@@ -52,7 +52,7 @@
 
         <!-- Shopping cart Sidebar -->
         <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:30%;">
-          <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;" id="shopping_cart_content">
+          <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;">
 
           <!-- Nav Item - Close button -->
           <li class="nav-item active" style="padding-bottom:30px;">
@@ -69,7 +69,9 @@
             <a id="checkout" class="mt-2 mb-4 btn btn-primary" href="#">结账</a>
           </li>
 
-          <!-- dynamically adding content -->
+          <div id="shopping_cart_content">
+            <!-- dynamically adding content -->
+          </div>
 
         </ul>
       </nav>
