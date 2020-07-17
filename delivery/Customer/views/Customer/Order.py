@@ -21,6 +21,15 @@ class Cart_Orders(APIView):
             return HttpResponse(status=404)
 
     def post(self, request):
-        request.session['order_detail'].append(request.data['detail'])
+        request.session['order_detail']= request.data['detail']
         request.session['total_price'] = request.data['total_price']
         return Response(status=status.HTTP_200_OK)
+
+def add_orders(request):
+    if request.method == 'POST':
+        try:
+            request.session['order_detail'] = request.session['order_detail'].append(request.data['detail'])
+        except:
+            request.session['order_detail'] = []
+            request.session['total_price'] = 0
+            return Response

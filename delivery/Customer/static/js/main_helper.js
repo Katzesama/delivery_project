@@ -19,14 +19,16 @@ function cart_onclick() {
 
   if (cart_info.style.display === "none") {
     cart_info.style.display = "block";
+    display_cart();
   }
 }
 
 function display_cart(){
-
+  let data = fetchOrders("{% url 'shopping_cart' %}");
+  for (let i=0; i < data.order_detail.length; i++){}
 }
 
-function fetchOrder(url) {
+function fetchOrders(url) {
   var request = new Request(url, {
               method: 'GET',
               headers: {
@@ -192,6 +194,23 @@ function display_dish_info(url){
           e.preventDefault();
   }, false);
 
+}
+
+function addOrder(url, order_data) {
+  var request = new Request(url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              data: order_data,
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      document.location.reload(true);
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
 }
 
 
