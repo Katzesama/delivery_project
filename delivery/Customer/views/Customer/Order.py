@@ -14,7 +14,7 @@ class Cart_Orders(APIView):
         try:
             detail = request.session['order_detail']
             total = request.session['total_price']
-            return Response({'order_detail' : detail, 'total_price' : total}, status=status.HTTP_200_OK)
+            return Response(json.dumps({'order_detail' : detail, 'total_price' : total}), status=status.HTTP_200_OK)
         except:
             request.session['order_detail'] = {}
             request.session['total_price'] = None
@@ -41,4 +41,4 @@ def add_order(request):
             request.session['order_detail'] = {}
             request.session['total_price'] = None
             request.session['number'] = 0
-            return Response
+            return Response(status=status.HTTP_200_OK)

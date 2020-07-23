@@ -25,7 +25,16 @@ function cart_onclick() {
 
 function display_cart(){
   let data = fetchOrders("{% url 'shopping_cart' %}");
-  for (let i=0; i < data.order_detail.length; i++){}
+  let cart_content = document.getElementById("shopping_cart_content");
+  for (let i=0; i < data.order_detail.length; i++){
+    let order = document.createElement("li");
+    order.class = "nav-item active justify-content-between";
+    cart_content.appendChild(order);
+    /*
+    <div><span  class='mr-2'>1x</span><span class='mr-5'>烤鸡</span></div>
+    <div><span>¥25.00</span><a class="ml-5" href="#"><i class="fa fa-minus"></i></a></div>
+    */
+  }
 }
 
 function fetchOrders(url) {
@@ -97,13 +106,13 @@ function display_dish_info(url){
   dish_name.innerHTML = data.name;
 
   let content_holder = document.getElementById("dish_info_content");
-  let dish_image = document.creatElement("img");
+  let dish_image = document.createElement("img");
   dish_image.class = "dropdown-list-image col-md-12";
   dish_image.src = data.picture;
   content_holder.appendChild(dish_image);
-  let options_holder = document.creatElement("div");
+  let options_holder = document.createElement("div");
   content_holder.appendChild(options_holder);
-  let header = document.creatElement("h5");
+  let header = document.createElement("h5");
   header.class = "mt-3";
   header.innerHTML = "选项";
   options_holder.appendChild(header);
@@ -130,31 +139,31 @@ function display_dish_info(url){
     }
     */
     let option = data.options[i];
-    let option_holder = document.creatElement("div");
+    let option_holder = document.createElement("div");
     option_holder.class = "d-flex";
     options_holder.appendChild(option_holder);
     // input checkbox part
-    let input_holder = document.creatElement("div");
+    let input_holder = document.createElement("div");
     option_holder.appendChild(input_holder);
     let input_checkbox = document.createElement("input");
     input_checkbox.type = "checkbox";
     input_checkbox.name = "option" + i.toString();
     input_checkbox.value = option.name;
     input_holder.appendChild(input_checkbox);
-    let after_part = document.creatElement("div");
+    let after_part = document.createElement("div");
     after_part.class = "col-md-11";
     option_holder.appendChild(after_part);
-    let input_label = document.creatElement("label");
+    let input_label = document.createElement("label");
     input_label.class = "d-flex justify-content-between";
     input_label.for = "option" + i.toString();
     after_part.appendChild(input_label);
-    let label_title = document.creatElement("span");
+    let label_title = document.createElement("span");
     label_title.innerHTML = option.name;
     input_label.appendChild(label_title);
     if (option.price > 0){
-      let label_price_part = document.creatElement("div");
+      let label_price_part = document.createElement("div");
       input_label.appendChild(label_price_part);
-      let label_price = document.creatElement("span");
+      let label_price = document.createElement("span");
       label_price.innerHTML = option.price;
       label_price_part.appendChild(label_price);
       input_checkbox.addEventListener('change', function() {
@@ -234,64 +243,64 @@ function display_dishes_by_kind(data){
 
   for (let i=0; i < data.length; i++){
     // category sidebar
-    let kind = document.creatElement("li");
+    let kind = document.createElement("li");
     kind.class = "nav-item active";
     kind_holder.appendChild(kind);
     let kind_link = document.createElement("a");
     kind_link.class = "nav-link";
     kind_link.href = "#kind" + i.toString();
     kind.appendChild(kind_link);
-    let kind_span = document.creatElement("span");
+    let kind_span = document.createElement("span");
     kind_span.innerHTML = data[i].name;
     kind_link.appendChild(kind_span);
 
 
     // group dishes in sections by kind
-    let section = document.creatElement("div");
+    let section = document.createElement("div");
     section.class = "row";
     section.id = "kind" + i.toString();
     dishes_holder.appendChild(section);
     // header for the section
-    let header_holder = document.creatElement("div");
+    let header_holder = document.createElement("div");
     header_holder.style = "flex-basis:100%;";
     section.appendChild(header_holder);
-    let header = document.creatElement("h1");
+    let header = document.createElement("h1");
     header.class = "h3 mb-3 text-gray-800";
     header.innerHTML = data[i].name;
     header_holder.appendChild(header);
     // dishes for the section
     for (let j=0; j < data[i].dishes.length; j++){
       let dish = data[i].dishes[j];
-      let dish_holder = document.creatElement("div");
+      let dish_holder = document.createElement("div");
       dish_holder.class = "col-xl-3 col-md-6 mb-4";
       section.appendChild(dish_holder);
-      let inner_holder = document.creatElement("div");
+      let inner_holder = document.createElement("div");
       inner_holder.class = "card shadow";
       dish_holder.appendChild(inner_holder);
-      let dish_link = document.creatElement("button");
+      let dish_link = document.createElement("button");
       dish_link.class = "btn";
       dish_link.onclick = function() {dish_info(dish.id)};
       inner_holder.appendChild(dish_link);
-      let content_holder = document.creatElement("div");
+      let content_holder = document.createElement("div");
       content_holder.class = "card-body row no-gutters align-items-center";
       inner_holder.appendChild(content_holder);
       // dish image
-      let image_holder = document.creatElement("div");
+      let image_holder = document.createElement("div");
       image_holder.class = "col-md-10 mr-2";
       content_holder.appendChild(image_holder);
-      let image = document.creatElement("img");
+      let image = document.createElement("img");
       image.class = "dropdown-list-image col-md-12";
       image.src = dish.picture;
       image_holder.appendChild(image);
       // dish name and price
-      let text_holder = document.creatElement("div");
+      let text_holder = document.createElement("div");
       text_holder.class = "col-6 mr-2";
       content_holder.appendChild(text_holder);
-      let dish_header = document.creatElement("h6");
+      let dish_header = document.createElement("h6");
       dish_header.class = "mt-3 font-weight-bold text-primary";
       dish_header.innerHTML = dish.name;
       text_holder.appendChild(dish_header);
-      let dish_price = document.creatElement("div");
+      let dish_price = document.createElement("div");
       dish_price.class = "h5 mb-2 mt-2 font-weight-bold text-gray-800";
       dish_price.innerHTML = "$" + dish.price.toString();
       text_holder.appendChild(dish_price);
