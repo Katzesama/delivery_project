@@ -192,11 +192,27 @@ function display_dish_info(url){
 
   submit_button.addEventListener('click', function(e){
           e.preventDefault();
+          let order_data = {};
+          let options = [];
+          var elements = content_holder.getElementsByTagName("input");
+          for (let i = 0; i < elements.length; i++) {
+                if (elements[i].checked) {
+                  options.push(elements[a].value);
+                }
+          }
+          order_data['name'] = dish_name.innerHTML;
+          order_data['price'] = total_price_tag.innerHTML;
+          order_data['options'] = JSON.stringify(options);
+          addOrder("{% url 'add_order' %}", order_data);
   }, false);
 
 }
 
 function addOrder(url, order_data) {
+  /*
+  TODO:
+  check the data if JSONfied
+  */
   var request = new Request(url, {
               method: 'POST',
               headers: {

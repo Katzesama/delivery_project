@@ -8,6 +8,7 @@ urlpatterns = [
     re_path(r'^menu/', Menu.Menu.as_view(), name='customer_menu_api'),
     re_path(r'^menu/<uuid:pk>/', Menu.Dish.as_view(), name='customer_dish'),
     re_path(r'^menu/cart/', Order.Cart_Orders.as_view(), name='shopping_cart'),
+    re_path(r'^menu/order/', Order.add_order, name='add_order'),
     re_path(r'^store/', views.Store.as_view(), name='store'),
     """re_path(r'^order/', name='order'),
     re_path(r'^payment/', name='payment'),
