@@ -26,14 +26,40 @@ function cart_onclick() {
 function display_cart(){
   let data = fetchOrders("{% url 'shopping_cart' %}");
   let cart_content = document.getElementById("shopping_cart_content");
-  for (let i=0; i < data.order_detail.length; i++){
+  for (let [key, value] of data.order_detail){
     let order = document.createElement("li");
     order.class = "nav-item active justify-content-between";
+    order.setAttribute('data-id' , key.toString());
     cart_content.appendChild(order);
-    /*
-    <div><span  class='mr-2'>1x</span><span class='mr-5'>烤鸡</span></div>
-    <div><span>¥25.00</span><a class="ml-5" href="#"><i class="fa fa-minus"></i></a></div>
-    */
+    // ['name']['price']['options']['quantity']
+    let line1 = document.createElement("div");
+    order.appendChild(line1);
+    let quantity = document.createElement("span");
+    quantity.class = "mr-2";
+    quantity.innerHTML = "x" + value['quantity'];
+    line1.appendChild(quantity);
+    let name = document.createElement("span");
+    name.class = "mr-5";
+    name.innerHTML = value["name"];
+    line1.appendChild(name);
+    let line2 = document.createElement("div");
+    order.appendChild(line2);
+    let price = document.createElement("span");
+    price.innerHTML = "$" + value["price"];
+    line2.appendChild(price);
+    let remove_button = document.createElement("a");
+    remove_button.class = "ml-5";
+    remove_button.href = "#";
+    line2.appendChild(remove_button);
+    remove_button.addEventListener('click', function(e){
+            e.preventDefault();
+            let remove_info = key;
+            removeOrders("{% url 'shopping_cart' %}", JSON.stringify(remove_info));
+            order.remove();
+    }, false);
+    let icon = document.createElement("i");
+    icon.class = "fa fa-minus";
+    remove_button.appendChild(icon);
   }
 }
 
@@ -43,6 +69,23 @@ function fetchOrders(url) {
               headers: {
                    'Content-Type': 'application/json'
               },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      return [];
+    }
+  });
+}
+
+function removeOrders(url, remove_data) {
+  var request = new Request(url, {
+              method: 'POST',
+              headers: {
+                   'Content-Type': 'application/json'
+              },
+              data: remove_data,
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
@@ -202,17 +245,18 @@ function display_dish_info(url){
   submit_button.addEventListener('click', function(e){
           e.preventDefault();
           let order_data = {};
-          let options = [];
+          let options = "";
           var elements = content_holder.getElementsByTagName("input");
           for (let i = 0; i < elements.length; i++) {
                 if (elements[i].checked) {
-                  options.push(elements[a].value);
+                  options = options + " " + elements[a].value;
                 }
           }
           order_data['name'] = dish_name.innerHTML;
+          order_data['quantity'] = dish_quantity.value.toString();
           order_data['price'] = total_price_tag.innerHTML;
-          order_data['options'] = JSON.stringify(options);
-          addOrder("{% url 'add_order' %}", order_data);
+          order_data['options'] = options;
+          addOrder("{% url 'add_order' %}", JSON.stringify(order_data));
   }, false);
 
 }

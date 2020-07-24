@@ -23,8 +23,7 @@ class Cart_Orders(APIView):
 
     # remove the dish order
     def post(self, request):
-        num = request.session['number']
-        request.session['order_detail'].pop(num, None)
+        request.session['order_detail'].pop(json.loads(request.data), None)
         # https://stackoverflow.com/questions/2166856/modifying-dictionary-in-django-session-does-not-modify-session
         request.session.modified = True
         request.session['total_price'] = request.data['total_price']
