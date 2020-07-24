@@ -29,6 +29,11 @@ class Cart_Orders(APIView):
         request.session['total_price'] = request.data['total_price']
         return Response(status=status.HTTP_200_OK)
 
+    # checkout
+    def put(self, request):
+
+        return Response(status=status.HTTP_200_OK)
+
 def add_order(request):
     if request.method == 'POST':
         try:
