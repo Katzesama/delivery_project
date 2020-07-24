@@ -114,8 +114,21 @@ function store_info_close() {
 }
 
 function display_store_info(){
-  var data = fetchJSON('/store/');
-
+  let data = fetchJSON('/store/');
+  let contact_holder = document.getElementById("store_contact_info");
+  let wechat_num = document.createElement("span");
+  wechat_num.innerHTML = "微信号：" + data.wechat;
+  contact_holder.appendChild(wechat_num);
+  let phone = document.createElement("span");
+  phone.innerHTML = "电话：" + data.phone;
+  contact_holder.appendChild(phone);
+  let wechat_code = document.createElement("img");
+  wechat_code.class = "img-fluid px-3 px-sm-4 mt-3 mb-4";
+  wechat_code.style = "width: 25rem;";
+  wechat_code.src = data.wechatcode;
+  contact_holder.appendChild(wechat_code);
+  let open_hour_holder = document.getElementById("store_open_info");
+  // add the openning hours later
 }
 
 
@@ -246,7 +259,7 @@ function display_dish_info(url){
           e.preventDefault();
           let order_data = {};
           let options = "";
-          var elements = content_holder.getElementsByTagName("input");
+          let elements = content_holder.getElementsByTagName("input");
           for (let i = 0; i < elements.length; i++) {
                 if (elements[i].checked) {
                   options = options + " " + elements[a].value;
