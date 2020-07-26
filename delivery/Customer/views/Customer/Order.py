@@ -17,7 +17,7 @@ class Cart_Orders(APIView):
             return Response(json.dumps({'order_detail' : detail, 'total_price' : total}), status=status.HTTP_200_OK)
         except:
             request.session['order_detail'] = {}
-            request.session['total_price'] = None
+            request.session['total_price'] = 0
             request.session['number'] = 0
             return HttpResponse(status=404)
 
@@ -31,18 +31,23 @@ class Cart_Orders(APIView):
 
     # checkout
     def put(self, request):
-
+        order = Order()
+        # detail: name quantity price options
+        order.detail = json.loads(request.POST['description'])
+        order.total_price = json.loads(request.POST['name'])
         return Response(status=status.HTTP_200_OK)
 
 def add_order(request):
     if request.method == 'POST':
         try:
+            data = json.loads(request.data)
             num = request.session['number']
-            request.session['order_detail'][num] = request.data['detail']
+            request.session['order_detail'][num] = data['detail']
             request.session.modified = True
+            request.session['total_price'] = request.session['total_price'] + float(data['price'])
             request.session['number'] = request.session['number'] + 1
         except:
             request.session['order_detail'] = {}
-            request.session['total_price'] = None
+            request.session['total_price'] = 0
             request.session['number'] = 0
             return Response(status=status.HTTP_200_OK)

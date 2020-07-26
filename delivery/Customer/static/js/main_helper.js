@@ -54,13 +54,20 @@ function display_cart(){
     remove_button.addEventListener('click', function(e){
             e.preventDefault();
             let remove_info = key;
-            removeOrders("{% url 'shopping_cart' %}", JSON.stringify(remove_info));
-            order.remove();
+            removeOrders("{% url 'shopping_cart' %}", JSON.stringify(remove_info)).then(function(){
+              order.remove();
+            });
     }, false);
     let icon = document.createElement("i");
     icon.class = "fa fa-minus";
     remove_button.appendChild(icon);
   }
+
+  // checkout
+  let checkout_button = document.getElementById("checkout");
+  checkout_button.addEventListener('click', function(e){
+          checkoutOrders("{% url 'shopping_cart' %}");
+  }, false);
 }
 
 function fetchOrders(url) {
@@ -91,11 +98,26 @@ function removeOrders(url, remove_data) {
     if (response.status === 200) { // OK
       return response.json(); // return a Promise
     } else {
-      return [];
+      alert("Something went wrong: " + response.status);
     }
   });
 }
 
+function checkoutOrders(url) {
+  var request = new Request(url, {
+              method: 'PUT',
+              headers: {
+                   'Content-Type': 'application/json'
+              },
+              });
+  return fetch(request).then((response) => {
+    if (response.status === 200) { // OK
+      return response.json(); // return a Promise
+    } else {
+      alert("Something went wrong: " + response.status);
+    }
+  });
+}
 /*
 store information window popup
 */
