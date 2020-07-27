@@ -9,7 +9,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 import uuid
 
-class Cart_Orders(APIView):
+class CartOrders(APIView):
     def get(self, request):
         try:
             detail = request.session['order_detail']
@@ -23,26 +23,41 @@ class Cart_Orders(APIView):
 
     # remove the dish order
     def post(self, request):
-        request.session['order_detail'].pop(json.loads(request.data), None)
-        # https://stackoverflow.com/questions/2166856/modifying-dictionary-in-django-session-does-not-modify-session
-        request.session.modified = True
-        request.session['total_price'] = request.data['total_price']
-        return Response(status=status.HTTP_200_OK)
+        try:
+            request.session['order_detail'].pop(json.loads(request.data), None)
+            # https://stackoverflow.com/questions/2166856/modifying-dictionary-in-django-session-does-not-modify-session
+            request.session.modified = True
+            request.session['total_price'] = request.data['total_price']
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return HttpResponse(status=404)
 
     # checkout
     def put(self, request):
-        order = Order()
-        # detail: name quantity price options
-        order.detail = json.loads(request.POST['description'])
-        order.total_price = json.loads(request.POST['name'])
-        return Response(status=status.HTTP_200_OK)
+        try:
+            order = Order()
+            # detail: name quantity price options
+            # i.e. {1: {'name': 'k', 'quantity': '1', 'price' : '20', 'options' : 'coke beer'}}
+            detail = []
+            for item in request.session['order_detail']:
+                a = []
+                a.append(item['name'])
+                a.append(item['quantity'])
+                a.append(item['price'])
+                a.append(item['options'])
+                detail.append(a)
+            order.detail = json.dumps(detail)
+            order.total_price = request.session['total_price']
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return HttpResponse(status=404)
 
 def add_order(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.data)
             num = request.session['number']
-            request.session['order_detail'][num] = data['detail']
+            request.session['order_detail'][num] = data
             request.session.modified = True
             request.session['total_price'] = request.session['total_price'] + float(data['price'])
             request.session['number'] = request.session['number'] + 1
@@ -51,3 +66,7 @@ def add_order(request):
             request.session['total_price'] = 0
             request.session['number'] = 0
             return Response(status=status.HTTP_200_OK)
+
+class CheckoutOrders(APIView):
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)

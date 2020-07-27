@@ -82,7 +82,7 @@ class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     total_price = models.DecimalField(..., max_digits=6, decimal_places=2)
     ordered_time = models.DateTimeField(auto_now_add=True)
-    #store list of dish name, quantity, price (eg. ["rice", "2", "5.00"])
+    #store list of dish name quantity price options (eg. ["rice", "2", "5.00"])
     detail = models.CharField(max_length=2000, null=True, blank=False)
     deliver_address = models.CharField(max_length=500, null=True, blank=True)
     customer_phone = models.CharField(max_length=12, null=True, blank=True)
