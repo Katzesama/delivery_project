@@ -112,7 +112,7 @@ function checkoutOrders(url) {
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      return response.json(); // return a Promise
+      location.href = '/order/' + response.json(); // redirect
     } else {
       alert("Something went wrong: " + response.status);
     }
@@ -310,7 +310,7 @@ function addOrder(url, order_data) {
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      document.location.reload(true);
+      return [];
     } else {
       alert("Something went wrong: " + response.status);
     }

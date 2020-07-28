@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="zh">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'Customer/vendor/fontawesome-free/css/all.min.css'%} ">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="{% static 'Customer/css/sb-admin-2.min.css' %}">
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+          <!-- Topbar -->
+          <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+            <!-- Sidebar Toggle (Topbar) -->
+            <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+              <i class="fa fa-book"></i>
+            </button>
+
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
+
+              <!-- Nav Item - Shoppingcart -->
+              <li class="nav-item no-arrow">
+                <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
+                  <i class="fa fa-shopping-cart"></i>
+                </button>
+              </li>
+
+              <div class="topbar-divider d-none d-sm-block"></div>
+
+              <!-- Nav Item - Moreinfo -->
+              <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-info-circle" aria-hidden="true"></i>
+                </a>
+                <!-- Dropdown - More Information -->
+                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                  <a class="dropdown-item" id="store_info_link" onclick="store_info_onclick()">
+                    <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                    商家信息
+                  </a>
+                </div>
+
+              </li>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+      <!-- Begin Page Content -->
+      <div class="container-fluid">
+
+        <!-- Store_info Popup -->
+      <div class="modal align-items-center justify-content-between" id="store_info">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content card shadow">
+            <div class="card-header d-flex flex-row align-items-center">
+              <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
+              <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
+            </div>
+            <div class="card-body">
+              <h5>联系方式</h5>
+              <div class="card" id="store_contact_info">
+                <span>粥不出户</span>
+
+                <!-- dynamically adding content -->
+
+              </div>
+            </br>
+              <h5>营业时间</h5>
+              <div class="card" id="store_open_info">
+
+                <!-- dynamically adding content -->
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    <div id="dishes_holder">
+
+    <!-- dynamically adding dishes here -->
+
+    </div>
+
+      </div>
+      <!-- End of Main Content -->
+
+      </div>
+
+      </div>
+      <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+<!--
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
+      <!-- jQuery -->
+    <!-- jQuery -->
+    <script  type="text/javascript" src="{% static 'Customer/vendor/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script type="text/javascript" src="{% static 'Customer/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script type="text/javascript" src="{% static 'Customer/vendor/chart.js/Chart.min.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+	<script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
+</body>
+</html>

@@ -48,7 +48,9 @@ class CartOrders(APIView):
                 detail.append(a)
             order.detail = json.dumps(detail)
             order.total_price = request.session['total_price']
-            return Response(status=status.HTTP_200_OK)
+            order.save()
+            orderid = str(order.id)
+            return Response(json.dumps({'id': orderid}), status=status.HTTP_200_OK)
         except:
             return HttpResponse(status=404)
 
