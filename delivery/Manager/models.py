@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from decimal import Decimal
 import uuid
 import json
 
@@ -40,7 +41,7 @@ class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
     name = models.CharField(max_length=200,blank=False,null=False)
     image = models.ImageField(null=True, blank=True, upload_to="profile_pics/")
-    restaurant = models.ForeignKey(Restaurant, on_delete=models.SET_NULL)
+    restaurant = models.ForeignKey(Restaurant, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):  # __unicode__ for Python 2
         return self.name
@@ -69,7 +70,7 @@ class Dish(models.Model):
     """
     description = models.CharField(max_length=2000, null=True, blank=True)
     availability = models.BooleanField(default=True)
-    kind = models.ForeignKey(Dish, on_delete=models.CASCADE)
+    kind = models.ForeignKey(Kind, on_delete=models.CASCADE)
 
 class Option(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)

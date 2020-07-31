@@ -55,7 +55,7 @@ class OptionSerializer(serializers.ModelSerializer):
 
 
 class DishSerializer(serializers.ModelSerializer):
-    picture = serializer.ImageField(required=False)
+    picture = serializers.ImageField(required=False)
     options = serializers.SerializerMethodField()
     class Meta:
         model = Dish
@@ -84,7 +84,7 @@ class OpenTimeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ResSerializer(serializers.ModelSerializer):
-    wechatcode = serializer.ImageField(required=False)
+    wechatcode = serializers.ImageField(required=False)
     openning_times = OpenTimeSerializer(read_only=False)
     class Meta:
         model = Restaurant
@@ -92,7 +92,7 @@ class ResSerializer(serializers.ModelSerializer):
 
 class SellerSerializer(serializers.ModelSerializer):
     restaurant = ResSerializer(read_only=True)
-    image = serializer.ImageField(required=False)
+    image = serializers.ImageField(required=False)
     class Meta:
         model = Order
         fields = "__all__"

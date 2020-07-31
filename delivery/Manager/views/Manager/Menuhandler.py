@@ -1,5 +1,5 @@
-from .models import *
-from .serializer import *
+from Manager.models import *
+from Manager.serializer import *
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404, redirect
