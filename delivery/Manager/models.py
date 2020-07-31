@@ -6,8 +6,18 @@ import uuid
 import json
 
 
-class OpenningTime(models.Model):
+class Restaurant(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length = 100, default='No Name')
+    phone = models.CharField(max_length=12)
+    wechat = models.CharField(max_length=20)
+    wechatcode = models.ImageField(null=True, blank=True, upload_to="wechat_code/")
+    description = models.CharField(max_length =100)
+    image = models.ImageField(null=True, blank=True)
+    open = models.BooleanField(default=True)
 
+class OpenningTime(models.Model):
+    id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     #https://stackoverflow.com/questions/49641493/how-to-create-business-hours-via-django
     #author: Rana El-Garem
     WEEKDAYS = (
@@ -23,17 +33,7 @@ class OpenningTime(models.Model):
     weekday = models.IntegerField(choices=WEEKDAYS, unique=True)
     from_hour = models.TimeField()
     to_hour = models.TimeField()
-
-class Restaurant(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length = 100, default='No Name')
-    phone = models.CharField(max_length=12)
-    wechat = models.CharField(max_length=20)
-    wechatcode = models.ImageField(null=True, blank=True, upload_to="wechat_code/")
-    description = models.CharField(max_length =100)
-    openning_times = models.ManyToManyField(OpenningTime)
-    image = models.ImageField(null=True, blank=True)
-    open = models.BooleanField(default=True)
+    restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
 
 # Create your models here.
 class Seller(models.Model):
@@ -46,14 +46,6 @@ class Seller(models.Model):
     def __str__(self):  # __unicode__ for Python 2
         return self.name
 
-"""class Images(models.Model):
-	associated_post = models.ForeignKey(Post, on_delete=models.CASCADE)
-	img = models.ImageField(null=True, blank=True)
-
-class Image(models.Model):
-    image = models.TextField()
-    id = models.AutoField(primary_key=True)
-"""
 
 class Kind(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -63,7 +55,7 @@ class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(default='static/Manager/images/defaultimage.jpg', upload_to="dish_images/")
     name = models.CharField(max_length=200, blank=False, null=False)
-    price = models.DecimalField(..., max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
     """
     TODO!
     Remove description!
@@ -75,13 +67,13 @@ class Dish(models.Model):
 class Option(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, blank=False, null=False, default='选项')
+    name = models.CharField(max_length=200, blank=False, null=False, default=u'选项')
     # store the list in JSON
-    price = models.DecimalField(..., max_digits=5, decimal_places=2, default=Decimal('0.00'))
+    price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
 class Order(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
-    total_price = models.DecimalField(..., max_digits=6, decimal_places=2)
+    total_price = models.DecimalField(max_digits=6, decimal_places=2)
     ordered_time = models.DateTimeField(auto_now_add=True)
     #store list of dish name quantity price options (eg. ["rice", "2", "5.00"])
     detail = models.CharField(max_length=2000, null=True, blank=False)

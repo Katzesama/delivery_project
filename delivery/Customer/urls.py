@@ -3,7 +3,7 @@ from Customer.views.Customer import views, Menuhandler, Orderhandler
 from django.contrib.auth import views as auth_view
 
 urlpatterns = [
-    re_path(r'^/', views.render_menu, name='customer_menu'),
+    path('', views.render_menu, name='customer_menu'),
     re_path(r'^menu/', Menuhandler.Menu.as_view(), name='customer_menu_api'),
     re_path(r'^menu/<uuid:pk>/', Menuhandler.Dish.as_view(), name='customer_dish'),
     re_path(r'^store/', views.Store.as_view(), name='store'),
