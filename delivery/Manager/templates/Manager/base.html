@@ -87,7 +87,7 @@
             </button>
             <!-- Topbar Search -->
            <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-            action="{% url 'search_order_render' %}" method="GET">
+           onsubmit="searchOrder()" method="GET" id="searchbar">
              <div class="input-group">
                <input name='search_number' type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
                <div class="input-group-append">
@@ -118,7 +118,7 @@
                 </a>
                 <!-- Dropdown - User Information -->
                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                  <a class="dropdown-item" href="{% url 'userprofile' {{profile_id}} %}">
+                  <a class="dropdown-item" href="{% url 'user_profile' profile_id %}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     个人信息
                   </a>
@@ -156,7 +156,15 @@
 <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script> -->
-      <!-- jQuery -->
+  <script type="text/javascript">
+    function searchOrder(){
+      var search_form = document.getElementById('searchbar');
+      var input_value = search_form.getElementsByName("search_number")[0].value;
+      var action_src = "{% url 'search_order_render' 123 %}".replace(/123/, input_value);
+      search_form.action = action_src ;
+    }
+ </script>
+
     <!-- jQuery -->
     <script  type="text/javascript" src="{% static 'Manager/vendor/jquery/jquery.min.js' %}"></script>
 

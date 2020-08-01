@@ -1,9 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'Manager/base.html' %}
 
 {% block title %}主页{% endblock %}
+
+{% if user.is_authenticated %}
 
 {% block content %}
 {% load static %}
 
 
 {% endblock %}
+
+
+{% else %}
+<h1>Please <a href="{% url 'login' %}"">login</a></h1>
+<!-- end if for user is login  -->
+{% endif %}

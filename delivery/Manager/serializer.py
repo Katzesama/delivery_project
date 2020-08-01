@@ -77,25 +77,26 @@ class KindSerializer(serializers.ModelSerializer):
         serializer = DishSerializer(dishes, many=True)
         return serializer.data
 
-class OpenTimeSerializer(serializers.ModelSerializer):
-    weekdays = serializers.ChoiceField(choices=OpenningTime.WEEKDAYS)
+class SellerSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(required=False)
     class Meta:
-        model = Order
+        model = Seller
         fields = "__all__"
 
 class ResSerializer(serializers.ModelSerializer):
     wechatcode = serializers.ImageField(required=False)
-    openning_times = OpenTimeSerializer(read_only=False)
+    seller = SellerSerializer(read_only=True)
     class Meta:
         model = Restaurant
         fields = "__all__"
 
-class SellerSerializer(serializers.ModelSerializer):
+class OpenTimeSerializer(serializers.ModelSerializer):
+    weekdays = serializers.ChoiceField(choices=OpenningTime.WEEKDAYS)
     restaurant = ResSerializer(read_only=True)
-    image = serializers.ImageField(required=False)
     class Meta:
-        model = Order
+        model = OpenningTime
         fields = "__all__"
+
 
 class OrderSerializer(serializers.ModelSerializer):
     status = serializers.ChoiceField(choices=Order.ORDERSTATUS)

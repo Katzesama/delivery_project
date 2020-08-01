@@ -5,6 +5,15 @@ from decimal import Decimal
 import uuid
 import json
 
+# Create your models here.
+class Seller(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200,blank=False,null=False)
+    image = models.ImageField(null=True, blank=True, upload_to="profile_pics/")
+
+    def __str__(self):  # __unicode__ for Python 2
+        return self.name
 
 class Restaurant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -15,6 +24,7 @@ class Restaurant(models.Model):
     description = models.CharField(max_length =100)
     image = models.ImageField(null=True, blank=True)
     open = models.BooleanField(default=True)
+    seller = models.ForeignKey(Seller, null=True, blank=True, on_delete=models.SET_NULL)
 
 class OpenningTime(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
@@ -34,17 +44,6 @@ class OpenningTime(models.Model):
     from_hour = models.TimeField()
     to_hour = models.TimeField()
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
-
-# Create your models here.
-class Seller(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, editable=False, null=True, blank=True)
-    name = models.CharField(max_length=200,blank=False,null=False)
-    image = models.ImageField(null=True, blank=True, upload_to="profile_pics/")
-    restaurant = models.ForeignKey(Restaurant, null=True, on_delete=models.SET_NULL)
-
-    def __str__(self):  # __unicode__ for Python 2
-        return self.name
 
 
 class Kind(models.Model):

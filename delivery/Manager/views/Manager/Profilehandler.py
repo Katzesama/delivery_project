@@ -12,17 +12,17 @@ class UserProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
     template_name = 'editUserProfile.html'
 
-    def get(self, request, **kwargs):
+    def get(self, request, pk, **kwargs):
         try:
-            current_user_profile = Seller.objects.get(id = user_id)
+            current_user_profile = Seller.objects.get(id = pk)
         except:
             return HttpResponse(status=404)
 
         serializer = SellerSerializer(current_user_profile)
 
-        return Response({'serializer':serializer,'profile':current_user_profile})
+        return Response({'serializer':serializer})
 
-    def post(self, request, **kwargs):
+    def post(self, request, pk, **kwargs):
         current_user_profile = request.user.seller
         serializer = SellerSerializer(current_user_profile, data = request.data)
         if serializer.is_valid():
@@ -30,7 +30,7 @@ class UserProfile(APIView):
             return redirect("profile", current_user_profile.id)
 
         print(serializer.errors)
-        return Response({'serializer': serializer, 'profile': current_user_profile})
+        return Response({'serializer': serializer})
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
