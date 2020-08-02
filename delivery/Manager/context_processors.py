@@ -3,7 +3,7 @@ import uuid
 
 def get_basic_information(request):
     if request.user.is_authenticated and not request.user.is_superuser:
-        profile_id = request.user.seller.id
+        profile_id = Seller.objects.get(user = request.user).id
     else:
         profile_id = ""
 

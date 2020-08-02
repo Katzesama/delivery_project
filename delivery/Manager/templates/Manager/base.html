@@ -12,6 +12,7 @@
   <link rel="stylesheet" type="text/css" href="{% static 'Manager/css/sb-admin-2.min.css' %}">
 </head>
 
+{% if user.is_authenticated %}
 <body>
 
   <main>
@@ -177,4 +178,9 @@
     <!-- Custom Theme JavaScript -->
 	<script type="text/javascript" src="{% static 'Manager/js/sb-admin-2.js' %}"></script>
 </body>
+{% else %}
+<h1>Please <a href="{% url 'login' %}"">login</a></h1>
+<!-- end if for user is login  -->
+{% endif %}
+
 </html>

@@ -10,13 +10,13 @@ import uuid
 
 class UserProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'editUserProfile.html'
+    template_name = 'Manager/editUserProfile.html'
 
     def get(self, request, pk, **kwargs):
         try:
-            current_user_profile = Seller.objects.get(id = pk)
+            current_user_profile = Seller.objects.get(id=pk)
         except:
-            return HttpResponse(status=404)
+            return HttpResponse(status=405)
 
         serializer = SellerSerializer(current_user_profile)
 
@@ -34,17 +34,17 @@ class UserProfile(APIView):
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'editResProfile.html'
+    template_name = 'Manager/editResProfile.html'
 
     def get(self, request, **kwargs):
         try:
-            current_res_profile = request.user.seller.restaurant
+            current_res_profile = Resturant.objects.all()
         except:
             return HttpResponse(status=404)
 
         serializer = ResSerializer(current_res_profile)
 
-        return Response({'serializer':serializer,'profile':current_res_profile})
+        return Response({'serializer':serializer})
 
     def post(self, request, **kwargs):
         current_res_profile = request.user.seller.restaurant
