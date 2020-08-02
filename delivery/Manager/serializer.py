@@ -78,7 +78,7 @@ class KindSerializer(serializers.ModelSerializer):
         return serializer.data
 
 class SellerSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(required=False)
+    image = serializers.ImageField(max_length=None, use_url=True, required=False)
     class Meta:
         model = Seller
         fields = "__all__"

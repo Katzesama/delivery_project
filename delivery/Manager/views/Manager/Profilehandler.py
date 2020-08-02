@@ -16,21 +16,20 @@ class UserProfile(APIView):
         try:
             current_user_profile = Seller.objects.get(id=pk)
         except:
-            return HttpResponse(status=405)
+            return HttpResponse(status=404)
 
         serializer = SellerSerializer(current_user_profile)
 
-        return Response({'serializer':serializer})
+        return Response({'serializer':serializer},  status=status.HTTP_200_OK)
 
     def post(self, request, pk, **kwargs):
-        current_user_profile = request.user.seller
+        current_user_profile = Seller.objects.get(id=pk)
         serializer = SellerSerializer(current_user_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return redirect("profile", current_user_profile.id)
+            return redirect(serializer.data, status=status.HTTP_200_OK)
 
-        print(serializer.errors)
-        return Response({'serializer': serializer})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
@@ -44,7 +43,7 @@ class ResProfile(APIView):
 
         serializer = ResSerializer(current_res_profile)
 
-        return Response({'serializer':serializer})
+        return Response({'serializer':serializer},  status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
         current_res_profile = request.user.seller.restaurant
@@ -53,5 +52,4 @@ class ResProfile(APIView):
             serializer.save()
             return redirect("profile", current_res_profile.id)
 
-        print(serializer.errors)
-        return Response({'serializer': serializer, 'profile': current_res_profile})
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
