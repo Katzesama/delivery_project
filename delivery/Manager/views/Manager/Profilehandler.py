@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
+from rest_framework import status
 import uuid
 
 class UserProfile(APIView):
@@ -13,23 +14,22 @@ class UserProfile(APIView):
     template_name = 'Manager/editUserProfile.html'
 
     def get(self, request, pk, **kwargs):
-        try:
-            current_user_profile = Seller.objects.get(id=pk)
-        except:
-            return HttpResponse(status=404)
+        current_user_profile = get_object_or_404(Seller, id=pk)
 
         serializer = SellerSerializer(current_user_profile)
 
         return Response({'serializer':serializer},  status=status.HTTP_200_OK)
 
     def post(self, request, pk, **kwargs):
-        current_user_profile = Seller.objects.get(id=pk)
+        current_user_profile = get_object_or_404(Seller, id=pk)
+
+        print(request.data)
         serializer = SellerSerializer(current_user_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return redirect(serializer.data, status=status.HTTP_200_OK)
+            return redirect('user_profile', current_res_profile.id)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'serializer': serializer}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]

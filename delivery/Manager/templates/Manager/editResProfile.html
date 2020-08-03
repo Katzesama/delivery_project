@@ -10,7 +10,7 @@
   <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 </div>
 
-<form action="" method="POST">
+<form action="{% url 'user_profile' profile_id %}" method="POST">
     {% csrf_token %}
     {% render_form serializer %}
         <input type="submit" value = "Save">

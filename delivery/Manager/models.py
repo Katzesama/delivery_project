@@ -52,7 +52,7 @@ class Kind(models.Model):
 
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    picture = models.ImageField(default='static/Manager/images/defaultimage.jpg', upload_to="dish_images/")
+    picture = models.ImageField(null=True, blank=True, upload_to="dish_images/")
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     """
