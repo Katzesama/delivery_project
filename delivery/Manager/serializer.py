@@ -82,6 +82,14 @@ class SellerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seller
         fields = "__all__"
+        # https://stackoverflow.com/questions/46842120/django-rest-framework-error-userthis-field-is-required
+        extra_kwargs = {'user': {'required': False}}
+
+    def update(self, instance, validated_data):
+        instance.name = validated_data.get('name', instance.name)
+        instance.image = validated_data.get('image', instance.image)
+        instance.save()
+        return instance
 
 class ResSerializer(serializers.ModelSerializer):
     wechatcode = serializers.ImageField(required=False)

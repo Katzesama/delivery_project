@@ -9,11 +9,11 @@
   <h1 class="h3 mb-0 text-gray-800">商家信息</h1>
 </div>
 
-<form action="" method="POST">
+<form action="" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="">
-      <img id="imagedisplay" class="dropdown-list-image col-md-5" src="" alt="{% static 'images/defaultimage.jpg' %}">
+      <img id="imagedisplay" class="dropdown-list-image col-md-5" src="" alt="">
       <label class="btn btn-primary" for="image" style="width=auto;display:inline-block;">图片</lable>
       <input id="image" name="image" style="display:none;" type="file"/>
     </div>
@@ -34,8 +34,12 @@
   var data = {{ serializer|safe }};
   console.log(data.name);
   name_holder.value = data.name;
-  name.placeholder = "1111";
-  img.src = "";
+  if (!data.image){
+    img.src = "{% static 'Manager/images/defaultimage.jpg' %}";
+  } else {
+    img.src = data.image;
+  }
+
   // change the image when a new image is uploaded
   img_upload.addEventListener('change', function(e){
       e.preventDefault();

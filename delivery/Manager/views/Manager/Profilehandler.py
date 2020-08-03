@@ -23,14 +23,14 @@ class UserProfile(APIView):
     def post(self, request, pk, **kwargs):
         current_user_profile = get_object_or_404(Seller, id=pk)
 
-        print(request.data)
-        serializer = SellerSerializer(current_user_profile, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
+        seller_serializer = SellerSerializer(current_user_profile, data = request.data)
+        if seller_serializer.is_valid():
+            seller_serializer.save()
             return redirect('user_profile', current_user_profile.id)
+        print(seller_serializer.errors)
 
-        print(serializer.errors)
-        return Response({'serializer': serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({'serializer': seller_serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResProfile(APIView):
     renderer_classes = [TemplateHTMLRenderer]
