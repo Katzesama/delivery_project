@@ -124,7 +124,7 @@
                     个人信息
                   </a>
                   <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{% url 'logout' %}" data-toggle="modal" data-target="#logoutModal">
+                  <a class="dropdown-item" href="{% url 'logout' %}">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     登出
                   </a>
@@ -179,7 +179,9 @@
 	<script type="text/javascript" src="{% static 'Manager/js/sb-admin-2.js' %}"></script>
 </body>
 {% else %}
-<h1>Please <a href="{% url 'login' %}"">login</a></h1>
+<script type='text/javascript'>
+  window.location.href = "{% url 'logout' %}";
+</script>
 <!-- end if for user is login  -->
 {% endif %}
 
