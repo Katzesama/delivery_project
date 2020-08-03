@@ -8,9 +8,9 @@ import json
 # Create your models here.
 class Seller(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, editable=False)
     name = models.CharField(max_length=200,blank=False,null=False)
-    image = models.ImageField(null=True, blank=True, upload_to="profile_pics/")
+    image = models.ImageField(default="", null=True, blank=True, upload_to="profile_pics/")
+    user = models.ForeignKey(User, null=False, blank=False, on_delete=models.CASCADE)
 
     def __str__(self):  # __unicode__ for Python 2
         return self.name

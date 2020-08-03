@@ -11,8 +11,59 @@
 
 <form action="" method="POST">
     {% csrf_token %}
-    {% render_form serializer %}
-        <input type="submit" value = "Save">
+
+    <div class="">
+      <img id="imagedisplay" class="dropdown-list-image col-md-5" src="" alt="{% static 'images/defaultimage.jpg' %}">
+      <label class="btn btn-primary" for="image" style="width=auto;display:inline-block;">图片</lable>
+      <input id="image" name="image" style="display:none;" type="file"/>
+    </div>
+
+    <div class="">
+      <input id="name" name="name" value="">
+    </div>
+
+
+    <input type="submit" value = "Save">
 </form>
+
+<script type="text/javascript">
+  var img = document.getElementById("imagedisplay");
+  var name_holder = document.getElementById("name");
+  var img_upload = document.getElementById("image");
+
+  var data = {{ serializer|safe }};
+  console.log(data.name);
+  name_holder.value = data.name;
+  name.placeholder = "1111";
+  img.src = "";
+  // change the image when a new image is uploaded
+  img_upload.addEventListener('change', function(e){
+      e.preventDefault();
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        if (testFileType(this.files[0].type)){
+          reader.readAsDataURL(this.files[0]);
+          reader.onload = function (e) {
+            img.src = e.target.result;
+          };
+        }
+        else{
+          this.value = null;
+        }
+    }
+  }, false);
+
+  function testFileType(type) {
+    switch (type) {
+       case 'image/jpeg':
+       case 'image/jpg':
+       case 'image/gif':
+       case 'image/png':
+       return true;
+     }
+     return false;
+  }
+</script>
+
 
 {% endblock %}

@@ -67,7 +67,7 @@ const csrf_token = "{{ csrf_token }}";
           e.preventDefault();
           if (this.files && this.files[0]) {
             var reader = new FileReader();
-            if (testFileType(this.files[0])){
+            if (testFileType(this.files[0].type)){
               reader.readAsDataURL(this.files[0]);
               reader.onload = function (e) {
                 dish_pic.src = e.target.result;
