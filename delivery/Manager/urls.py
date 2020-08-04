@@ -12,10 +12,11 @@ urlpatterns = [
     re_path(r'^userprofile/(?P<pk>[0-9a-f-]+)/$', views.user_profile_render, name='user_profile'),
     re_path(r'^resprofile/api/', Profilehandler.ResProfile.as_view(), name='resprofile_api'),
     re_path(r'^resprofile/', views.res_profile_render, name='resprofile'),
+
     re_path(r'^menu/api/', Menuhandler.Menu.as_view(), name='menu_api'),
-    re_path(r'^menu/', views.menu_render, name='render_menu'),
+    re_path(r'^menu/(?P<pk>[0-9a-f-]+)/$', Menuhandler.A_Dish.as_view(), name='menu_dish'),
     re_path(r'^menu/new/', views.new_dish, name='new_dish'),
-    re_path(r'^menu/(?P<pk>[0-9a-f-]+)/$', Menuhandler.Dish.as_view(), name='menu_dish'),
+    re_path(r'^menu/', views.menu_render, name='render_menu'),
     #re_path(r'^orders/',name='order_list'),
     re_path(r'^orders/processing/api/', Ordershandler.ProceOrdersList.as_view(), name='proceorder_api'),
     re_path(r'^orders/delivery/api/', Ordershandler.DeliverOrdersList.as_view(), name='deliverorder_api'),

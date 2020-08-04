@@ -1,17 +1,17 @@
 {% extends 'Manager/base.html' %}
 
 {% block title %}菜单{% endblock %}
-
-{% load static %}
+{% load rest_framework %}
 
 {% block content %}
-const csrf_token = "{{ csrf_token }}";
+{% load static %}
 <!-- Page Heading -->
 <div>
   <h1 class="h3 mb-0 text-gray-800">菜单</h1>
 </div>
 
   <div id="holder" class="row"></div>
+
   <script type="text/javascript">
   var holder = document.getElementById("holder");
 
@@ -136,7 +136,6 @@ const csrf_token = "{{ csrf_token }}";
       let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id);
       save_button.onclick=function(){
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
-        //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
         let dish_data = {
           'name': header.innerHTML,
           'availability': dish_availability.options[dish_availability.selectedIndex].value,
@@ -158,8 +157,8 @@ const csrf_token = "{{ csrf_token }}";
 
     // add new dish
     let add_dish = document.createElement("button");
+    add_dish.setAttribute("class", "mt-2 mb-5 btn btn-primary");
     add_dish.innerHTML = '新菜';
-    add_dish.class = "mt-2 mb-5 btn btn-info";
     add_dish.onclick=function(){
       location.href = "{% url 'new_dish' %}";
     };

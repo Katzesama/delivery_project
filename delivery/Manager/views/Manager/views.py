@@ -7,11 +7,12 @@ def user_profile_render(request, pk):
 def res_profile_render(request):
     return render(request, 'Manager/editResProfile.html', {'fetch_url': './api/'})
 
-def menu_render(request):
-    return render(request, 'Manager/editMenu.html', {'fetch_url': '/menu/api/'})
-
 def new_dish(request):
     return render(request, 'Manager/addDish.html')
+
+def menu_render(request):
+    return render(request, 'Manager/editMenu.html', {'fetch_url': './api/'})
+
 
 def processorder_render(request):
     return render(request, 'Manager/orderProcessing.html', {'fetch_url': '/orders/processing/api/'})

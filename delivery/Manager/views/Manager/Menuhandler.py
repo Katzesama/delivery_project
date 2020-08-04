@@ -16,8 +16,8 @@ class Menu(APIView):
     return it as api to the html that renders the menu
     page (editMenu.html)
     """
-    def get(self, request, post_id, **kwargs):
-        if not request.user.is_authenticated():
+    def get(self, request, **kwargs):
+        if not request.user.is_authenticated:
             return redirect('login')
         else:
             menu = Dish.objects.all()
@@ -27,7 +27,7 @@ class Menu(APIView):
             return pg_obj.get_paginated_response(res.data)
 
 
-class Dish(APIView):
+class A_Dish(APIView):
     """
     Retrieve, update or delete a dish instance.
     """

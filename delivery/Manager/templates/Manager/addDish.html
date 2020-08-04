@@ -5,11 +5,9 @@
 {% load static %}
 
 {% block content %}
-const csrf_token = "{{ csrf_token }}";
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
   <h1 class="h3 mb-0 text-gray-800">菜单</h1>
-  <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>
 </div>
 
   <div id="holder" class="row">
@@ -70,7 +68,6 @@ const csrf_token = "{{ csrf_token }}";
   var save_button = document.getElementById("save_button");
   save_button.onclick=function(){
     // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
-    //"{% url 'someview' arg1=12345 %}".replace(/12345/, tmp.toString());
     let header = document.getElementById("name");
     let dish_availability = document.getElementById("availablity");
     let dish_price_num = document.getElementById("price");
