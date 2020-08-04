@@ -10,15 +10,13 @@ from rest_framework import status
 import uuid
 
 class UserProfile(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'Manager/editUserProfile.html'
 
     def get(self, request, pk, **kwargs):
         current_user_profile = get_object_or_404(Seller, id=pk)
 
         serializer = SellerSerializer(current_user_profile)
 
-        return Response({'serializer':serializer.data},  status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk, **kwargs):
         current_user_profile = get_object_or_404(Seller, id=pk)
@@ -30,7 +28,7 @@ class UserProfile(APIView):
         print(seller_serializer.errors)
 
 
-        return Response({'serializer': seller_serializer.data}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(seller_serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 class ResProfile(APIView):
     def get(self, request, **kwargs):
@@ -43,7 +41,7 @@ class ResProfile(APIView):
 
         serializer = ResSerializer(current_res_profile)
         print(serializer.data)
-        return Response(serializer.data,  status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
         try:

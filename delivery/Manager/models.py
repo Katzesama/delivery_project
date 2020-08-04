@@ -26,6 +26,10 @@ class Restaurant(models.Model):
     open = models.BooleanField(default=True)
     seller = models.ForeignKey(Seller, null=True, blank=True, on_delete=models.SET_NULL)
 
+"""
+IMPORTANT:
+can be used later if the oppening time is needed
+"""
 class OpenningTime(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     #https://stackoverflow.com/questions/49641493/how-to-create-business-hours-via-django

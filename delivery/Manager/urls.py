@@ -8,7 +8,8 @@ urlpatterns = [
     re_path(r'^logout/', auth_views.LogoutView.as_view(), name='logout'),
     re_path(r'^home/', views.home, name='home'),
 
-    re_path(r'^userprofile/(?P<pk>[0-9a-f-]+)/$', Profilehandler.UserProfile.as_view(), name='user_profile'),
+    re_path(r'^userprofile/(?P<pk>[0-9a-f-]+)/api/$', Profilehandler.UserProfile.as_view(), name='user_profile_api'),
+    re_path(r'^userprofile/(?P<pk>[0-9a-f-]+)/$', views.user_profile_render, name='user_profile'),
     re_path(r'^resprofile/api/', Profilehandler.ResProfile.as_view(), name='resprofile_api'),
     re_path(r'^resprofile/', views.res_profile_render, name='resprofile'),
     re_path(r'^menu/api/', Menuhandler.Menu.as_view(), name='menu_api'),

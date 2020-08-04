@@ -9,7 +9,7 @@
   <h1 class="h3 mb-0 text-gray-800">商家信息</h1>
 </div>
 
-<form action="" method="POST" enctype="multipart/form-data">
+<form action="{% url 'user_profile_api' profile_id%}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
     <div class="col-lg-6 mt-3 mb-3">
@@ -34,35 +34,36 @@
 </form>
 
 <script type="text/javascript">
-  var img = document.getElementById("imagedisplay");
-  var name_holder = document.getElementById("name");
-  var img_upload = document.getElementById("image");
+  function get_data_display(data){
+    var img = document.getElementById("imagedisplay");
+    var name_holder = document.getElementById("name");
+    var img_upload = document.getElementById("image");
 
-  var data = {{ serializer|safe }};
-  console.log(data.name);
-  name_holder.value = data.name;
-  if (!data.image){
-    img.src = "{% static 'Manager/images/defaultimage.jpg' %}";
-  } else {
-    img.src = data.image;
-  }
-
-  // change the image when a new image is uploaded
-  img_upload.addEventListener('change', function(e){
-      e.preventDefault();
-      if (this.files && this.files[0]) {
-        var reader = new FileReader();
-        if (testFileType(this.files[0].type)){
-          reader.readAsDataURL(this.files[0]);
-          reader.onload = function (e) {
-            img.src = e.target.result;
-          };
-        }
-        else{
-          this.value = null;
-        }
+    console.log(data.name);
+    name_holder.value = data.name;
+    if (!data.image){
+      img.src = "{% static 'Manager/images/defaultimage.jpg' %}";
+    } else {
+      img.src = data.image;
     }
-  }, false);
+
+    // change the image when a new image is uploaded
+    img_upload.addEventListener('change', function(e){
+        e.preventDefault();
+        if (this.files && this.files[0]) {
+          var reader = new FileReader();
+          if (testFileType(this.files[0].type)){
+            reader.readAsDataURL(this.files[0]);
+            reader.onload = function (e) {
+              img.src = e.target.result;
+            };
+          }
+          else{
+            this.value = null;
+          }
+      }
+    }, false);
+  }
 
   function testFileType(type) {
     switch (type) {
@@ -74,6 +75,24 @@
      }
      return false;
   }
+
+  function fetchJSON(url) {
+    var request = new Request(url, {
+                method: 'GET',
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("网页出了故障：" + response.status);
+      }
+    });
+  }
+
+  fetchJSON("{% url 'user_profile_api' profile_id %}").then(get_data_display);
 </script>
 
 
