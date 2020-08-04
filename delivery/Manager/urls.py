@@ -9,7 +9,8 @@ urlpatterns = [
     re_path(r'^home/', views.home, name='home'),
 
     re_path(r'^userprofile/(?P<pk>[0-9a-f-]+)/$', Profilehandler.UserProfile.as_view(), name='user_profile'),
-    re_path(r'^resprofile/', Profilehandler.ResProfile.as_view(), name='resprofile'),
+    re_path(r'^resprofile/api/', Profilehandler.ResProfile.as_view(), name='resprofile_api'),
+    re_path(r'^resprofile/', views.res_profile_render, name='resprofile'),
     re_path(r'^menu/api/', Menuhandler.Menu.as_view(), name='menu_api'),
     re_path(r'^menu/', views.menu_render, name='render_menu'),
     re_path(r'^menu/new/', views.new_dish, name='new_dish'),

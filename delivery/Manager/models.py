@@ -18,11 +18,11 @@ class Seller(models.Model):
 class Restaurant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length = 100, default='No Name')
-    phone = models.CharField(max_length=12)
-    wechat = models.CharField(max_length=20)
+    phone = models.CharField(max_length=20)
+    wechat = models.CharField(max_length=100)
     wechatcode = models.ImageField(default="", null=True, blank=True, upload_to="wechat_code/")
-    description = models.CharField(max_length =100)
-    image = models.ImageField(null=True, blank=True)
+    description = models.CharField(max_length =100, null=True, blank=True)
+    image = models.ImageField(default="", null=True, blank=True, upload_to='res_pics/')
     open = models.BooleanField(default=True)
     seller = models.ForeignKey(Seller, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -52,7 +52,7 @@ class Kind(models.Model):
 
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    picture = models.ImageField(null=True, blank=True, upload_to="dish_images/")
+    picture = models.ImageField(default="", null=True, blank=True, upload_to="dish_images/")
     name = models.CharField(max_length=200, blank=False, null=False)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     """

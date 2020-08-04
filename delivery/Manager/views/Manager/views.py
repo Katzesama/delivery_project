@@ -1,6 +1,12 @@
 from django.shortcuts import render
 
 # Create your views here.
+def user_profile_render(request):
+    return render(request, 'Manager/editUserProfile.html', {'fetch_url': '/menu/api/'})
+
+def res_profile_render(request):
+    return render(request, 'Manager/editResProfile.html', {'fetch_url': './api/'})
+
 def menu_render(request):
     return render(request, 'Manager/editMenu.html', {'fetch_url': '/menu/api/'})
 

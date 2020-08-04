@@ -33,24 +33,29 @@ class UserProfile(APIView):
         return Response({'serializer': seller_serializer.data}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResProfile(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'Manager/editResProfile.html'
-
     def get(self, request, **kwargs):
         try:
-            current_res_profile = Resturant.objects.all()
+            current_user = request.user
+            current_seller = get_object_or_404(Seller, user=current_user)
+            current_res_profile = Restaurant.objects.get(seller=current_seller)
         except:
             return HttpResponse(status=404)
 
         serializer = ResSerializer(current_res_profile)
-
-        return Response({'serializer':serializer},  status=status.HTTP_200_OK)
+        print(serializer.data)
+        return Response(serializer.data,  status=status.HTTP_200_OK)
 
     def post(self, request, **kwargs):
-        current_res_profile = request.user.seller.restaurant
+        try:
+            current_user = request.user
+            current_seller = get_object_or_404(Seller, user=current_user)
+            current_res_profile = Restaurant.objects.get(seller=current_seller)
+        except:
+            return HttpResponse(status=404)
+
         serializer = ResSerializer(current_res_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return redirect("profile", current_res_profile.id)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return redirect("resprofile")
+        print(serializer.errors)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
