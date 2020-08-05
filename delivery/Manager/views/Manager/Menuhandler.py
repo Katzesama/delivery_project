@@ -31,7 +31,7 @@ class A_Dish(APIView):
     """
     Retrieve, update or delete a dish instance.
     """
-    def get_object(self, pk):
+    def get_object(self, request, pk):
         if not request.user.is_authenticated:
             return redirect('login')
         else:
@@ -41,12 +41,12 @@ class A_Dish(APIView):
                 return HttpResponse(status=404)
 
     def get(self, request, pk):
-        dish = self.get_object(pk)
+        dish = self.get_object(request, pk)
         serializer = DishSerializer(dish)
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):
-        dish = self.get_object(pk)
+        dish = self.get_object(request, pk)
         dish = DishSerializer(dish, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -54,7 +54,7 @@ class A_Dish(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
-        dish = self.get_object(pk)
+        dish = self.get_object(request, pk)
         dish = DishSerializer(dish, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -66,7 +66,7 @@ class A_Dish(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        dish = self.get_object(pk)
+        dish = self.get_object(request, pk)
         dish.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -91,13 +91,13 @@ class Dish_Kind(APIView):
         return Response(status=status.HTTP_200_OK)
 
     def delete():
-        kind = self.get_object(pk)
+        kind = self.get_object(request, pk)
         kind.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class Dish_Option(APIView):
-    def get_object(self, pk):
+    def get_object(self, request, pk):
         if not request.user.is_authenticated:
             return redirect('login')
         else:
@@ -106,15 +106,25 @@ class Dish_Option(APIView):
             except Option.DoesNotExist:
                 return HttpResponse(status=404)
 
-    def get():
-        return Response(status=status.HTTP_200_OK)
+    # get the option
+    def get(self, request, pk):
+        option = self.get_object(request, pk)
+        serializer = OptionSerializer(option)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # edit an option
     def post():
         return Response(status=status.HTTP_200_OK)
 
-    def put():
-        return
-    def delete():
-        option = self.get_object(pk)
+    # create an option
+    def put(self, request, pk):
+        print("aaaaaaa");
+        current_dish = get_object_or_404(Dish, id=pk)
+        request.data['dish'] = current_dish
+        serializer = OptionSerializer(data = request.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request, pk):
+        option = self.get_object(request, pk)
         option.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

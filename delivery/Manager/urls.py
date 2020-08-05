@@ -18,6 +18,8 @@ urlpatterns = [
     re_path(r'^menu/create_new/', views.create_new_dish, name='create_new_dish'),
     re_path(r'^menu/new/(?P<pk>[0-9a-f-]+)/$', views.new_dish, name='new_dish'),
     re_path(r'^menu/', views.menu_render, name='render_menu'),
+    re_path(r'^menu/(?P<pk>[0-9a-f-]+)/options/$', Menuhandler.Dish_Option.as_view(), name='dish_option'),
+    re_path(r'^menu/option/(?P<ordernum>\d+)/$', Menuhandler.Dish_Option.as_view(), name='handle_option'),
 
     #re_path(r'^orders/',name='order_list'),
     re_path(r'^orders/processing/api/', Ordershandler.ProceOrdersList.as_view(), name='proceorder_api'),

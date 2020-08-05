@@ -48,24 +48,6 @@ class PaginationModel(PageNumberPagination):
         return Response(response_body)
 
 
-class OptionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Option
-        fields = "__all__"
-
-
-class DishSerializer(serializers.ModelSerializer):
-    picture = serializers.ImageField(required=False)
-    options = serializers.SerializerMethodField()
-    class Meta:
-        model = Dish
-        fields = "__all__"
-
-    def get_options(self, obj):
-        options = Option.objects.filter(dish=obj)
-        serializer = OptionSerializer(options, many=True)
-        return serializer.data
-
 class KindSerializer(serializers.ModelSerializer):
     dishes = serializers.SerializerMethodField()
     class Meta:
@@ -76,6 +58,26 @@ class KindSerializer(serializers.ModelSerializer):
         dishes = Dish.objects.filter(kind=obj)
         serializer = DishSerializer(dishes, many=True)
         return serializer.data
+
+
+class DishSerializer(serializers.ModelSerializer):
+    picture = serializers.ImageField(required=False)
+    options = serializers.SerializerMethodField()
+    kind = KindSerializer(read_only=True)
+    class Meta:
+        model = Dish
+        fields = "__all__"
+
+    def get_options(self, obj):
+        options = Option.objects.filter(dish=obj)
+        serializer = OptionSerializer(options, many=True)
+        return serializer.data
+
+class OptionSerializer(serializers.ModelSerializer):
+    dish = DishSerializer(read_only=True)
+    class Meta:
+        model = Option
+        fields = "__all__"
 
 class SellerSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True, required=False)

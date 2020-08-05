@@ -10,7 +10,7 @@
   <h1 class="h3 mb-0 text-gray-800">添加新菜</h1>
 </div>
 
-  <div id="holder" class="row">
+<div id="holder" class="row">
 
     <div class="card shadow mb-4">
       <div class="card-header py-3">
@@ -35,7 +35,7 @@
             <br>
             <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">选项 <a href="#" data-toggle="modal" data-target="#OptionModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
             <div id="options">
-
+              <p><span>i</span><span class="ml-5">1.00</span><a>x</a></p>
             </div>
           </div>
           <button id="save_button" class="mr-2 mt-2 btn btn-primary">储存</button>
@@ -64,27 +64,35 @@
 
     <!-- Option Modal-->
     <div class="modal fade" id="OptionModal" tabindex="-1">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">添加选项</h5>
+            <h5 class="modal-title">添加选项</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body">
-            <form action="{% url 'user_profile_api' profile_id%}" method="PUT">
-              <input type="hidden" value="{{dish_id}}" name="dish_id">
-              <input name="detail" placeholder="输入选项细节" required>
-              <br>
-              <input class="mt-3 btn btn-primary" type="submit" value = "添加">
-            <form>
+            <form id="option_form" action="{% url 'dish_option' dish_id %}" method="PUT">
+              <div>
+                <label>选项细节</label>
+                <input name="detail" placeholder="输入选项细节" required>
+              </div>
+
+              <div>
+                <label>选项价格</label>
+                <input name="price" placeholder="0.00" type="number" step=".01" required>
+              </div>
+              <input class="mt-3 btn btn-primary" data-dismiss="modal" type="submit" value="添加">
+            </form>
+
           </div>
         </div>
       </div>
     </div>
 
   </div>
+
   <script type="text/javascript">
 
   var dish_pic = document.getElementById("picture");
@@ -125,10 +133,16 @@
       dish_data["picture"] = pic_upload.value;
     }
     //JSON.stringify(img);
-    let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, {{dish_id}});
+    let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, "{{dish_id}}");
     updateDish(dish_url, dish_data);
   };
 
+  var option_form = document.getElementById("option_form");
+  option_form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    console.log("aaaaaa");
+    fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+  }, false);
 
   function testFileType(type) {
     switch (type) {
@@ -157,6 +171,75 @@
       }
     });
   }
+
+
+  // only options will be updated at the current page
+  function get_data_display(data){
+    var options = document.getElementById("options");
+    //clear the older content from last request
+    while(options.hasChildNodes()){
+			options.removeChild(options.firstChild);
+    }
+
+    for (var i = 0; i < data.options.length; i++) {
+      let option_holder = document.createElement("p");
+      options.appendChild(option_holder);
+
+      let option_detail = document.createElement("span");
+      option_detail.innerHTML(data.options[i].detail);
+      option_holder.appendChild(option_detail);
+
+      let option_price = document.createElement("span");
+      option_price.class="ml-3";
+      option_price.innerHTML = data.options[i].price;
+      option_holder.appendChild(option_price);
+
+      let del_option = document.createElement("a");
+      del_option.class = "text-danger";
+      let icon = document.createElement("i");
+      icon.class = "fa fa-minus";
+      del_option.appendChild(icon);
+      option_holder.appendChild(del_option);
+      let option_id = data.options[i].id;
+      del_option.addEventListener('click', function(e){
+          e.preventDefault();
+          let option_url = "{% url 'handle_option' 123 %}".replace(/123/, option_id);
+          var request = new Request(option_url, {
+                      method: 'DELETE',
+                      headers: {
+                      },
+                      });
+          return fetch(request).then((response) => {
+            if (response.status === 204) { // OK
+              // https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+              option_holder.remove();
+            } else {
+              alert("网页出了问题: " + response.status);
+            }
+          });
+      }, false);
+
+    }
+
+  }
+
+  function fetchJSON(url) {
+    var request = new Request(url, {
+                method: 'GET',
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("网页出了故障：" + response.status);
+      }
+    });
+  }
+
+  fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
 
 </script>
 
