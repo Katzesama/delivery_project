@@ -57,20 +57,15 @@ class Kind(models.Model):
 class Dish(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     picture = models.ImageField(default="", null=True, blank=True, upload_to="dish_images/")
-    name = models.CharField(max_length=200, blank=False, null=False)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    """
-    TODO!
-    Remove description!
-    """
-    description = models.CharField(max_length=2000, null=True, blank=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     availability = models.BooleanField(default=True)
-    kind = models.ForeignKey(Kind, on_delete=models.CASCADE)
+    kind = models.ForeignKey(Kind, null=True, blank=True, on_delete=models.SET_NULL)
 
 class Option(models.Model):
     id = models.AutoField(auto_created=True, primary_key=True, editable=False)
     dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200, blank=False, null=False, default=u'选项')
+    detail = models.CharField(max_length=200, blank=False, null=False, default=u'选项')
     # store the list in JSON
     price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 

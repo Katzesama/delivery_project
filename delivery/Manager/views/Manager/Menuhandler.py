@@ -32,7 +32,7 @@ class A_Dish(APIView):
     Retrieve, update or delete a dish instance.
     """
     def get_object(self, pk):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('login')
         else:
             try:
@@ -46,13 +46,75 @@ class A_Dish(APIView):
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):
-        dish = DishSerializer(data=request.data)
+        dish = self.get_object(pk)
+        dish = DishSerializer(dish, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def put(self, request, pk):
+        dish = self.get_object(pk)
+        dish = DishSerializer(dish, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            try:
+                del request.session['dish_id']
+            except:
+                pass
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
         dish = self.get_object(pk)
         dish.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Dish_Kind(APIView):
+    def get_object(self, pk):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        else:
+            try:
+                return Kind.objects.get(id=pk)
+            except Kind.DoesNotExist:
+                return HttpResponse(status=404)
+
+    def get():
+        return Response(status=status.HTTP_200_OK)
+
+    def post():
+        return Response(status=status.HTTP_200_OK)
+
+    def put():
+        return Response(status=status.HTTP_200_OK)
+
+    def delete():
+        kind = self.get_object(pk)
+        kind.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class Dish_Option(APIView):
+    def get_object(self, pk):
+        if not request.user.is_authenticated:
+            return redirect('login')
+        else:
+            try:
+                return Option.objects.get(id=pk)
+            except Option.DoesNotExist:
+                return HttpResponse(status=404)
+
+    def get():
+        return Response(status=status.HTTP_200_OK)
+
+    def post():
+        return Response(status=status.HTTP_200_OK)
+
+    def put():
+        return
+    def delete():
+        option = self.get_object(pk)
+        option.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

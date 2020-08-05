@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from Manager.models import Dish
 
 # Create your views here.
 def user_profile_render(request, pk):
@@ -7,8 +8,17 @@ def user_profile_render(request, pk):
 def res_profile_render(request):
     return render(request, 'Manager/editResProfile.html', {'fetch_url': './api/'})
 
-def new_dish(request):
-    return render(request, 'Manager/addDish.html')
+def create_new_dish(request):
+    try:
+        dish_id = request.session['dish_id']
+    except:
+        dish = Dish.objects.create()
+        dish_id = dish.id
+        request.session['dish_id'] = str(dish_id)
+    return redirect('new_dish', dish_id)
+
+def new_dish(request, pk):
+    return render(request, 'Manager/addDish.html', {'dish_id': pk})
 
 def menu_render(request):
     return render(request, 'Manager/editMenu.html', {'fetch_url': './api/'})
