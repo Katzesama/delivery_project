@@ -49,15 +49,9 @@ class PaginationModel(PageNumberPagination):
 
 
 class KindSerializer(serializers.ModelSerializer):
-    dishes = serializers.SerializerMethodField()
     class Meta:
         model = Dish
         fields = "__all__"
-
-    def get_dishes(self, obj):
-        dishes = Dish.objects.filter(kind=obj)
-        serializer = DishSerializer(dishes, many=True)
-        return serializer.data
 
 
 class DishSerializer(serializers.ModelSerializer):
@@ -74,10 +68,10 @@ class DishSerializer(serializers.ModelSerializer):
         return serializer.data
 
 class OptionSerializer(serializers.ModelSerializer):
-    dish = DishSerializer(read_only=True)
     class Meta:
         model = Option
         fields = "__all__"
+        extra_kwargs = {'dish': {'required': False}}
 
 class SellerSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True, required=False)

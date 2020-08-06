@@ -38,8 +38,11 @@
               <p><span>i</span><span class="ml-5">1.00</span><a>x</a></p>
             </div>
           </div>
-          <button id="save_button" class="mr-2 mt-2 btn btn-primary">储存</button>
+          <br>
 
+      </div>
+      <div class="card-footer">
+      <button id="save_button" class="mr-2 mt-2 btn btn-primary">储存</button>
       </div>
     </div>
 
@@ -63,7 +66,7 @@
     </div>
 
     <!-- Option Modal-->
-    <div class="modal fade" id="OptionModal" tabindex="-1">
+    <div class="modal fade" id="OptionModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -72,16 +75,16 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body">
-            <form id="option_form" action="{% url 'dish_option' dish_id %}" method="PUT">
-              <div>
+          <div class="cardbody">
+            <form id="option_form" method="PUT">
+              <div class="form-group">
                 <label>选项细节</label>
-                <input name="detail" placeholder="输入选项细节" required>
+                <input id="option_detail" name="detail" placeholder="输入选项细节" required>
               </div>
 
-              <div>
+              <div class="form-group">
                 <label>选项价格</label>
-                <input name="price" placeholder="0.00" type="number" step=".01" required>
+                <input id="option_price" name="price" placeholder="0.00" type="number" min="0" step=".01" required>
               </div>
               <input class="mt-3 btn btn-primary" data-dismiss="modal" type="submit" value="添加">
             </form>
@@ -90,6 +93,9 @@
         </div>
       </div>
     </div>
+
+
+
 
   </div>
 
@@ -140,8 +146,9 @@
   var option_form = document.getElementById("option_form");
   option_form.addEventListener('submit', function (e) {
     e.preventDefault();
-    console.log("aaaaaa");
-    fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+    let url ="{% url 'dish_option' 123 %}".replace(/123/, "{{dish_id}}");
+    addOption(url);
+    return false;
   }, false);
 
   function testFileType(type) {
@@ -153,6 +160,29 @@
        return true;
      }
      return false;
+  }
+
+  function addOption(url){
+    let data = {
+      'detail': document.getElementById("option_detail").value,
+      'price': document.getElementById("option_price").value
+    };
+    var request = new Request(url, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data),
+                });
+    console.log(request);
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);// return a Promise
+      } else {
+        alert("网页出了问题: " + response.status);
+      }
+    });
   }
 
   function updateDish(url, dish_data) {
@@ -186,18 +216,18 @@
       options.appendChild(option_holder);
 
       let option_detail = document.createElement("span");
-      option_detail.innerHTML(data.options[i].detail);
+      option_detail.innerHTML = data.options[i].detail;
       option_holder.appendChild(option_detail);
 
       let option_price = document.createElement("span");
-      option_price.class="ml-3";
+      option_price.setAttribute('class', "ml-3");
       option_price.innerHTML = data.options[i].price;
       option_holder.appendChild(option_price);
 
       let del_option = document.createElement("a");
-      del_option.class = "text-danger";
+      del_option.setAttribute('class', "ml-3 text-danger");
       let icon = document.createElement("i");
-      icon.class = "fa fa-minus";
+      icon.setAttribute('class', "fa fa-minus");
       del_option.appendChild(icon);
       option_holder.appendChild(del_option);
       let option_id = data.options[i].id;
@@ -207,6 +237,7 @@
           var request = new Request(option_url, {
                       method: 'DELETE',
                       headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
                       },
                       });
           return fetch(request).then((response) => {
