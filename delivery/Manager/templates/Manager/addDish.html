@@ -35,7 +35,6 @@
             <br>
             <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">选项 <a href="#" data-toggle="modal" data-target="#OptionModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
             <div id="options">
-              <p><span>i</span><span class="ml-5">1.00</span><a>x</a></p>
             </div>
           </div>
           <br>
@@ -75,7 +74,7 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="cardbody">
+          <div class="modal-body">
             <form id="option_form" method="PUT">
               <div class="form-group">
                 <label>选项细节</label>
@@ -86,7 +85,7 @@
                 <label>选项价格</label>
                 <input id="option_price" name="price" placeholder="0.00" type="number" min="0" step=".01" required>
               </div>
-              <input class="mt-3 btn btn-primary" data-dismiss="modal" type="submit" value="添加">
+              <button class="mt-3 btn btn-primary" form="option_form" type="submit">添加</button>
             </form>
 
           </div>
@@ -175,10 +174,11 @@
                 },
                 body: JSON.stringify(data),
                 });
-    console.log(request);
     return fetch(request).then((response) => {
       if (response.status === 200) { // OK
-        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);// return a Promise
+        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+        document.getElementById("option_detail").value = "";
+        document.getElementById("option_price").value = "";
       } else {
         alert("网页出了问题: " + response.status);
       }
