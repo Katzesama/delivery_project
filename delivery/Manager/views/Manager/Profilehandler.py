@@ -50,7 +50,6 @@ class ResProfile(APIView):
             current_res_profile = Restaurant.objects.get(seller=current_seller)
         except:
             return HttpResponse(status=404)
-
         serializer = ResSerializer(current_res_profile, data = request.data)
         if serializer.is_valid():
             serializer.save()

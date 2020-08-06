@@ -42,7 +42,7 @@ class A_Dish(APIView):
     def post(self, request, pk):
         dish = self.get_object(pk)
         data = json.loads(request.body)
-        dish = DishSerializer(dish, data = data)
+        serializer = DishSerializer(dish, data = data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -51,7 +51,7 @@ class A_Dish(APIView):
     def put(self, request, pk):
         dish = self.get_object(pk)
         data = json.loads(request.body)
-        dish = DishSerializer(dish, data = data)
+        serializer = DishSerializer(dish, data = data)
         if serializer.is_valid():
             serializer.save()
             try:
@@ -59,6 +59,7 @@ class A_Dish(APIView):
             except:
                 pass
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -67,7 +68,7 @@ class A_Dish(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class Dish_Kind(APIView):
+class Dish_Kinds(APIView):
     def get_object(self, pk):
         try:
             return Kind.objects.get(id=pk)
@@ -75,13 +76,14 @@ class Dish_Kind(APIView):
             return HttpResponse(status=404)
 
     def get(self, request):
-        kind = self.get_object(pk)
-        serializer = KindSerializer(kind)
+        kinds = Kind.objects.all()
+        serializer = KindSerializer(kinds, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request):
         kind = Kind.objects.create()
         data = json.loads(request.body)
+        print(data)
         serializer = KindSerializer(kind, data=data)
         if serializer.is_valid():
             serializer.save()

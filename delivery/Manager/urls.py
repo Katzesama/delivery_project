@@ -17,8 +17,9 @@ urlpatterns = [
     re_path(r'^menu/(?P<pk>[0-9a-f-]+)/$', Menuhandler.A_Dish.as_view(), name='menu_dish'),
     re_path(r'^menu/create_new/', views.create_new_dish, name='create_new_dish'),
     re_path(r'^menu/new/(?P<pk>[0-9a-f-]+)/$', views.new_dish, name='new_dish'),
-    re_path(r'^menu/(?P<pk>[0-9a-f-]+)/options/$', Menuhandler.Option_Dish.as_view(), name='dish_option'),
+    re_path(r'^menu/(?P<pk>[0-9a-f-]+)/option/$', Menuhandler.Option_Dish.as_view(), name='dish_option'),
     re_path(r'^menu/option/(?P<pk>\d+)/$', Menuhandler.Option_Dish.as_view(), name='handle_option'),
+    re_path(r'^menu/kinds/', Menuhandler.Dish_Kinds.as_view(), name='handle_kinds'),
     re_path(r'^menu/', views.menu_render, name='render_menu'),
 
     #re_path(r'^orders/',name='order_list'),
