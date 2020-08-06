@@ -1,0 +1,278 @@
+{% extends 'Manager/base.html' %}
+
+{% block title %}添加新菜{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+  <h1 class="h3 mb-0 text-gray-800">添加新菜</h1>
+</div>
+
+<div id="holder" class="row">
+
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <input class="h6 m-0 font-weight-bold text-primary" id="name" placeholder="输入菜名" required>
+        <select class="mt-2" name="kind" id="dish_kind">
+        </select>
+      </div>
+      <div class="card-body row no-gutters align-items-center">
+        <div class="col-md-5 mr-2">
+          <label for="image_upload" style="width=auto;display:inline-block;cursor:pointer;">
+            <img class="dropdown-list-image col-md-11" id="picture" src="{% static 'Manager/images/defaultimage.jpg'%} ">
+          </label>
+          <input id="image_upload" style="display:none;" type="file"/>
+        </div>
+          <div class="col-6 mr-2">
+            <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$<input class="card shadow" id="price" placeholder="输入价格" style="display:inline-block;" required></div>
+
+            <select class="mr-2 mt-2" name="availability" id="availablity">
+                <option value=false>售罄</option>
+                <option value=true selected="selected">有货</option>
+              </select>
+            <br>
+            <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">选项 <a href="#" data-toggle="modal" data-target="#OptionModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
+            <div id="options">
+              <p><span>i</span><span class="ml-5">1.00</span><a>x</a></p>
+            </div>
+          </div>
+          <br>
+
+      </div>
+      <div class="card-footer">
+      <button id="save_button" class="mr-2 mt-2 btn btn-primary">储存</button>
+      </div>
+    </div>
+
+    <!-- Kind Modal-->
+    <div class="modal fade" id="KindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <a class="btn btn-primary" href="login.html">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option Modal-->
+    <div class="modal fade" id="OptionModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">添加选项</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+          <div class="cardbody">
+            <form id="option_form" method="PUT">
+              <div class="form-group">
+                <label>选项细节</label>
+                <input id="option_detail" name="detail" placeholder="输入选项细节" required>
+              </div>
+
+              <div class="form-group">
+                <label>选项价格</label>
+                <input id="option_price" name="price" placeholder="0.00" type="number" min="0" step=".01" required>
+              </div>
+              <input class="mt-3 btn btn-primary" data-dismiss="modal" type="submit" value="添加">
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+  <script type="text/javascript">
+
+  var dish_pic = document.getElementById("picture");
+  // button to upload the new image
+  var pic_upload = document.getElementById("image_upload");
+  // change the image when a new image is uploaded
+  pic_upload.addEventListener('change', function(e){
+      e.preventDefault();
+      if (this.files && this.files[0]) {
+        var reader = new FileReader();
+        if (testFileType(this.files[0].type)){
+          reader.readAsDataURL(this.files[0]);
+          reader.onload = function (e) {
+            dish_pic.src = e.target.result;
+          };
+        }
+        else{
+          this.value = null;
+        }
+    }
+  }, false);
+
+  // buttons to manipulate the dish info
+  var save_button = document.getElementById("save_button");
+  save_button.onclick=function(){
+    // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
+    let header = document.getElementById("name");
+    let dish_availability = document.getElementById("availablity");
+    let dish_price_num = document.getElementById("price");
+    let dish_kind = document.getElementById("dish_kind");
+    let dish_data = {
+      'name': header.innerHTML,
+      'availability': dish_availability.options[dish_availability.selectedIndex].value,
+      'price': dish_price_num.innerHTML,
+      'kind': dish_kind.options[dish_kind.selectedIndex].value
+    };
+    if (pic_upload.value != null){
+      dish_data["picture"] = pic_upload.value;
+    }
+    //JSON.stringify(img);
+    let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, "{{dish_id}}");
+    updateDish(dish_url, dish_data);
+  };
+
+  var option_form = document.getElementById("option_form");
+  option_form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let url ="{% url 'dish_option' 123 %}".replace(/123/, "{{dish_id}}");
+    addOption(url);
+    return false;
+  }, false);
+
+  function testFileType(type) {
+    switch (type) {
+       case 'image/jpeg':
+       case 'image/jpg':
+       case 'image/gif':
+       case 'image/png':
+       return true;
+     }
+     return false;
+  }
+
+  function addOption(url){
+    let data = {
+      'detail': document.getElementById("option_detail").value,
+      'price': document.getElementById("option_price").value
+    };
+    var request = new Request(url, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data),
+                });
+    console.log(request);
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);// return a Promise
+      } else {
+        alert("网页出了问题: " + response.status);
+      }
+    });
+  }
+
+  function updateDish(url, dish_data) {
+    var request = new Request(url, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                data: dish_data,
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("Something went wrong: " + response.status);
+      }
+    });
+  }
+
+
+  // only options will be updated at the current page
+  function get_data_display(data){
+    var options = document.getElementById("options");
+    //clear the older content from last request
+    while(options.hasChildNodes()){
+			options.removeChild(options.firstChild);
+    }
+
+    for (var i = 0; i < data.options.length; i++) {
+      let option_holder = document.createElement("p");
+      options.appendChild(option_holder);
+
+      let option_detail = document.createElement("span");
+      option_detail.innerHTML = data.options[i].detail;
+      option_holder.appendChild(option_detail);
+
+      let option_price = document.createElement("span");
+      option_price.setAttribute('class', "ml-3");
+      option_price.innerHTML = data.options[i].price;
+      option_holder.appendChild(option_price);
+
+      let del_option = document.createElement("a");
+      del_option.setAttribute('class', "ml-3 text-danger");
+      let icon = document.createElement("i");
+      icon.setAttribute('class', "fa fa-minus");
+      del_option.appendChild(icon);
+      option_holder.appendChild(del_option);
+      let option_id = data.options[i].id;
+      del_option.addEventListener('click', function(e){
+          e.preventDefault();
+          let option_url = "{% url 'handle_option' 123 %}".replace(/123/, option_id);
+          var request = new Request(option_url, {
+                      method: 'DELETE',
+                      headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                      },
+                      });
+          return fetch(request).then((response) => {
+            if (response.status === 204) { // OK
+              // https://stackoverflow.com/questions/3715047/how-to-reload-a-page-using-javascript
+              option_holder.remove();
+            } else {
+              alert("网页出了问题: " + response.status);
+            }
+          });
+      }, false);
+
+    }
+
+  }
+
+  function fetchJSON(url) {
+    var request = new Request(url, {
+                method: 'GET',
+                headers: {
+                     'Content-Type': 'application/json'
+                },
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        return response.json(); // return a Promise
+      } else {
+        alert("网页出了故障：" + response.status);
+      }
+    });
+  }
+
+  fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+
+</script>
+
+
+{% endblock %}

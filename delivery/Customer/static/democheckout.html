@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin 2 - Dashboard</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="backtomenu" class="btn btn-link rounded-circle mr-3">
+            <i class="fa fa-arrow-left"></i> <span>回到菜单</span>
+          </button>
+
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto mr-auto">
+            <a class="d-flex justify-content-center" href="#">
+              <div class="sidebar-brand-text mx-3">粥不出户</div>
+            </a>
+
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+
+          <!-- Payment Popup -->
+        <div class="modal align-items-center justify-content-between" id="store_info">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content card shadow">
+              <div class="card-header d-flex flex-row align-items-center">
+                <a id="payment_close" class="mr-5" onclick="payment_close()"> <i class="fa fa-times"></i> </a>
+
+              </div>
+              <div class="card-body">
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      <div id="custormer_info_holder">
+
+        <div class="row">
+          <div class="mr-5">
+            <h5 class="mt-3 mb-3 text-gray-800">联系方式</h5>
+          </div>
+          <div>
+            <h6>邮箱</h6>
+            <h6>电话号码</h6>
+          </div>
+        </div>
+
+        <hr class="dropdown-divider">
+
+        <div class="row">
+          <div class="mr-5">
+            <h5 class="mt-3 mb-3 text-gray-800">地址</h5>
+          </div>
+          <div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr class="dropdown-divider">
+
+      <div id="orderdetail_holder" class="row">
+        <div class="mr-5">
+          <h5 class="mt-3 mb-3 text-gray-800">订单详情</h5>
+        </div>
+        <div>
+        </div>
+      </div>
+
+      <div id="buttons_holder" class="row justify-content-center">
+        <button id="pay_button" class="btn btn-success col-md-3">结账</button>
+      </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+
+</body>
+
+</html>

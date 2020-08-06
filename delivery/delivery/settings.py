@@ -15,6 +15,13 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = (
+    os.path.join(os.path.dirname(BASE_DIR), 'media')
+)
+
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_URL = '/static/'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -31,12 +38,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'Manager.apps.ManagerConfig',
+    'Customer.apps.CustomerConfig',
+    'django.contrib.admin',
+    'rest_framework',
+    'django_cleanup.apps.CleanupConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -62,6 +74,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Manager.context_processors.get_basic_information',
+                'Manager.context_processors.get_dish_types',
             ],
         },
     },
@@ -112,6 +126,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+SESSION_COOKIE_AGE = 3600
 
 
 # Static files (CSS, JavaScript, Images)

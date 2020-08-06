@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>SB Admin 2 - Dashboard</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    <!-- Sidebar -->
+    <ul class="navbar-nav sidebar accordion" id="category">
+
+      <!-- Sidebar - Brand -->
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+        <div class="sidebar-brand-text mx-3">粥不出户</div>
+      </a>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider my-0">
+
+      <div id="category_holder">
+      <!-- Nav Item - Rice -->
+      <li class="nav-item active">
+        <a class="nav-link" href="#rice">
+          <span>煲仔饭</span></a>
+      </li>
+
+      <!-- Nav Item - Soup -->
+      <li class="nav-item active">
+        <a class="nav-link" href="#soup">
+          <span>汤</span></a>
+      </li>
+
+    </div>
+
+      <!-- Divider -->
+      <hr class="sidebar-divider d-none d-md-block">
+
+      <!-- Sidebar Toggler (Sidebar) -->
+      <div class="text-center d-none d-md-inline">
+        <button class="rounded-circle border-0" id="sidebarToggle"></button>
+      </div>
+
+    </ul>
+    <!-- End of Sidebar -->
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        <!-- Shopping cart Sidebar -->
+        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:30%;">
+          <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;">
+
+          <!-- Nav Item - Close button -->
+          <li class="nav-item active" style="padding-bottom:30px;">
+            <a id="cart_close" class="mb-5" onclick="cart_close()"> <i class="fa fa-times"></i></a>
+          </li>
+
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active">
+              <h6 class="font-weight-bold text-primary">订单</h6>
+          </li>
+
+          <!-- Nav Item - Checkout -->
+          <li class="nav-item active">
+            <a id="checkout" class="mt-2 mb-4 btn btn-primary" href="#">结账</a>
+          </li>
+
+
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active justify-content-between">
+              <div><span  class='mr-2'>1x</span><span class='mr-5'>烤鸡</span></div>
+              <div><span>¥25.00</span><a class="ml-5" href="#"><i class="fa fa-minus"></i></a></div>
+          </li>
+
+          <!-- Divider -->
+          <hr class="dropdown-divider">
+
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active justify-content-between">
+              <div><span  class='mr-2'>1x</span><span class='mr-5'>烤鸡</span></div>
+              <div><span>¥25.00</span><a class="ml-5" href="#"><i class="fa fa-minus"></i></a></div>
+          </li>
+
+          <!-- Divider -->
+          <hr class="dropdown-divider">
+
+          <!-- Nav Item - Dashboard -->
+          <li class="nav-item active justify-content-between">
+            <div><span  class='mr-2'>1x</span><span>超级无敌好吃的大碗饭</span></div>
+                <div><span>¥25.00<a class="ml-5" href="#"><i class="fa fa-minus"></i></a></span></div>
+          </li>
+
+          <!-- Divider -->
+          <hr class="dropdown-divider">
+
+        </ul>
+      </nav>
+        <script>
+          function cart_close() {
+            var cart_info = document.getElementById("shopping_cart");
+
+            cart_info.style.display = "none";
+          }
+        </script>
+        <!-- End of Shopping cart Sidebar -->
+
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+          <!-- Sidebar Toggle (Topbar) -->
+          <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+            <i class="fa fa-book"></i>
+          </button>
+
+          <!-- Topbar Navbar -->
+          <ul class="navbar-nav ml-auto">
+
+            <!-- Nav Item - Shoppingcart -->
+            <li class="nav-item no-arrow mx-1">
+              <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
+                <i class="fa fa-shopping-cart"></i>
+              </button>
+            </li>
+
+            <div class="topbar-divider d-none d-sm-block"></div>
+
+            <!-- Nav Item - Moreinfo -->
+            <li class="nav-item dropdown no-arrow">
+              <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-info-circle" aria-hidden="true"></i>
+              </a>
+              <!-- Dropdown - More Information -->
+              <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item" id="store_info_link" onclick="store_info_onclick()">
+                  <i class="fas fa-home fa-sm fa-fw mr-2 text-gray-400"></i>
+                  商家信息
+                </a>
+              </div>
+
+              <script>
+                function store_info_onclick() {
+                  var store_info = document.getElementById("store_info");
+                    store_info.style.display = "block";
+                  var body = document.getElementById("page-top");
+                  body.classList.add("modal-open");
+                }
+
+                function cart_onclick() {
+                  var cart_info = document.getElementById("shopping_cart");
+
+                  if (cart_info.style.display === "none") {
+                    cart_info.style.display = "block";
+                  }
+                }
+              </script>
+
+            </li>
+          </ul>
+
+        </nav>
+        <!-- End of Topbar -->
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+
+          <!-- Store_info Popup -->
+        <div class="modal align-items-center justify-content-between" id="store_info">
+          <div class="modal-dialog modal-dialog-scrollable">
+            <div class="modal-content card shadow">
+              <div class="card-header d-flex flex-row align-items-center">
+                <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
+                <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
+              </div>
+              <div class="card-body">
+                <h5>联系方式</h5>
+                <div class="card">
+                  <span>粥不出户</span>
+                  <span>微信号：zhoubuchuhu</span>
+                  <span>电话：604-587-9897</span>
+                  <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;" src="https://techcrunch.com/wp-content/uploads/2017/02/chrome-qr-reader1.png" alt="">
+                </div>
+              </br>
+                <h5>营业时间</h5>
+                <div class="card">
+                  <span>星期日	11:00 AM - 03:50 PM</span>
+                  <span>星期一	11:00 AM - 03:50 PM</span>
+                  <span>星期二	11:00 AM - 03:50 PM</span>
+                  <span class="font-weight-bold">星期三	11:00 AM - 03:50 PM</span>
+                  <span>星期四	11:00 AM - 03:50 PM</span>
+                  <span>星期五	11:00 AM - 03:50 PM</span>
+                  <span>星期六	11:00 AM - 03:50 PM</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+          function store_info_close() {
+            var store_info = document.getElementById("store_info");
+
+            store_info.style.display = "none";
+            var body = document.getElementById("page-top");
+            body.classList.remove("modal-open");
+          }
+        </script>
+
+        <script>
+        function dish_info() {
+          var dish_info = document.getElementById("dish_info");
+            dish_info.style.display = "block";
+          var body = document.getElementById("page-top");
+          body.classList.add("modal-open");
+        }
+        </script>
+
+        <!-- Dish_info Popup -->
+      <div class="modal align-items-center justify-content-between" id="dish_info">
+        <div class="modal-dialog modal-dialog-scrollable">
+          <div class="modal-content card shadow">
+            <div class="card-header d-flex flex-row align-items-center">
+              <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
+              <h6 class="m-0 font-weight-bold text-primary">菜名</h6>
+            </div>
+            <div class="card-body">
+              <img class="dropdown-list-image col-md-12" src="https://omnivorescookbook.com/wp-content/uploads/2015/03/1502_Clay-Pot-Chicken-Rice_004-1.jpg">
+              <div>
+                <h5 class="mt-3">选项</h5>
+                <div class="d-flex">
+                  <div>
+                  <input type="checkbox" name="option1" value="可乐">
+                  </div>
+                  <div class="col-md-11">
+                  <label class="d-flex justify-content-between" for="option1">
+                    <span>可乐</span>
+                    <div><span>+$0.6</span></div>
+                  </label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>
+                  <input type="checkbox" name="option2" value="啤酒">
+                  </div>
+                  <div class="col-md-11">
+                  <label class="d-flex justify-content-between" for="option2">
+                    <span>啤酒</span>
+                    <div><span>+$0.6</span></div>
+                  </label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <div>
+                  <input type="checkbox" name="option3" value="水牛奶">
+                  </div>
+                  <div class="col-md-11">
+                  <label class="d-flex justify-content-between" for="option3">
+                    <span>顺德来的超级好喝水牛奶</span>
+                    <div><span>+$0.6</span></div>
+                  </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-header d-flex flex-row align-items-center justify-content-between">
+              <div class="d-flex flex-row">
+                <a class="mr-2" id="dish_quan_minus"><i class="fa fa-minus"></i></a>
+                <input class="text-center" id="dish_quantity" value="1" type="number" style="width: 2em;">
+                <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
+              </div>
+              <button class="btn btn-primary">添加 - $<span id="dish_total_price"></span></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+      function change_dish_quantity(){
+        let minus_dish_button = document.getElementById("dish_quan_minus");
+        let plus_dish_button = document.getElementById("dish_quan_plus");
+        let dish_quantity = document.getElementById("dish_quantity");
+        let total_price_tag = document.getElementById("dish_total_price");
+        let dish_price = 20.67;
+        let total_price = dish_price;
+
+        dish_quantity.addEventListener('change', function(){
+          total_price = parseInt(dish_quantity.value, 10) * dish_price;
+          total_price_tag.innerHTML = total_price.toFixed(2);
+        }, false);
+
+        minus_dish_button.addEventListener('click', function(){
+          if (parseInt(dish_quantity.value, 10) > 1){
+            dish_quantity.value = parseInt(dish_quantity.value, 10) - 1;
+            total_price = parseInt(dish_quantity.value, 10) * dish_price;
+            total_price_tag.innerHTML = total_price.toFixed(2);
+          }
+        }, false);
+
+        plus_dish_button.addEventListener('click', function(){
+          dish_quantity.value = parseInt(dish_quantity.value, 10) + 1;
+          total_price = parseInt(dish_quantity.value, 10) * dish_price;
+          total_price_tag.innerHTML = total_price.toFixed(2);
+        }, false);
+      }
+
+      change_dish_quantity();
+
+        function dish_info_close() {
+          var dish_info = document.getElementById("dish_info");
+
+          dish_info.style.display = "none";
+          var body = document.getElementById("page-top");
+          body.classList.remove("modal-open");
+        }
+      </script>
+      <div id="dishes_holder">
+        <!-- Rice Section-->
+        <div id="rice" class="row">
+        <div style="flex-basis:100%;">
+          <h1 class="h3 mb-3 text-gray-800">煲仔饭</h1>
+        </div>
+
+          <!-- Dish -->
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card shadow">
+            <button class="btn" onclick="dish_info()">
+            <div class="card-body row no-gutters align-items-center">
+              <div class="col-md-10 mr-2">
+                <img class="dropdown-list-image col-md-12" src="https://omnivorescookbook.com/wp-content/uploads/2015/03/1502_Clay-Pot-Chicken-Rice_004-1.jpg">
+              </div>
+                <div class="col-6 mr-2">
+                  <h6 class="mt-3 font-weight-bold text-primary">滑鸡煲仔饭</h6>
+                  <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$13.00</div>
+                </div>
+
+            </div>
+          </button>
+          </div>
+        </div>
+
+          <!-- Dish -->
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card shadow">
+            <button class="btn" onclick="dish_info()">
+            <div class="card-body row no-gutters align-items-center">
+              <div class="col-md-10 mr-2">
+                <img class="dropdown-list-image col-md-12" src="https://img.lovepik.com/photo/50021/0692.jpg_wh860.jpg">
+              </div>
+                <div class="col-6 mr-2">
+                    <h6 class="mt-3 font-weight-bold text-primary">腊肉煲仔饭</h6>
+                  <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$15.00</div>
+                </div>
+
+            </div>
+          </button>
+          </div>
+        </div>
+
+        <!-- Dish -->
+        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card shadow">
+          <button class="btn" onclick="dish_info()">
+          <div class="card-body row no-gutters align-items-center">
+            <div class="col-md-10 mr-2">
+              <img class="dropdown-list-image col-md-12" src="https://img0.jxcaipu.com/recipe/74/1e/5babb6_720.jpg?ver=1">
+            </div>
+              <div class="col-6 mr-2">
+                  <h6 class="mt-3 font-weight-bold text-primary">靓汤</h6>
+                <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$10.00</div>
+              </div>
+
+          </div>
+        </button>
+        </div>
+      </div>
+
+      <!-- Dish -->
+      <div class="col-xl-3 col-md-6 mb-4">
+      <div class="card shadow">
+        <button class="btn" onclick="dish_info()">
+        <div class="card-body row no-gutters align-items-center">
+          <div class="col-md-10 mr-2">
+            <img class="dropdown-list-image col-md-12" src="https://img0.jxcaipu.com/recipe/74/1e/5babb6_720.jpg?ver=1">
+          </div>
+            <div class="col-6 mr-2">
+                <h6 class="mt-3 font-weight-bold text-primary">靓汤</h6>
+              <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$10.00</div>
+            </div>
+
+        </div>
+      </button>
+      </div>
+    </div>
+
+        </div>
+
+
+
+        <!-- Soup Section-->
+        <div id="soup" class="row">
+          <div style="flex-basis:100%;">
+            <h1 class="h3 mb-3 text-gray-800">汤</h1>
+          </div>
+
+          <!-- Dish -->
+          <div class="col-xl-3 col-md-6 mb-4">
+          <div class="card shadow">
+            <button class="btn" onclick="dish_info()">
+            <div class="card-body row no-gutters align-items-center">
+              <div class="col-md-10 mr-2">
+                <img class="dropdown-list-image col-md-12" src="https://img0.jxcaipu.com/recipe/74/1e/5babb6_720.jpg?ver=1">
+              </div>
+                <div class="col-6 mr-2">
+                    <h6 class="mt-3 font-weight-bold text-primary">靓汤</h6>
+                  <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$10.00</div>
+                </div>
+
+            </div>
+          </button>
+          </div>
+        </div>
+
+        </div>
+
+      </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      <!-- Footer -->
+      <footer class="sticky-footer bg-white">
+        <div class="container my-auto">
+          <div class="copyright text-center my-auto">
+            <span>Copyright &copy; Your Website 2019</span>
+          </div>
+        </div>
+      </footer>
+      <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+  <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login.html">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript-->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for all pages-->
+  <script src="js/sb-admin-2.min.js"></script>
+
+  <!-- Page level plugins -->
+  <script src="vendor/chart.js/Chart.min.js"></script>
+
+  <!-- Page level custom scripts -->
+  <script src="js/demo/chart-area-demo.js"></script>
+  <script src="js/demo/chart-pie-demo.js"></script>
+
+</body>
+
+</html>
