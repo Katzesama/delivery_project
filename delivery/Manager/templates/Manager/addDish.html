@@ -221,7 +221,7 @@
 
       let option_price = document.createElement("span");
       option_price.setAttribute('class', "ml-3");
-      option_price.innerHTML = data.options[i].price;
+      option_price.innerHTML = "$" + data.options[i].price;
       option_holder.appendChild(option_price);
 
       let del_option = document.createElement("a");
