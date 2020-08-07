@@ -64,7 +64,7 @@ class DishSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_options(self, obj):
-        options = Option.objects.filter(dish=obj)
+        options = Option.objects.filter(dish=obj).order_by('id')
         serializer = OptionSerializer(options, many=True)
         return serializer.data
 

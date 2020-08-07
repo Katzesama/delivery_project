@@ -90,6 +90,14 @@
       if_open.checked = false;
     }
 
+    if_open.onclick = function(){
+      if (this.checked){
+        this.value = true;
+      } else {
+        this.value = false;
+      }
+    };
+
     console.log(data.image);
     if (!data.image){
       img.src = "{% static 'Manager/images/defaultimage.jpg' %}";

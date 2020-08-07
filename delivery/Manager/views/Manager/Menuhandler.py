@@ -18,7 +18,7 @@ class Menu(APIView):
     page (editMenu.html)
     """
     def get(self, request, **kwargs):
-        menu = Dish.objects.all()
+        menu = Dish.objects.all().order_by('name')
         pg_obj=PaginationModel()
         pg_res=pg_obj.paginate_queryset(queryset=menu, request=request)
         res=DishSerializer(instance=pg_res, many=True)
@@ -31,7 +31,7 @@ class A_Dish(APIView):
     """
 
     permission_classes = [IsAuthenticated]
-    
+
     def get_object(self, pk):
         try:
             return Dish.objects.get(id=pk)

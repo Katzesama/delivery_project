@@ -27,8 +27,8 @@
             <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$<input class="card shadow" id="dish_price" type="number" min="0" step=".01" placeholder="输入价格" style="display:inline-block;" required></div>
 
             <select class="mr-2 mt-2" name="availability" id="availablity">
-                <option value=false>售罄</option>
-                <option value=true selected="selected">有货</option>
+                <option value="False">售罄</option>
+                <option value="True" selected="selected">有货</option>
               </select>
               <div>
                 <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">分类 <a href="#" data-toggle="modal" data-target="#KindModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
@@ -111,7 +111,6 @@
   var dish_pic = document.getElementById("picture");
   // button to upload the new image
   var pic_upload = document.getElementById("image_upload");
-  var pic_file = "";
   // change the image when a new image is uploaded
   pic_upload.addEventListener('change', function(e){
       e.preventDefault();
@@ -121,7 +120,6 @@
           reader.readAsDataURL(this.files[0]);
           reader.onload = function (e) {
             dish_pic.src = e.target.result;
-            pic_file = e.target.result;
           };
         }
         else{
@@ -140,10 +138,12 @@
     let dish_kind = document.getElementById("dish_kind");
     let dish_data = new FormData();
     dish_data.append('name', header.value);
-    dish_data.append('availablity', dish_availability.options[dish_availability.selectedIndex].value);
+    dish_data.append('availability', dish_availability.options[dish_availability.selectedIndex].value);
     dish_data.append('price',  dish_price_num.value);
     dish_data.append('kind', dish_kinds.options[dish_kinds.selectedIndex].value);
-    dish_data.append('picture', pic_upload.files[0]);
+    if (pic_upload.value != ""){
+      dish_data.append('picture', pic_upload.files[0]);
+    }
 
     let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, "{{dish_id}}");
     updateDish(dish_url, dish_data);
