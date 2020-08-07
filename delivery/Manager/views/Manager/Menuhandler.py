@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
+from rest_framework.parsers import MultiPartParser, FormParser
 import uuid
 
 
@@ -28,6 +29,7 @@ class A_Dish(APIView):
     """
     Retrieve, update or delete a dish instance.
     """
+
     def get_object(self, pk):
         try:
             return Dish.objects.get(id=pk)
@@ -50,10 +52,16 @@ class A_Dish(APIView):
 
     def put(self, request, pk):
         dish = self.get_object(pk)
-        data = json.loads(request.body)
-        serializer = DishSerializer(dish, data = data)
+        data = request.data
+        if 'kind' in data.keys():
+            kind = Kind.objects.get(id=data['kind'])
+            dish.kind = kind
+            dish.save()
+
+        serializer = DishSerializer(dish, data=request.data)
         if serializer.is_valid():
             serializer.save()
+            print(serializer.data)
             try:
                 del request.session['dish_id']
             except:

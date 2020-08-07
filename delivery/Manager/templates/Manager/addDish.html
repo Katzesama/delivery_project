@@ -111,6 +111,7 @@
   var dish_pic = document.getElementById("picture");
   // button to upload the new image
   var pic_upload = document.getElementById("image_upload");
+  var pic_file = "";
   // change the image when a new image is uploaded
   pic_upload.addEventListener('change', function(e){
       e.preventDefault();
@@ -120,6 +121,7 @@
           reader.readAsDataURL(this.files[0]);
           reader.onload = function (e) {
             dish_pic.src = e.target.result;
+            pic_file = e.target.result;
           };
         }
         else{
@@ -136,38 +138,39 @@
     let dish_availability = document.getElementById("availablity");
     let dish_price_num = document.getElementById("dish_price");
     let dish_kind = document.getElementById("dish_kind");
-    let dish_data = {
-      'name': header.value,
-      'availability': dish_availability.options[dish_availability.selectedIndex].value,
-      'price': dish_price_num.value,
-      'kind': dish_kinds.options[dish_kinds.selectedIndex].value
-    };
-    if (pic_upload.value != null){
-      var reader = new FileReader();
-      dish_data["picture"] = reader.readAsDataURL(pic_upload.files[0]);
-    }
+    let dish_data = new FormData();
+    dish_data.append('name', header.value);
+    dish_data.append('availablity', dish_availability.options[dish_availability.selectedIndex].value);
+    dish_data.append('price',  dish_price_num.value);
+    dish_data.append('kind', dish_kinds.options[dish_kinds.selectedIndex].value);
+    dish_data.append('picture', pic_upload.files[0]);
 
-    console.log(dish_data);
     let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, "{{dish_id}}");
     updateDish(dish_url, dish_data);
   };
 
+
   function updateDish(url, dish_data) {
-    var request = new Request(url, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRFToken': '{{ csrf_token }}'
-                },
-                body: JSON.stringify(dish_data),
-                });
-    return fetch(request).then((response) => {
-      if (response.status === 200) { // OK
-        location.href = "{% url 'render_menu' %}"; // redirect to menu page
-      } else {
-        alert("Something went wrong: " + response.status);
-      }
-    });
+
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (request.readyState==4) {
+            try {
+                if (request.status==200) {
+                    location.href = "{% url 'render_menu' %}";
+                  }
+                else{
+                  alert("网页出了问题: " + this.responseXML);
+                }
+            }
+            catch(e) {
+                alert("传送出了问题: " + e.name);
+            }
+        }
+    };
+    request.open("PUT", url);
+    request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+    request.send(dish_data);
   }
 
 

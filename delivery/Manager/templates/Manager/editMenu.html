@@ -183,7 +183,7 @@
     // https://stackoverflow.com/questions/30864011/display-only-some-of-the-page-numbers-by-django-pagination
     // page number buttons
     for (var i = 0; i < data.count; i++) {
-      let page_button = cocument.createElement("button");
+      let page_button = document.createElement("button");
       page_button.class = "btn btn-light text-grey-600";
       page_button.style = "width=auto;display:inline-block;";
       page_button.innerHTML = i.toString();

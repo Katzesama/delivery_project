@@ -31,15 +31,15 @@ class PaginationModel(PageNumberPagination):
             type = "menu"
         else:
             type = "orders"
-        response_body = OrderedDict([
-            ("query", type),
-            ("count", self.page.paginator.count),
-            ("current", self.page.number),
-            ("size", self.page_size),
-            ("next", self.get_next_link()),
-            ("previous", self.get_previous_link()),
-            (type, data)
-        ])
+        response_body = {
+            "query": type,
+            "count": self.page.paginator.count,
+            "current": self.page.number,
+            "size": self.page_size,
+            "next": self.get_next_link(),
+            "previous": self.get_previous_link(),
+            type: data,
+        }
 
         if self.get_previous_link() is None:
             del response_body["previous"]
@@ -50,7 +50,7 @@ class PaginationModel(PageNumberPagination):
 
 class KindSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dish
+        model = Kind
         fields = "__all__"
 
 
