@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
-from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
 import uuid
 
 
@@ -30,6 +30,8 @@ class A_Dish(APIView):
     Retrieve, update or delete a dish instance.
     """
 
+    permission_classes = [IsAuthenticated]
+    
     def get_object(self, pk):
         try:
             return Dish.objects.get(id=pk)
@@ -58,7 +60,7 @@ class A_Dish(APIView):
             dish.kind = kind
             dish.save()
 
-        serializer = DishSerializer(dish, data=request.data)
+        serializer = DishSerializer(dish, data=data)
         if serializer.is_valid():
             serializer.save()
             print(serializer.data)
@@ -77,6 +79,9 @@ class A_Dish(APIView):
 
 
 class Dish_Kinds(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return Kind.objects.get(id=pk)
@@ -101,6 +106,9 @@ class Dish_Kinds(APIView):
 
 
 class Option_Dish(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return Option.objects.get(id=pk)

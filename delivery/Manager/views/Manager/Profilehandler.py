@@ -7,10 +7,11 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 import uuid
 
 class UserProfile(APIView):
-
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk, **kwargs):
         current_user_profile = get_object_or_404(Seller, id=pk)
 
@@ -19,18 +20,22 @@ class UserProfile(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, pk, **kwargs):
-        current_user_profile = get_object_or_404(Seller, id=pk)
+        if request.user.is_authenticated:
+            current_user_profile = get_object_or_404(Seller, id=pk)
 
-        seller_serializer = SellerSerializer(current_user_profile, data = request.data)
-        if seller_serializer.is_valid():
-            seller_serializer.save()
-            return redirect('user_profile', current_user_profile.id)
-        print(seller_serializer.errors)
+            seller_serializer = SellerSerializer(current_user_profile, data = request.data)
+            if seller_serializer.is_valid():
+                seller_serializer.save()
+                return redirect('user_profile', current_user_profile.id)
+            print(seller_serializer.errors)
 
 
-        return Response(seller_serializer.data, status=status.HTTP_400_BAD_REQUEST)
+            return Response(seller_serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_403_BAD_REQUEST)
 
 class ResProfile(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, **kwargs):
         try:
             current_user = request.user

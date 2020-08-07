@@ -9,6 +9,7 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 from django.db.models import Q
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 import uuid
 
 class HisOrdersList(APIView):
@@ -50,6 +51,9 @@ class OrderDetail(APIView):
     """
     Retrieve, update an order instance.
     """
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         if not request.user.is_authenticated():
             return redirect('login')
