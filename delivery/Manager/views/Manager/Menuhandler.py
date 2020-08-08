@@ -45,7 +45,7 @@ class A_Dish(APIView):
 
     def post(self, request, pk):
         dish = self.get_object(pk)
-        data = json.loads(request.body)
+        data = request.data
         serializer = DishSerializer(dish, data = data)
         if serializer.is_valid():
             serializer.save()
@@ -63,7 +63,6 @@ class A_Dish(APIView):
         serializer = DishSerializer(dish, data=data)
         if serializer.is_valid():
             serializer.save()
-            print(serializer.data)
             try:
                 del request.session['dish_id']
             except:

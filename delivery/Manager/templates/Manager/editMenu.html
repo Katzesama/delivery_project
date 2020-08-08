@@ -60,12 +60,15 @@
     for (var i = 0; i < data.menu.length; i++) {
 
       let dish_id = data.menu[i].id;
-
       // most outter container of the dish section
+      let container = document.createElement("div");
+      container.setAttribute("class", "col-md-8 mr-3 mb-4");
+      holder.appendChild(container);
+
       let dish = document.createElement("div");
-      dish.setAttribute("class", "card shadow mb-4");
+      dish.setAttribute("class", "card");
       dish.id = "dish_" + dish_id;
-      holder.appendChild(dish);
+      container.appendChild(dish);
 
       // add header to the dish section
       let header_ct = document.createElement("div");
@@ -83,13 +86,13 @@
       dish.appendChild(body);
       // display dish picture
       let pic_holder = document.createElement("div");
-      pic_holder.setAttribute("class", "col-md-5 mr-2");
+      pic_holder.setAttribute("class", "col-md-5  mr-3");
       body.appendChild(pic_holder);
       let pic_upload_label = document.createElement("label");
-      pic_upload_label.style = "width=auto;display:inline-block;cursor:pointer;";
+      pic_upload_label.style = "display:inline-block;cursor:pointer;";
       pic_holder.appendChild(pic_upload_label);
       let dish_pic = document.createElement("img");
-      dish_pic.setAttribute("class", "dropdown-list-image col-md-11");
+      dish_pic.setAttribute("class", "dropdown-list-image card-img");
       if (data.menu[i].picture){
         dish_pic.src = data.menu[i].picture;
       } else {
@@ -139,12 +142,12 @@
       dish_info.appendChild(dish_price);
       let dish_price_num = document.createElement("input");
       dish_price_num.setAttribute("class", "shadow");
-      dish_price_num.style = "display:inline-block";
+      dish_price_num.style = "display:inline-block;width:auto;";
       dish_price_num.value = data.menu[i].price;
       dish_price_num.type = "number";
       dish_price_num.min = "0";
       dish_price_num.step = "0.01";
-      dish_price_num.placeholder = "输入价格";
+      dish_price_num.placeholder = "0.00";
       dish_price.appendChild(dish_price_num);
 
       // select the availability of the dish
@@ -213,15 +216,14 @@
       let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, dish_id);
       save_button.onclick=function(){
         // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
-        let dish_data = {
-          'name': header.innerHTML,
-          'availability': dish_availability.options[dish_availability.selectedIndex].value,
-          'price': dish_price_num.innerHTML,
-        };
-        if (pic_upload.value != null){
-          dish_data["picture"] = pic_upload.value;
+        let dish_data = new FormData();
+        dish_data.append('name', header.value);
+        dish_data.append('availability', dish_availability.options[dish_availability.selectedIndex].value);
+        dish_data.append('price',  dish_price_num.value);
+        if (pic_upload.value != ""){
+          dish_data.append('picture', pic_upload.files[0]);
         }
-        //JSON.stringify(img);
+
         updateDish(dish_url, dish_data);
       };
       del_button.onclick=function(){
@@ -259,7 +261,7 @@
 
     // https://stackoverflow.com/questions/30864011/display-only-some-of-the-page-numbers-by-django-pagination
     // page number buttons
-    for (var i = 1; i <= data.total_pages; i++) {
+    for (let i = 1; i <= data.total_pages; i++) {
       let page_button = document.createElement("button");
       page_button.setAttribute("class", "btn btn-light text-grey-600");
       page_button.style = "width=auto;display:inline-block;";
@@ -270,7 +272,7 @@
       }
       else if (i > data.current - 3 || i < data.current + 3) {
         page_button.onclick = function(){
-          get_data_display('./api/?page=' + i.toString());
+          get_data_display('./api/?page=' + i);
         };
         footer.appendChild(page_button);
       }
@@ -377,20 +379,25 @@ function appendOption(holder, option_data){
 }
 
 function updateDish(url, dish_data) {
-  var request = new Request(url, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json'
-              },
-              data: dish_data,
-              });
-  return fetch(request).then((response) => {
-    if (response.status === 200) { // OK
-      return response.json(); // return a Promise
-    } else {
-      alert("Something went wrong: " + response.status);
-    }
-  });
+  var request = new XMLHttpRequest();
+  request.onreadystatechange = function () {
+      if (request.readyState==4) {
+          try {
+              if (request.status==200) {
+                  console.log(request.data);
+                }
+              else{
+                alert("网页出了问题: " + this.responseXML);
+              }
+          }
+          catch(e) {
+              alert("传送出了问题: " + e.name);
+          }
+      }
+  };
+  request.open("POST", url);
+  request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+  request.send(dish_data);
 }
 
 
