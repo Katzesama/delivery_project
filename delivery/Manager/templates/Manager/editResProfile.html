@@ -11,7 +11,7 @@
 
 <form action="{% url 'resprofile_api' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <div class="col-lg-6 mt-3 mb-3">
+    <div class="col-md-10 mt-3 mb-3">
       <label>商店图片</label>
       <div class="col-md-5 mr-2">
           <label for="image" style="width=auto;display:inline-block;cursor:pointer;">
@@ -21,27 +21,27 @@
       </div>
     </div>
 
-      <div class="form-group col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label for="name">商店名称</label>
         <input id="name" name="name" value="" class="form-inline" required>
       </div>
 
-      <div class="form-group col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label for="phone">电话号码</label>
         <input id="phone" name="phone" type="tel" value="" class="form-inline" required>
       </div>
 
-      <div class="form-group col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label for="description">商店简介</label>
-        <input id="description" name="description" style="height=300px;" value="" class="form-inline">
+        <textarea id="description" name="description" rows="4" class="form-inline"></textarea>
       </div>
 
-      <div class="form-group col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label for="wechat">微信号</label>
         <input id="wechat" name="wechat" value="" class="form-inline" required>
       </div>
 
-      <div class="col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label>微信二维码</label>
         <div class="col-md-5 mr-2">
             <label for="wechatcode" style="width=auto;display:inline-block;cursor:pointer;">
@@ -51,7 +51,7 @@
         </div>
       </div>
 
-      <div class="form-group col-lg-6 mt-3 mb-3">
+      <div class="col-md-10 mt-3 mb-3">
         <label for="open">是否营业中</label>
         <input id="open" name="open" type="checkbox" class="form-inline">
       </div>
@@ -89,6 +89,14 @@
       if_open.value = false;
       if_open.checked = false;
     }
+
+    if_open.onclick = function(){
+      if (this.checked){
+        this.value = true;
+      } else {
+        this.value = false;
+      }
+    };
 
     console.log(data.image);
     if (!data.image){

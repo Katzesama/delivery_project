@@ -14,9 +14,7 @@
 
     <div class="card shadow mb-4">
       <div class="card-header py-3">
-        <input class="h6 m-0 font-weight-bold text-primary" id="name" placeholder="输入菜名" required>
-        <select class="mt-2" name="kind" id="dish_kind">
-        </select>
+        <input class="h6 m-0 font-weight-bold text-primary" id="dish_name" placeholder="输入菜名" required>
       </div>
       <div class="card-body row no-gutters align-items-center">
         <div class="col-md-5 mr-2">
@@ -26,13 +24,18 @@
           <input id="image_upload" style="display:none;" type="file"/>
         </div>
           <div class="col-6 mr-2">
-            <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$<input class="card shadow" id="price" placeholder="输入价格" style="display:inline-block;" required></div>
+            <div class="h5 mb-2 mt-2 font-weight-bold text-gray-800">$<input class="card shadow" id="dish_price" type="number" min="0" step=".01" placeholder="输入价格" style="display:inline-block;" required></div>
 
             <select class="mr-2 mt-2" name="availability" id="availablity">
-                <option value=false>售罄</option>
-                <option value=true selected="selected">有货</option>
+                <option value="False">售罄</option>
+                <option value="True" selected="selected">有货</option>
               </select>
-            <br>
+              <div>
+                <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">分类 <a href="#" data-toggle="modal" data-target="#KindModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
+                <select id="dish_kinds">
+                </select>
+              </div>
+            <hr>
             <h5 class="h5 mb-2 mt-3 text-gray-800 align-items-center">选项 <a href="#" data-toggle="modal" data-target="#OptionModal" class="h6 text-primary"><i class="fa fa-plus"></i></a></h5>
             <div id="options">
             </div>
@@ -41,24 +44,29 @@
 
       </div>
       <div class="card-footer">
-      <button id="save_button" class="mr-2 mt-2 btn btn-primary">储存</button>
+      <button id="save_button" type="submit" class="mr-2 mt-2 btn btn-primary">储存</button>
       </div>
     </div>
 
     <!-- Kind Modal-->
-    <div class="modal fade" id="KindModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+    <div class="modal fade" id="KindModal" tabindex="-1">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+            <h5 class="modal-title">菜单分类</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <a class="btn btn-primary" href="login.html">Logout</a>
+          <div class="modal-body">
+            <form id="kind_form" method="PUT">
+              <div class="form-group">
+                <label>分类</label>
+                <input id="kind_name" name="name" placeholder="输入分类" required>
+              </div>
+
+              <button class="mt-3 btn btn-primary" form="kind_form" type="submit">添加</button>
+            </form>
           </div>
         </div>
       </div>
@@ -124,23 +132,47 @@
   var save_button = document.getElementById("save_button");
   save_button.onclick=function(){
     // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
-    let header = document.getElementById("name");
+    let header = document.getElementById("dish_name");
     let dish_availability = document.getElementById("availablity");
-    let dish_price_num = document.getElementById("price");
+    let dish_price_num = document.getElementById("dish_price");
     let dish_kind = document.getElementById("dish_kind");
-    let dish_data = {
-      'name': header.innerHTML,
-      'availability': dish_availability.options[dish_availability.selectedIndex].value,
-      'price': dish_price_num.innerHTML,
-      'kind': dish_kind.options[dish_kind.selectedIndex].value
-    };
-    if (pic_upload.value != null){
-      dish_data["picture"] = pic_upload.value;
+    let dish_data = new FormData();
+    dish_data.append('name', header.value);
+    dish_data.append('availability', dish_availability.options[dish_availability.selectedIndex].value);
+    dish_data.append('price',  dish_price_num.value);
+    dish_data.append('kind', dish_kinds.options[dish_kinds.selectedIndex].value);
+    if (pic_upload.value != ""){
+      dish_data.append('picture', pic_upload.files[0]);
     }
-    //JSON.stringify(img);
+
     let dish_url = "{% url 'menu_dish' 123 %}".replace(/123/, "{{dish_id}}");
     updateDish(dish_url, dish_data);
   };
+
+
+  function updateDish(url, dish_data) {
+
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function () {
+        if (request.readyState==4) {
+            try {
+                if (request.status==200) {
+                    location.href = "{% url 'render_menu' %}";
+                  }
+                else{
+                  alert("网页出了问题: " + this.responseXML);
+                }
+            }
+            catch(e) {
+                alert("传送出了问题: " + e.name);
+            }
+        }
+    };
+    request.open("PUT", url);
+    request.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+    request.send(dish_data);
+  }
+
 
   var option_form = document.getElementById("option_form");
   option_form.addEventListener('submit', function (e) {
@@ -149,17 +181,6 @@
     addOption(url);
     return false;
   }, false);
-
-  function testFileType(type) {
-    switch (type) {
-       case 'image/jpeg':
-       case 'image/jpg':
-       case 'image/gif':
-       case 'image/png':
-       return true;
-     }
-     return false;
-  }
 
   function addOption(url){
     let data = {
@@ -176,7 +197,7 @@
                 });
     return fetch(request).then((response) => {
       if (response.status === 200) { // OK
-        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+        fetchJSON("{% url 'menu_dish' dish_id %}").then(get_options_display);
         document.getElementById("option_detail").value = "";
         document.getElementById("option_price").value = "";
       } else {
@@ -185,26 +206,9 @@
     });
   }
 
-  function updateDish(url, dish_data) {
-    var request = new Request(url, {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                data: dish_data,
-                });
-    return fetch(request).then((response) => {
-      if (response.status === 200) { // OK
-        return response.json(); // return a Promise
-      } else {
-        alert("Something went wrong: " + response.status);
-      }
-    });
-  }
-
 
   // only options will be updated at the current page
-  function get_data_display(data){
+  function get_options_display(data){
     var options = document.getElementById("options");
     //clear the older content from last request
     while(options.hasChildNodes()){
@@ -221,7 +225,7 @@
 
       let option_price = document.createElement("span");
       option_price.setAttribute('class', "ml-3");
-      option_price.innerHTML = data.options[i].price;
+      option_price.innerHTML = "$" + data.options[i].price;
       option_holder.appendChild(option_price);
 
       let del_option = document.createElement("a");
@@ -254,6 +258,59 @@
 
   }
 
+  var kind_form = document.getElementById("kind_form");
+  kind_form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let url ="{% url 'handle_kinds' %}";
+    addKind(url).then(append_new_kind);
+    return false;
+  }, false);
+
+  function addKind(url){
+    let data = {
+      'name': document.getElementById("kind_name").value
+    };
+    var request = new Request(url, {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data),
+                });
+    return fetch(request).then((response) => {
+      if (response.status === 200) { // OK
+        document.getElementById("kind_name").value = "";
+        return response.json();
+      } else {
+        alert("网页出了问题: " + response.status);
+      }
+    });
+  }
+
+  function append_new_kind(data){
+      var kinds = document.getElementById("dish_kinds");
+      let kind_holder = document.createElement("option");
+      kind_holder.value = data.id;
+      kind_holder.innerHTML = data.name;
+      kinds.appendChild(kind_holder);
+  }
+
+  function get_kinds_display(data){
+    var kinds = document.getElementById("dish_kinds");
+    //clear the older content from last request
+    while(kinds.hasChildNodes()){
+			kinds.removeChild(kinds.firstChild);
+    }
+
+    for (var i=0; i < data.length; i++){
+      let kind_holder = document.createElement("option");
+      kind_holder.value = data[i].id;
+      kind_holder.innerHTML = data[i].name;
+      kinds.appendChild(kind_holder);
+    }
+  }
+
   function fetchJSON(url) {
     var request = new Request(url, {
                 method: 'GET',
@@ -270,8 +327,19 @@
     });
   }
 
-  fetchJSON("{% url 'menu_dish' dish_id %}").then(get_data_display);
+  fetchJSON("{% url 'menu_dish' dish_id %}").then(get_options_display);
+  fetchJSON("{% url 'handle_kinds' %}").then(get_kinds_display);
 
+  function testFileType(type) {
+    switch (type) {
+       case 'image/jpeg':
+       case 'image/jpg':
+       case 'image/gif':
+       case 'image/png':
+       return true;
+     }
+     return false;
+  }
 </script>
 
 

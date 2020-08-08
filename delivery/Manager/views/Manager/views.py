@@ -25,13 +25,13 @@ def menu_render(request):
 
 
 def processorder_render(request):
-    return render(request, 'Manager/orderProcessing.html', {'fetch_url': '/orders/processing/api/'})
+    return render(request, 'Manager/orderProcessing.html', {'fetch_url': './api/'})
 
 def deliverorder_render(request):
-    return render(request, 'Manager/orderDelivering.html', {'fetch_url': '/orders/delivery/api/'})
+    return render(request, 'Manager/orderDelivering.html', {'fetch_url': './api/'})
 
 def historyorder_render(request):
-    return render(request, 'Manager/orderHistory.html', {'fetch_url': '/orders/history/api/'})
+    return render(request, 'Manager/orderHistory.html', {'fetch_url': './api/'})
 
 def search_order_render(request, ordernum):
     return render(request, 'Manager/searchOrder.html', {'fetch_url': '/orders/search/api/'+ str(ordernum) + '/'})

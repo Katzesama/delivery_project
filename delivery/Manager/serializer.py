@@ -29,17 +29,18 @@ class PaginationModel(PageNumberPagination):
     def get_paginated_response(self, data):
         if "menu" in self.request.path:
             type = "menu"
-        else:
+        elif "orders" in self.request.path:
             type = "orders"
-        response_body = OrderedDict([
-            ("query", type),
-            ("count", self.page.paginator.count),
-            ("current", self.page.number),
-            ("size", self.page_size),
-            ("next", self.get_next_link()),
-            ("previous", self.get_previous_link()),
-            (type, data)
-        ])
+        response_body = {
+            "query": type,
+            "count": self.page.paginator.count,
+            "current": self.page.number,
+            "size": self.page_size,
+            "next": self.get_next_link(),
+            "previous": self.get_previous_link(),
+            "total_pages": self.page.paginator.num_pages,
+            type: data,
+        }
 
         if self.get_previous_link() is None:
             del response_body["previous"]
@@ -50,7 +51,7 @@ class PaginationModel(PageNumberPagination):
 
 class KindSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dish
+        model = Kind
         fields = "__all__"
 
 
@@ -63,7 +64,7 @@ class DishSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_options(self, obj):
-        options = Option.objects.filter(dish=obj)
+        options = Option.objects.filter(dish=obj).order_by('id')
         serializer = OptionSerializer(options, many=True)
         return serializer.data
 

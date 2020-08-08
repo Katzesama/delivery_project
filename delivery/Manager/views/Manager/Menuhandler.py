@@ -7,6 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.renderers import JSONRenderer
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 import uuid
 
 
@@ -17,24 +18,24 @@ class Menu(APIView):
     page (editMenu.html)
     """
     def get(self, request, **kwargs):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        else:
-            menu = Dish.objects.all()
-            pg_obj=PaginationModel()
-            pg_res=pg_obj.paginate_queryset(queryset=menu, request=request)
-            res=DishSerializer(instance=pg_res, many=True)
-            return pg_obj.get_paginated_response(res.data)
+        menu = Dish.objects.all().order_by('name')
+        pg_obj=PaginationModel()
+        pg_res=pg_obj.paginate_queryset(queryset=menu, request=request)
+        res=DishSerializer(instance=pg_res, many=True)
+        return pg_obj.get_paginated_response(res.data)
 
 
 class A_Dish(APIView):
     """
     Retrieve, update or delete a dish instance.
     """
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return Dish.objects.get(id=pk)
-        except:
+        except Dish.DoesNotExist:
             return HttpResponse(status=404)
 
     def get(self, request, pk):
@@ -44,7 +45,8 @@ class A_Dish(APIView):
 
     def post(self, request, pk):
         dish = self.get_object(pk)
-        dish = DishSerializer(dish, data=request.data)
+        data = request.data
+        serializer = DishSerializer(dish, data = data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
@@ -52,7 +54,13 @@ class A_Dish(APIView):
 
     def put(self, request, pk):
         dish = self.get_object(pk)
-        dish = DishSerializer(dish, data=request.data)
+        data = request.data
+        if 'kind' in data.keys():
+            kind = Kind.objects.get(id=data['kind'])
+            dish.kind = kind
+            dish.save()
+
+        serializer = DishSerializer(dish, data=data)
         if serializer.is_valid():
             serializer.save()
             try:
@@ -60,6 +68,7 @@ class A_Dish(APIView):
             except:
                 pass
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
@@ -68,32 +77,37 @@ class A_Dish(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class Dish_Kind(APIView):
+class Dish_Kinds(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        else:
-            try:
-                return Kind.objects.get(id=pk)
-            except Kind.DoesNotExist:
-                return HttpResponse(status=404)
+        try:
+            return Kind.objects.get(id=pk)
+        except Kind.DoesNotExist:
+            return HttpResponse(status=404)
 
-    def get():
-        return Response(status=status.HTTP_200_OK)
+    def get(self, request):
+        kinds = Kind.objects.all()
+        serializer = KindSerializer(kinds, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post():
-        return Response(status=status.HTTP_200_OK)
-
-    def put():
-        return Response(status=status.HTTP_200_OK)
-
-    def delete():
-        kind = self.get_object(request, pk)
-        kind.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    def put(self, request):
+        kind = Kind.objects.create()
+        data = json.loads(request.body)
+        print(data)
+        serializer = KindSerializer(kind, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Option_Dish(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return Option.objects.get(id=pk)
@@ -102,7 +116,6 @@ class Option_Dish(APIView):
 
     # get the option
     def get(self, request, pk):
-        print("here is get")
         option = self.get_object(pk)
         serializer = OptionSerializer(option)
         return Response(serializer.data, status=status.HTTP_200_OK)
