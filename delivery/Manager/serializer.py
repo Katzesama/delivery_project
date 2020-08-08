@@ -29,7 +29,7 @@ class PaginationModel(PageNumberPagination):
     def get_paginated_response(self, data):
         if "menu" in self.request.path:
             type = "menu"
-        else:
+        elif "orders" in self.request.path:
             type = "orders"
         response_body = {
             "query": type,

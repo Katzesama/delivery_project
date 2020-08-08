@@ -22,7 +22,6 @@ urlpatterns = [
     re_path(r'^menu/kinds/', Menuhandler.Dish_Kinds.as_view(), name='handle_kinds'),
     re_path(r'^menu/', views.menu_render, name='render_menu'),
 
-    #re_path(r'^orders/',name='order_list'),
     re_path(r'^orders/processing/api/', Ordershandler.ProceOrdersList.as_view(), name='proceorder_api'),
     re_path(r'^orders/delivery/api/', Ordershandler.DeliverOrdersList.as_view(), name='deliverorder_api'),
     re_path(r'^orders/history/api/', Ordershandler.HisOrdersList.as_view(), name='hisorder_api'),

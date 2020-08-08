@@ -384,7 +384,6 @@ function updateDish(url, dish_data) {
       if (request.readyState==4) {
           try {
               if (request.status==200) {
-                  console.log(request.data);
                 }
               else{
                 alert("网页出了问题: " + this.responseXML);

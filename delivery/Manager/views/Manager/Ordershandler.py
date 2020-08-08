@@ -13,39 +13,30 @@ from rest_framework.permissions import IsAuthenticated
 import uuid
 
 class HisOrdersList(APIView):
-    def get(self, request, post_id, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect('login')
-        else:
-            orders = Order.objects.filter(Q(status='完成') | Q(status='已退款')).order_by('-ordered_time')
-            pg_obj=PaginationModel()
-            pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
-            res=OrderSerializer(instance=pg_res, many=True)
-            return pg_obj.get_paginated_response(res.data)
+    def get(self, request, **kwargs):
+        orders = Order.objects.filter(Q(status='完成') | Q(status='已退款')).order_by('-ordered_time')
+        pg_obj=PaginationModel()
+        pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
+        res=OrderSerializer(instance=pg_res, many=True)
+        return pg_obj.get_paginated_response(res.data)
 
 
 class DeliverOrdersList(APIView):
-    def get(self, request, post_id, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect('login')
-        else:
-            orders = Order.objects.filter(status='送餐中').order_by('-ordered_time')
-            pg_obj=PaginationModel()
-            pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
-            res=OrderSerializer(instance=pg_res, many=True)
-            return pg_obj.get_paginated_response(res.data)
+    def get(self, request, **kwargs):
+        orders = Order.objects.filter(status='送餐中').order_by('-ordered_time')
+        pg_obj=PaginationModel()
+        pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
+        res=OrderSerializer(instance=pg_res, many=True)
+        return pg_obj.get_paginated_response(res.data)
 
 
 class ProceOrdersList(APIView):
-    def get(self, request, post_id, **kwargs):
-        if not request.user.is_authenticated():
-            return redirect('login')
-        else:
-            orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中')).order_by('-ordered_time')
-            pg_obj=PaginationModel()
-            pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
-            res=OrderSerializer(instance=pg_res, many=True)
-            return pg_obj.get_paginated_response(res.data)
+    def get(self, request, **kwargs):
+        orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中')).order_by('-ordered_time')
+        pg_obj=PaginationModel()
+        pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
+        res=OrderSerializer(instance=pg_res, many=True)
+        return pg_obj.get_paginated_response(res.data)
 
 class OrderDetail(APIView):
     """
