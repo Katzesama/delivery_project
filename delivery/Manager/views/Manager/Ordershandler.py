@@ -11,6 +11,7 @@ from django.db.models import Q
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 import uuid
+import json
 
 class HisOrdersList(APIView):
     def get(self, request, **kwargs):
@@ -46,25 +47,24 @@ class OrderDetail(APIView):
     permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
-        if not request.user.is_authenticated():
-            return redirect('login')
-        else:
-            try:
-                return Order.objects.get(id=pk)
-            except Order.DoesNotExist:
-                return HttpResponse(status=404)
+        try:
+            return Order.objects.get(id=pk)
+        except Order.DoesNotExist:
+            return HttpResponse(status=404)
 
     def get(self, request, pk):
-        dish = self.get_object(pk)
-        dish_serializer = DishSerializer(dish)
+        order = self.get_object(pk)
+        serializer = OrderSerializer(order)
         return Response(serializer.data, status=200)
 
     def post(self, request, pk):
         order = self.get_object(pk)
-        serializer = OrderSerializer(order, data=request.data)
+        data = request.data
+        serializer = OrderSerializer(order, data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SearchOrder(APIView):
