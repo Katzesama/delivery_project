@@ -32,5 +32,5 @@ class A_Dish(APIView):
 
     def get(self, request, pk):
         dish = self.get_object(pk)
-        dish_serializer = DishSerializer(dish)
+        serializer = DishSerializer(dish)
         return Response(serializer.data, status=200)

@@ -161,8 +161,8 @@ dish information window popup
 function get_dish_info(id) {
   dish_info.style.display = "block";
   body.classList.add("modal-open");
-  let dishurl = "{% url 'customer_dish_api' 123 %}".replace(/123/, id);
-  display_dish_info(dishurl);
+  let dishurl = "./dishes/" + id + "/";
+  fetchJSON(dishurl).then(display_dish_info);
 }
 
 function dish_info_close() {
@@ -170,8 +170,7 @@ function dish_info_close() {
   body.classList.remove("modal-open");
 }
 
-function display_dish_info(url){
-  let data = fetchJSON(url);
+function display_dish_info(data){
   let submit_button = document.getElementById("dish_submit");
   let minus_dish_button = document.getElementById("dish_quan_minus");
   let plus_dish_button = document.getElementById("dish_quan_plus");
@@ -195,27 +194,6 @@ function display_dish_info(url){
   header.innerHTML = "选项";
   options_holder.appendChild(header);
   for (let i=0; i < data.options.length; i++){
-    /*
-    https://stackoverflow.com/questions/56449599/how-to-get-input-from-dynamically-created-checkboxes-and-radio-buttons-in-javasc
-    function radiobutton(d) {
-      var output = "";
-
-      for (var i = 0; i < d.length; i++) {
-        output += '<input type="radio" value="' + d[i] + '" name="box2">' + d[i] +  '<br><br>';
-
-      }
-      return output;
-    }
-
-    function check() {
-      var elements = document.getElementsByTagName("input");
-      for (var a = 0; a < elements.length; a++) {
-            if (elements[a].checked) {
-              console.log(elements[a].value + " is checked");
-            }
-      }
-    }
-    */
     let option = data.options[i];
     let option_holder = document.createElement("div");
     option_holder.class = "d-flex";
@@ -354,14 +332,13 @@ function display_dishes_by_kind(data){
     dish_link.onclick = function() {get_dish_info(data[i].id)};
     inner_holder.appendChild(dish_link);
     let content_holder = document.createElement("div");
-    content_holder.setAttribute("class", "card-body row no-gutters align-items-center");
+    content_holder.setAttribute("class", "card-body no-gutters align-items-center");
     dish_link.appendChild(content_holder);
     // dish image
     let image_holder = document.createElement("div");
-    image_holder.setAttribute("class", "mr-2");
     content_holder.appendChild(image_holder);
     let image = document.createElement("img");
-    image.setAttribute("class", "btn dropdown-list-image card-img");
+    image.setAttribute("class", "card-img");
     if (data[i].picture){
       image.src = data[i].picture;
     } else {
@@ -370,7 +347,6 @@ function display_dishes_by_kind(data){
     image_holder.appendChild(image);
     // dish name and price
     let text_holder = document.createElement("div");
-    text_holder.setAttribute("class", "col-6 mr-2");
     content_holder.appendChild(text_holder);
     let dish_header = document.createElement("h6");
     dish_header.setAttribute("class", "mt-3 font-weight-bold text-primary");
