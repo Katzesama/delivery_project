@@ -291,7 +291,7 @@ function display_dish_info(url){
           order_data['quantity'] = dish_quantity.value.toString();
           order_data['price'] = total_price_tag.innerHTML;
           order_data['options'] = options;
-          addOrder("{% url 'add_order' %}", JSON.stringify(order_data));
+          addOrder("./order/", JSON.stringify(order_data));
   }, false);
 
 }
@@ -306,7 +306,7 @@ function addOrder(url, order_data) {
               headers: {
                 'Content-Type': 'application/json'
               },
-              data: order_data,
+              body: JSON.stringify(order_data),
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
@@ -319,73 +319,85 @@ function addOrder(url, order_data) {
 
 
 function display_dishes_by_kind(data){
+  var kind_name = "";
+  var section = "";
 
   for (let i=0; i < data.length; i++){
-    // category sidebar
-    let kind = document.createElement("li");
-    kind.class = "nav-item active";
-    kind_holder.appendChild(kind);
-    let kind_link = document.createElement("a");
-    kind_link.class = "nav-link";
-    kind_link.href = "#kind" + i.toString();
-    kind.appendChild(kind_link);
-    let kind_span = document.createElement("span");
-    kind_span.innerHTML = data[i].name;
-    kind_link.appendChild(kind_span);
 
-
-    // group dishes in sections by kind
-    let section = document.createElement("div");
-    section.class = "row";
-    section.id = "kind" + i.toString();
-    dishes_holder.appendChild(section);
-    // header for the section
-    let header_holder = document.createElement("div");
-    header_holder.style = "flex-basis:100%;";
-    section.appendChild(header_holder);
-    let header = document.createElement("h1");
-    header.class = "h3 mb-3 text-gray-800";
-    header.innerHTML = data[i].name;
-    header_holder.appendChild(header);
-    // dishes for the section
-    for (let j=0; j < data[i].dishes.length; j++){
-      let dish = data[i].dishes[j];
-      let dish_holder = document.createElement("div");
-      dish_holder.class = "col-xl-3 col-md-6 mb-4";
-      section.appendChild(dish_holder);
-      let inner_holder = document.createElement("div");
-      inner_holder.class = "card shadow";
-      dish_holder.appendChild(inner_holder);
-      let dish_link = document.createElement("button");
-      dish_link.class = "btn";
-      dish_link.onclick = function() {dish_info(dish.id)};
-      inner_holder.appendChild(dish_link);
-      let content_holder = document.createElement("div");
-      content_holder.class = "card-body row no-gutters align-items-center";
-      inner_holder.appendChild(content_holder);
-      // dish image
-      let image_holder = document.createElement("div");
-      image_holder.class = "col-md-10 mr-2";
-      content_holder.appendChild(image_holder);
-      let image = document.createElement("img");
-      image.class = "dropdown-list-image col-md-12";
-      image.src = dish.picture;
-      image_holder.appendChild(image);
-      // dish name and price
-      let text_holder = document.createElement("div");
-      text_holder.class = "col-6 mr-2";
-      content_holder.appendChild(text_holder);
-      let dish_header = document.createElement("h6");
-      dish_header.class = "mt-3 font-weight-bold text-primary";
-      dish_header.innerHTML = dish.name;
-      text_holder.appendChild(dish_header);
-      let dish_price = document.createElement("div");
-      dish_price.class = "h5 mb-2 mt-2 font-weight-bold text-gray-800";
-      dish_price.innerHTML = "$" + dish.price.toString();
-      text_holder.appendChild(dish_price);
+    if (data[i].kind.name !== kind_name){
+      kind_name = data[i].kind.name;
+      appendKind(kind_name);
+      // group dishes in sections by kind
+      section = document.createElement("div");
+      section.setAttribute("class", "row");
+      section.id = "kind_" + kind_name;
+      dishes_holder.appendChild(section);
+      // header for the section
+      let header_holder = document.createElement("div");
+      header_holder.style = "flex-basis:100%;";
+      section.appendChild(header_holder);
+      let header = document.createElement("h1");
+      header.setAttribute("class", "h3 mb-3 text-gray-800");
+      header.innerHTML = kind_name;
+      header_holder.appendChild(header);
     }
+
+    // dish for the section
+    let dish_holder = document.createElement("div");
+    dish_holder.setAttribute("class", "col-xl-3 col-md-6 mb-4");
+    section.appendChild(dish_holder);
+    let inner_holder = document.createElement("div");
+    inner_holder.setAttribute("class", "card shadow");
+    dish_holder.appendChild(inner_holder);
+    let dish_link = document.createElement("button");
+    dish_link.setAttribute("class", "btn");
+    dish_link.onclick = function() {dish_info(data[i].id)};
+    inner_holder.appendChild(dish_link);
+    let content_holder = document.createElement("div");
+    content_holder.setAttribute("class", "card-body row no-gutters align-items-center");
+    inner_holder.appendChild(content_holder);
+    // dish image
+    let image_holder = document.createElement("div");
+    image_holder.setAttribute("class", "col-md-10 mr-2");
+    content_holder.appendChild(image_holder);
+    let image = document.createElement("img");
+    image.class = "dropdown-list-image col-md-12";
+    if (data[i].picture){
+      image.src = data[i].picture;
+    } else {
+      image.src = '../static/Manager/images/defaultimage.jpg/'
+    }
+    image_holder.appendChild(image);
+    // dish name and price
+    let text_holder = document.createElement("div");
+    text_holder.setAttribute("class", "col-6 mr-2");
+    content_holder.appendChild(text_holder);
+    let dish_header = document.createElement("h6");
+    dish_header.setAttribute("class", "mt-3 font-weight-bold text-primary");
+    dish_header.innerHTML = data[i].name;
+    text_holder.appendChild(dish_header);
+    let dish_price = document.createElement("div");
+    dish_price.setAttribute("class", "h5 mb-2 mt-2 font-weight-bold text-gray-800");
+    dish_price.innerHTML = "$" + dish.price.toString();
+    text_holder.appendChild(dish_price);
   }
 
+}
+
+/*
+  add kind to category sidebar
+*/
+function appendKind(kind_name){
+  let kind = document.createElement("li");
+  kind.setAttribute("class", "nav-item active");
+  kind_holder.appendChild(kind);
+  let kind_link = document.createElement("a");
+  kind_link.setAttribute("class", "nav-link");
+  kind_link.href = "#kind_" + kind_name;
+  kind.appendChild(kind_link);
+  let kind_span = document.createElement("span");
+  kind_span.innerHTML = kind_name;
+  kind_link.appendChild(kind_span);
 }
 
 function fetchJSON(url) {
