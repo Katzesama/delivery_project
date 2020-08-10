@@ -178,25 +178,27 @@ function display_dish_info(data){
   let total_price_tag = document.getElementById("dish_total_price");
   let dish_price = data.price;
   let total_price = data.price;
+  let dish_image = document.getElementById("dish_info_img");
+  let options_holder = document.getElementById("dish_info_options");
 
   let dish_name = document.getElementById("dish_name");
   dish_name.innerHTML = data.name;
 
   let content_holder = document.getElementById("dish_info_content");
-  let dish_image = document.createElement("img");
-  dish_image.class = "dropdown-list-image col-md-12";
-  dish_image.src = data.picture;
-  content_holder.appendChild(dish_image);
-  let options_holder = document.createElement("div");
-  content_holder.appendChild(options_holder);
-  let header = document.createElement("h5");
-  header.class = "mt-3";
-  header.innerHTML = "选项";
-  options_holder.appendChild(header);
+  if (data.picture){
+    dish_image.src = data.picture;
+  } else {
+    dish_image.src = "../static/Manager/images/defaultimage.jpg/";
+  }
+
+
+  while(options_holder.hasChildNodes()){
+      options_holder.removeChild(options_holder.firstChild);
+  }
   for (let i=0; i < data.options.length; i++){
     let option = data.options[i];
     let option_holder = document.createElement("div");
-    option_holder.class = "d-flex";
+    option_holder.setAttribute("class", "d-flex");
     options_holder.appendChild(option_holder);
     // input checkbox part
     let input_holder = document.createElement("div");
@@ -204,23 +206,23 @@ function display_dish_info(data){
     let input_checkbox = document.createElement("input");
     input_checkbox.type = "checkbox";
     input_checkbox.name = "option" + i.toString();
-    input_checkbox.value = option.name;
+    input_checkbox.value = option.detail;
     input_holder.appendChild(input_checkbox);
     let after_part = document.createElement("div");
-    after_part.class = "col-md-11";
+    after_part.setAttribute("class", "col-md-11");
     option_holder.appendChild(after_part);
     let input_label = document.createElement("label");
-    input_label.class = "d-flex justify-content-between";
+    input_label.setAttribute("class", "d-flex justify-content-between");
     input_label.for = "option" + i.toString();
     after_part.appendChild(input_label);
     let label_title = document.createElement("span");
-    label_title.innerHTML = option.name;
+    label_title.innerHTML = option.detail;
     input_label.appendChild(label_title);
     if (option.price > 0){
       let label_price_part = document.createElement("div");
       input_label.appendChild(label_price_part);
       let label_price = document.createElement("span");
-      label_price.innerHTML = option.price;
+      label_price.innerHTML = "$" + option.price;
       label_price_part.appendChild(label_price);
       input_checkbox.addEventListener('change', function() {
         if(this.checked) {
@@ -342,7 +344,7 @@ function display_dishes_by_kind(data){
     if (data[i].picture){
       image.src = data[i].picture;
     } else {
-      image.src = '../static/Manager/images/defaultimage.jpg/'
+      image.src = '../static/Manager/images/defaultimage.jpg/';
     }
     image_holder.appendChild(image);
     // dish name and price
