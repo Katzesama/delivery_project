@@ -16,11 +16,11 @@ class Menu(APIView):
     page (editMenu.html)
     """
     def get(self, request, **kwargs):
-        menu = Kind.objects.all()
-        serializer = KindSerializer(menu, many=True)
+        menu = Dish.objects.all().order_by("kind__name")
+        serializer = DishSerializer(menu, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class Dish(APIView):
+class A_Dish(APIView):
     """
     Retrieve, update or delete a dish instance.
     """

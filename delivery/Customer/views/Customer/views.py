@@ -12,7 +12,7 @@ import uuid
 
 # Create your views here.
 def render_menu(request):
-    return render(request, 'Customer/index.html', {'fetch_url': '/menu/api/'})
+    return render(request, 'Customer/index.html', {'fetch_url': './api/'})
 
 class Store(APIView):
     def get(self, request):

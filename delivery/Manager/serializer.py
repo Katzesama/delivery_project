@@ -74,6 +74,7 @@ class OptionSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_kwargs = {'dish': {'required': False}}
 
+
 class SellerSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(max_length=None, use_url=True, required=False)
     class Meta:
