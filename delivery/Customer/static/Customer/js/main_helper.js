@@ -158,7 +158,7 @@ function display_store_info(){
 dish information window popup
 */
 
-function dish_info(id) {
+function get_dish_info(id) {
   dish_info.style.display = "block";
   body.classList.add("modal-open");
   let dishurl = "{% url 'customer_dish_api' 123 %}".replace(/123/, id);
@@ -344,24 +344,24 @@ function display_dishes_by_kind(data){
 
     // dish for the section
     let dish_holder = document.createElement("div");
-    dish_holder.setAttribute("class", "col-xl-3 col-md-6 mb-4");
+    dish_holder.setAttribute("class", "col-md-5 mr-4 mb-4");
     section.appendChild(dish_holder);
     let inner_holder = document.createElement("div");
     inner_holder.setAttribute("class", "card shadow");
     dish_holder.appendChild(inner_holder);
     let dish_link = document.createElement("button");
     dish_link.setAttribute("class", "btn");
-    dish_link.onclick = function() {dish_info(data[i].id)};
+    dish_link.onclick = function() {get_dish_info(data[i].id)};
     inner_holder.appendChild(dish_link);
     let content_holder = document.createElement("div");
     content_holder.setAttribute("class", "card-body row no-gutters align-items-center");
-    inner_holder.appendChild(content_holder);
+    dish_link.appendChild(content_holder);
     // dish image
     let image_holder = document.createElement("div");
-    image_holder.setAttribute("class", "col-md-10 mr-2");
+    image_holder.setAttribute("class", "mr-2");
     content_holder.appendChild(image_holder);
     let image = document.createElement("img");
-    image.class = "dropdown-list-image col-md-12";
+    image.setAttribute("class", "btn dropdown-list-image card-img");
     if (data[i].picture){
       image.src = data[i].picture;
     } else {
@@ -378,7 +378,7 @@ function display_dishes_by_kind(data){
     text_holder.appendChild(dish_header);
     let dish_price = document.createElement("div");
     dish_price.setAttribute("class", "h5 mb-2 mt-2 font-weight-bold text-gray-800");
-    dish_price.innerHTML = "$" + dish.price.toString();
+    dish_price.innerHTML = "$" + data[i].price;
     text_holder.appendChild(dish_price);
   }
 
