@@ -63,11 +63,11 @@ function display_cart(){
     remove_button.appendChild(icon);
   }
 
-  // checkout
+  // checkout after checking the cart is empty!!!!!!
   let checkout_button = document.getElementById("checkout");
-  checkout_button.addEventListener('click', function(e){
+  checkout_button.onclick = function(){
           checkoutOrders("{% url 'shopping_cart' %}");
-  }, false);
+  };
 }
 
 function fetchOrders(url) {
@@ -125,7 +125,7 @@ store information window popup
 function store_info_onclick() {
   store_info.style.display = "block";
   body.classList.add("modal-open");
-  display_store_info();
+  fetchJSON(store_info_url).then(display_store_info);
 }
 
 
@@ -135,22 +135,39 @@ function store_info_close() {
   body.classList.remove("modal-open");
 }
 
-function display_store_info(){
-  let data = fetchJSON('/store/');
+function display_store_info(data){
+  let basic_holder = document.getElementById("store_basic_info");
+
+  while(basic_holder.hasChildNodes()){
+      basic_holder.removeChild(basic_holder.firstChild);
+  }
+
+  let description = document.createElement("span");
+  basic_holder.innerHTML = data.description;
+  basic_holder.appendChild(description);
+
   let contact_holder = document.getElementById("store_contact_info");
+
+  while(contact_holder.hasChildNodes()){
+      contact_holder.removeChild(contact_holder.firstChild);
+  }
+
   let wechat_num = document.createElement("span");
   wechat_num.innerHTML = "微信号：" + data.wechat;
   contact_holder.appendChild(wechat_num);
   let phone = document.createElement("span");
   phone.innerHTML = "电话：" + data.phone;
   contact_holder.appendChild(phone);
-  let wechat_code = document.createElement("img");
-  wechat_code.class = "img-fluid px-3 px-sm-4 mt-3 mb-4";
-  wechat_code.style = "width: 25rem;";
-  wechat_code.src = data.wechatcode;
-  contact_holder.appendChild(wechat_code);
-  let open_hour_holder = document.getElementById("store_open_info");
-  // add the openning hours later
+  if (data.wechatcode){
+    let wechatcode_label = document.createElement("p");
+    wechatcode_label.innerHTML = "微信二维码：";
+    contact_holder.appendChild(wechatcode_label);
+    let wechat_code = document.createElement("img");
+    wechat_code.class = "img-fluid px-3 px-sm-4 mt-3 mb-4";
+    wechat_code.style = "width: 25rem;";
+    wechat_code.src = data.wechatcode;
+    contact_holder.appendChild(wechat_code);
+  }
 }
 
 
@@ -176,8 +193,8 @@ function display_dish_info(data){
   let plus_dish_button = document.getElementById("dish_quan_plus");
   let dish_quantity = document.getElementById("dish_quantity");
   let total_price_tag = document.getElementById("dish_total_price");
-  let dish_price = data.price;
-  let total_price = data.price;
+  let dish_price = parseFloat(data.price);
+  let total_price = parseFloat(data.price);
   let dish_image = document.getElementById("dish_info_img");
   let options_holder = document.getElementById("dish_info_options");
 
@@ -191,12 +208,16 @@ function display_dish_info(data){
     dish_image.src = "../static/Manager/images/defaultimage.jpg/";
   }
 
+  dish_quantity.value = "1";
+  total_price_tag.innerHTML = total_price.toFixed(2);
+
 
   while(options_holder.hasChildNodes()){
       options_holder.removeChild(options_holder.firstChild);
   }
   for (let i=0; i < data.options.length; i++){
     let option = data.options[i];
+    let option_price = parseFloat(data.options[i].price);
     let option_holder = document.createElement("div");
     option_holder.setAttribute("class", "d-flex");
     options_holder.appendChild(option_holder);
@@ -218,47 +239,50 @@ function display_dish_info(data){
     let label_title = document.createElement("span");
     label_title.innerHTML = option.detail;
     input_label.appendChild(label_title);
-    if (option.price > 0){
+    if (option_price > 0){
       let label_price_part = document.createElement("div");
       input_label.appendChild(label_price_part);
       let label_price = document.createElement("span");
-      label_price.innerHTML = "$" + option.price;
+      label_price.innerHTML = "+$" + option_price.toFixed(2);
       label_price_part.appendChild(label_price);
       input_checkbox.addEventListener('change', function() {
         if(this.checked) {
-          dish_price = dish_price + option.price;
+          dish_price = dish_price + option_price;
         } else {
-          dish_price = dish_price - option.price;
+          dish_price = dish_price - option_price;
         }
+        console.log(typeof option_price);
+        console.log("dish" + dish_price);
         total_price = parseInt(dish_quantity.value, 10) * dish_price;
-        total_price_tag.innerHTML = total_price;
+        console.log("total" + total_price);
+        total_price_tag.innerHTML = total_price.toFixed(2);
       }, false);
     }
 
 
   }
 
-  dish_quantity.addEventListener('change', function(){
+  dish_quantity.onchange = function(){
     total_price = parseInt(dish_quantity.value, 10) * dish_price;
     total_price_tag.innerHTML = total_price.toFixed(2);
-  }, false);
+  };
 
-  minus_dish_button.addEventListener('click', function(){
+  minus_dish_button.onclick = function(){
+    console.log(dish_quantity.value)
     if (parseInt(dish_quantity.value, 10) > 1){
-      dish_quantity.value = parseInt(dish_quantity.value, 10) - 1;
+      dish_quantity.stepDown(1);
       total_price = parseInt(dish_quantity.value, 10) * dish_price;
       total_price_tag.innerHTML = total_price.toFixed(2);
     }
-  }, false);
+  };
 
-  plus_dish_button.addEventListener('click', function(){
-    dish_quantity.value = parseInt(dish_quantity.value, 10) + 1;
+  plus_dish_button.onclick = function(){
+    dish_quantity.stepUp(1);
     total_price = parseInt(dish_quantity.value, 10) * dish_price;
     total_price_tag.innerHTML = total_price.toFixed(2);
-  }, false);
+  };
 
-  submit_button.addEventListener('click', function(e){
-          e.preventDefault();
+  submit_button.onclick = function(){
           let order_data = {};
           let options = "";
           let elements = content_holder.getElementsByTagName("input");
@@ -267,12 +291,12 @@ function display_dish_info(data){
                   options = options + " " + elements[a].value;
                 }
           }
-          order_data['name'] = dish_name.innerHTML;
-          order_data['quantity'] = dish_quantity.value.toString();
-          order_data['price'] = total_price_tag.innerHTML;
+          order_data['name'] = dish.name;
+          order_data['quantity'] = dish_quantity.value;
+          order_data['price'] = total_price.toFixed(2);
           order_data['options'] = options;
-          addOrder("./order/", JSON.stringify(order_data));
-  }, false);
+          addOrder("./order/", order_data);
+  };
 
 }
 

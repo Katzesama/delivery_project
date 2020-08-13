@@ -123,20 +123,25 @@
         <!-- Store_info Popup -->
       <div class="modal align-items-center justify-content-between" id="store_info">
         <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content card shadow">
-            <div class="card-header d-flex flex-row align-items-center">
+          <div class="modal-content shadow">
+            <div class="modal-header d-flex flex-row align-items-center">
               <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
               <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
             </div>
-            <div class="card-body">
-              <h5>联系方式</h5>
-              <div class="card" id="store_contact_info">
-                <span>粥不出户</span>
+            <div class="modal-body">
+              <h5>餐厅简介</h5>
+              <div class="card" id="store_basic_info">
 
                 <!-- dynamically adding content -->
 
               </div>
-            </br>
+              </br>
+              <h5>联系方式</h5>
+              <div class="card" id="store_contact_info">
+
+                <!-- dynamically adding content -->
+
+              </div>
               <!--h5>营业时间</h5>
               <div class="card" id="store_open_info"-->
 
@@ -167,7 +172,7 @@
           <div class="card-header d-flex flex-row align-items-center justify-content-between">
             <div class="d-flex flex-row">
               <a class="mr-2" id="dish_quan_minus"><i class="fa fa-minus"></i></a>
-              <input id="dish_quantity" class="text-center" value="1" type="number" style="width: 2em;">
+              <input id="dish_quantity" value="1" class="text-center" type="number" style="width: 2em;">
               <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
             </div>
             <button id="dish_submit" class="btn btn-primary">添加 - $<span id="dish_total_price"></span></button>
@@ -196,6 +201,7 @@
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 
   <script type="text/javascript">
+    var store_info_url = "{% url 'store_info' %}";
     function get_dishes_display(url){
       fetchJSON(url).then(display_dishes_by_kind);
     }

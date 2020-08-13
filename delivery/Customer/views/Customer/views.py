@@ -16,6 +16,6 @@ def render_menu(request):
 
 class Store(APIView):
     def get(self, request):
-            store = Restaurant.objects.all()
+            store = Restaurant.objects.all()[0]
             serializer = ResSerializer(store)
             return Response(serializer.data, status=200)
