@@ -22,7 +22,7 @@ class CartOrders(APIView):
             return HttpResponse(status=404)
 
     # remove the dish order
-    def post(self, request):
+    def delete(self, request):
         try:
             request.session['order_detail'].pop(json.loads(request.data), None)
             # https://stackoverflow.com/questions/2166856/modifying-dictionary-in-django-session-does-not-modify-session
@@ -58,9 +58,9 @@ class CartOrders(APIView):
             return HttpResponse(status=404)
 
 def add_order(request):
-    if request.method == 'POST':
+    if request.method == 'PUT':
         try:
-            data = json.loads(request.data)
+            data = request.body
             num = request.session['number']
             request.session['order_detail'][num] = data
             request.session.modified = True

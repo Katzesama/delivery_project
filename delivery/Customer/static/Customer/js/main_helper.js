@@ -88,15 +88,15 @@ function fetchOrders(url) {
 
 function removeOrders(url, remove_data) {
   var request = new Request(url, {
-              method: 'POST',
+              method: 'DELETE',
               headers: {
                    'Content-Type': 'application/json'
               },
-              data: remove_data,
+              body: remove_data,
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      return response.json(); // return a Promise
+      return []; // return a Promise
     } else {
       alert("Something went wrong: " + response.status);
     }
@@ -288,7 +288,12 @@ function display_dish_info(data){
           let elements = content_holder.getElementsByTagName("input");
           for (let i = 0; i < elements.length; i++) {
                 if (elements[i].checked) {
-                  options = options + " " + elements[a].value;
+                  if (i == 0){
+                    options = options + elements[a].value;
+                  } else {
+                    options = options + ", " + elements[a].value;
+                  }
+
                 }
           }
           order_data['name'] = dish.name;
@@ -306,7 +311,7 @@ function addOrder(url, order_data) {
   check the data if JSONfied
   */
   var request = new Request(url, {
-              method: 'POST',
+              method: 'PUT',
               headers: {
                 'Content-Type': 'application/json'
               },
