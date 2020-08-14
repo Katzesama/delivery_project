@@ -51,7 +51,7 @@
       <div id="content">
 
         <!-- Shopping cart Sidebar -->
-        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:30%;">
+        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:40%;">
           <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;">
 
           <!-- Nav Item - Close button -->
@@ -66,7 +66,7 @@
 
           <!-- Nav Item - Checkout -->
           <li class="nav-item active">
-            <a id="checkout" class="mt-2 mb-4 btn btn-primary" href="#">结账</a>
+            <button id="checkout" class="mt-2 mb-4 btn btn-primary" >结账 - <span id="checkout_price"></span></button>
           </li>
 
           <div id="shopping_cart_content">
@@ -91,7 +91,9 @@
               <!-- Nav Item - Shoppingcart -->
               <li class="nav-item no-arrow">
                 <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
-                  <i class="fa fa-shopping-cart"></i>
+                  <i class="fa fa-shopping-cart">
+                    <span class="badge badge-danger badge-counter" id="cart_quantity"></span>
+                  </i>
                 </button>
               </li>
 
@@ -202,11 +204,22 @@
 
   <script type="text/javascript">
     var store_info_url = "{% url 'store_info' %}";
+    var shopping_cart_url = "{% url 'shopping_cart' %}";
+    var csrf_token = "{{csrf_token}}";
     function get_dishes_display(url){
       fetchJSON(url).then(display_dishes_by_kind);
     }
 
     get_dishes_display("{{fetch_url}}");
+    fetchOrders(shopping_cart_url).then((data) => {
+      if (data.order_num){
+        order_quantity = data.order_num;
+      } else {
+        order_quantity = 0;
+      }
+      cart_quantity.innerHTML = order_quantity;
+    });
+
   </script>
 <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

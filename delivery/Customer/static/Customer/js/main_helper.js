@@ -3,6 +3,8 @@ var store_info = document.getElementById("store_info");
 var dish_info = document.getElementById("dish_info");
 var dishes_holder = document.getElementById("dishes_holder");
 var kind_holder = document.getElementById("category_content");
+var cart_quantity = document.getElementById("cart_quantity");
+var order_quantity = 0;
 
 var body = document.getElementById("page-top");
 
@@ -19,54 +21,86 @@ function cart_onclick() {
 
   if (cart_info.style.display === "none") {
     cart_info.style.display = "block";
-    display_cart();
+    fetchOrders(shopping_cart_url).then(display_cart);
   }
 }
 
-function display_cart(){
-  let data = fetchOrders("{% url 'shopping_cart' %}");
+
+function display_cart(data){
   let cart_content = document.getElementById("shopping_cart_content");
-  for (let [key, value] of data.order_detail){
-    let order = document.createElement("li");
-    order.class = "nav-item active justify-content-between";
-    order.setAttribute('data-id' , key.toString());
-    cart_content.appendChild(order);
-    // ['name']['price']['options']['quantity']
-    let line1 = document.createElement("div");
-    order.appendChild(line1);
-    let quantity = document.createElement("span");
-    quantity.class = "mr-2";
-    quantity.innerHTML = "x" + value['quantity'];
-    line1.appendChild(quantity);
-    let name = document.createElement("span");
-    name.class = "mr-5";
-    name.innerHTML = value["name"];
-    line1.appendChild(name);
-    let line2 = document.createElement("div");
-    order.appendChild(line2);
-    let price = document.createElement("span");
-    price.innerHTML = "$" + value["price"];
-    line2.appendChild(price);
-    let remove_button = document.createElement("a");
-    remove_button.class = "ml-5";
-    remove_button.href = "#";
-    line2.appendChild(remove_button);
-    remove_button.addEventListener('click', function(e){
-            e.preventDefault();
-            let remove_info = key;
-            removeOrders("{% url 'shopping_cart' %}", JSON.stringify(remove_info)).then(function(){
-              order.remove();
-            });
-    }, false);
-    let icon = document.createElement("i");
-    icon.class = "fa fa-minus";
-    remove_button.appendChild(icon);
+
+  while(cart_content.hasChildNodes()){
+      cart_content.removeChild(cart_content.firstChild);
   }
 
+  let checkout_price = document.getElementById("checkout_price");
   // checkout after checking the cart is empty!!!!!!
   let checkout_button = document.getElementById("checkout");
+
+  if (!data.total_price){
+    checkout_price.innerHTML = "0.00";
+  } else {
+    checkout_price.innerHTML = data.total_price.toFixed(2);
+  }
+
+  if (data.order_num){
+    checkout_button.disabled = false;
+    for (let [key, value] of  Object.entries(data.order_detail)){
+      let order = document.createElement("li");
+      order.setAttribute("class", "nav-item active justify-content-between");
+      order.setAttribute('data-id' , key.toString());
+      cart_content.appendChild(order);
+      // ['name']['price']['options']['quantity']
+      let line1 = document.createElement("div");
+      order.appendChild(line1);
+      let quantity = document.createElement("span");
+      quantity.setAttribute("class", "mr-2");
+      quantity.innerHTML = "x" + value['quantity'];
+      line1.appendChild(quantity);
+      let name = document.createElement("span");
+      name.setAttribute("class", "mr-5");
+      name.innerHTML = value["name"];
+      line1.appendChild(name);
+      let price = document.createElement("span");
+      price.innerHTML = "$" + value["price"];
+      line1.appendChild(price);
+      let line2 = document.createElement("div");
+      order.appendChild(line2);
+      let options = document.createElement("span");
+      options.setAttribute("class", "font-weight-light font-italic text-gray-500");
+      options.innerHTML = value["options"];
+      line2.appendChild(options);
+      let remove_button = document.createElement("a");
+      remove_button.setAttribute("class", "ml-5");
+      remove_button.href = "#";
+      line1.appendChild(remove_button);
+      remove_button.addEventListener('click', function(e){
+              e.preventDefault();
+              let remove_info = {'key': key, 'price': value['price']};
+              removeOrders(shopping_cart_url, JSON.stringify(remove_info)).then(data => {
+                if (data === "sucess") {
+                  checkout_price.innerHTML = (parseFloat(checkout_price.innerHTML) - parseFloat(value['price'])).toFixed(2);
+                  order.remove();
+                  order_quantity = order_quantity - 1;
+                  cart_quantity.innerHTML = order_quantity;
+                  if (!cart_content.hasChildNodes()){
+                    checkout_button.disabled = true;
+                  }
+                }
+              });
+      }, false);
+      let icon = document.createElement("i");
+      icon.setAttribute("class", "fa fa-minus");
+      remove_button.appendChild(icon);
+      let divider = document.createElement("hr");
+      order.appendChild(divider);
+    }
+  } else {
+    checkout_button.disabled = true;
+  }
+
   checkout_button.onclick = function(){
-          checkoutOrders("{% url 'shopping_cart' %}");
+      checkoutOrders(shopping_cart_url);
   };
 }
 
@@ -81,7 +115,7 @@ function fetchOrders(url) {
     if (response.status === 200) { // OK
       return response.json(); // return a Promise
     } else {
-      return [];
+      alert("网页出了问题，无法取得购物车详情: " + response.status);
     }
   });
 }
@@ -90,15 +124,17 @@ function removeOrders(url, remove_data) {
   var request = new Request(url, {
               method: 'DELETE',
               headers: {
-                   'Content-Type': 'application/json'
+                   'Content-Type': 'application/json',
+                   'X-CSRFToken': csrf_token
               },
               body: remove_data,
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      return []; // return a Promise
+      return "sucess"; // return a Promise
     } else {
-      alert("Something went wrong: " + response.status);
+      alert("网页出了问题，无法删除订单: " + response.status);
+      return [];
     }
   });
 }
@@ -107,7 +143,8 @@ function checkoutOrders(url) {
   var request = new Request(url, {
               method: 'PUT',
               headers: {
-                   'Content-Type': 'application/json'
+                   'Content-Type': 'application/json',
+                   'X-CSRFToken': csrf_token
               },
               });
   return fetch(request).then((response) => {
@@ -251,10 +288,7 @@ function display_dish_info(data){
         } else {
           dish_price = dish_price - option_price;
         }
-        console.log(typeof option_price);
-        console.log("dish" + dish_price);
         total_price = parseInt(dish_quantity.value, 10) * dish_price;
-        console.log("total" + total_price);
         total_price_tag.innerHTML = total_price.toFixed(2);
       }, false);
     }
@@ -289,14 +323,14 @@ function display_dish_info(data){
           for (let i = 0; i < elements.length; i++) {
                 if (elements[i].checked) {
                   if (i == 0){
-                    options = options + elements[a].value;
+                    options = options + elements[i].value;
                   } else {
-                    options = options + ", " + elements[a].value;
+                    options = options + ", " + elements[i].value;
                   }
 
                 }
           }
-          order_data['name'] = dish.name;
+          order_data['name'] = data.name;
           order_data['quantity'] = dish_quantity.value;
           order_data['price'] = total_price.toFixed(2);
           order_data['options'] = options;
@@ -313,13 +347,16 @@ function addOrder(url, order_data) {
   var request = new Request(url, {
               method: 'PUT',
               headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrf_token
               },
               body: JSON.stringify(order_data),
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      return [];
+      order_quantity = order_quantity + 1;
+      cart_quantity.innerHTML = order_quantity;
+      dish_info_close();
     } else {
       alert("Something went wrong: " + response.status);
     }
