@@ -206,6 +206,7 @@
     var store_info_url = "{% url 'store_info' %}";
     var shopping_cart_url = "{% url 'shopping_cart' %}";
     var csrf_token = "{{csrf_token}}";
+    var checkout_url = "{% url 'checkout' 123 %}"
     function get_dishes_display(url){
       fetchJSON(url).then(display_dishes_by_kind);
     }

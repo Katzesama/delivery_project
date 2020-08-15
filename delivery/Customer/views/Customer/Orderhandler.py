@@ -38,27 +38,25 @@ class CartOrders(APIView):
     # checkout
     def put(self, request):
         try:
+            order = Order.objects.get(id=request.session['order_id'])
+        except:
             order = Order()
             # detail: name quantity price options
             # i.e. {1: {'name': 'k', 'quantity': '1', 'price' : '20', 'options' : 'coke beer'}}
-            detail = []
-            for item in request.session['order_detail']:
-                a = []
-                a.append(item['name'])
-                a.append(item['quantity'])
-                a.append(item['price'])
-                a.append(item['options'])
-                detail.append(a)
-            order.detail = json.dumps(detail)
-            order.total_price = request.session['total_price']
-            order.save()
-            orderid = str(order.id)
-            del request.session['order_detail']
-            del request.session['total_price']
-            del request.session['number']
-            return Response(json.dumps({'id': orderid}), status=status.HTTP_200_OK)
-        except:
-            return HttpResponse(status=404)
+        detail = []
+        for key, item in request.session['order_detail'].items():
+            a = []
+            a.append(item['name'])
+            a.append(item['quantity'])
+            a.append(item['price'])
+            a.append(item['options'])
+            detail.append(a)
+        order.detail = json.dumps(detail)
+        order.total_price = request.session['total_price']
+        order.save()
+        orderid = str(order.id)
+        request.session['order_id'] = order.id
+        return Response({'id': orderid}, status=status.HTTP_200_OK)
 
 def add_order(request):
     if request.method == 'PUT':
@@ -80,5 +78,13 @@ def set_order(request):
     request.session['number'] = request.session['number'] + 1
 
 class CheckoutOrders(APIView):
-    def get(self, request):
+    def get(self, request, pk):
+        return Response(status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        # when checkout done
+        del request.session['order_id']
+        del request.session['order_detail']
+        del request.session['total_price']
+        del request.session['number']
         return Response(status=status.HTTP_200_OK)

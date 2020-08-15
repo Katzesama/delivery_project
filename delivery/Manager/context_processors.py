@@ -1,5 +1,6 @@
 from .models import *
 import uuid
+from django.db.models import Q
 
 def get_basic_information(request):
     if request.user.is_authenticated and not request.user.is_superuser:
@@ -14,5 +15,5 @@ def get_basic_information(request):
     return {
         'profile_id': profile_id,
         'profile_img': profile_img,
-        'orders_count': Order.objects.filter(status='处理中').count()
+        'orders_count': Order.objects.filter(Q(status='处理中') | Q(payed=True)).count()
     }

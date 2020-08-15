@@ -100,7 +100,9 @@ function display_cart(data){
   }
 
   checkout_button.onclick = function(){
-      checkoutOrders(shopping_cart_url);
+      checkoutOrders(shopping_cart_url).then(data => {
+        location.href = checkout_url.replace(/123/, data.id);
+      });
   };
 }
 
@@ -149,7 +151,7 @@ function checkoutOrders(url) {
               });
   return fetch(request).then((response) => {
     if (response.status === 200) { // OK
-      location.href = '/order/' + response.json(); // redirect
+      return response.json(); // redirect
     } else {
       alert("Something went wrong: " + response.status);
     }
@@ -424,6 +426,13 @@ function display_dishes_by_kind(data){
     dish_price.setAttribute("class", "h5 mb-2 mt-2 font-weight-bold text-gray-800");
     dish_price.innerHTML = "$" + data[i].price;
     text_holder.appendChild(dish_price);
+    if (!data[i].availability){
+      dish_link.disabled = true;
+      let sold_tag = document.createElement("div");
+      sold_tag.setAttribute("class", "h5 mb-2 mt-2 font-weight-bold text-danger");
+      sold_tag.innerHTML = "售罄";
+      text_holder.appendChild(sold_tag);
+    }
   }
 
 }

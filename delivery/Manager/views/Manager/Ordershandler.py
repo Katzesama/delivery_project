@@ -33,7 +33,7 @@ class DeliverOrdersList(APIView):
 
 class ProceOrdersList(APIView):
     def get(self, request, **kwargs):
-        orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中')).order_by('-ordered_time')
+        orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中') | Q(payed=True)).order_by('-ordered_time')
         pg_obj=PaginationModel()
         pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
         res=OrderSerializer(instance=pg_res, many=True)

@@ -86,4 +86,5 @@ class Order(models.Model):
         ('退款中', '退款中'),
         ('已退款', '已退款'),
     )
+    payed = models.BooleanField(default=False)
     status = models.CharField(default ="处理中", max_length=100, choices=ORDERSTATUS)
