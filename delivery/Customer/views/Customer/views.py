@@ -12,10 +12,13 @@ import uuid
 
 # Create your views here.
 def render_menu(request):
-    return render(request, 'Customer/index.html', {'fetch_url': '/menu/api/'})
+    return render(request, 'Customer/index.html', {'fetch_url': './api/'})
 
 class Store(APIView):
     def get(self, request):
-            store = Restaurant.objects.all()
+            store = Restaurant.objects.all()[0]
             serializer = ResSerializer(store)
             return Response(serializer.data, status=200)
+
+def render_checkout(request, pk):
+    return render(request, 'Customer/checkout.html', {'fetch_url': './api/'})

@@ -18,7 +18,7 @@
   <div id="wrapper">
 
     <!-- Sidebar -->
-    <ul class="navbar-nav sidebar accordion" id="category">>
+    <ul class="navbar-nav sidebar accordion" id="category">
 
       <!-- Sidebar - Brand -->
       <a class="sidebar-brand d-flex align-items-center justify-content-center" href="#">
@@ -51,7 +51,7 @@
       <div id="content">
 
         <!-- Shopping cart Sidebar -->
-        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:30%;">
+        <nav class="navbar navbar-light bg-white shadow" id="shopping_cart" style="display:none;z-index:2000;right:0;position:absolute;height:100%;min-width:40%;">
           <ul class="navbar-nav ml-auto" style="padding-top:10px;padding-left:10px;">
 
           <!-- Nav Item - Close button -->
@@ -66,7 +66,7 @@
 
           <!-- Nav Item - Checkout -->
           <li class="nav-item active">
-            <a id="checkout" class="mt-2 mb-4 btn btn-primary" href="#">结账</a>
+            <button id="checkout" class="mt-2 mb-4 btn btn-primary" >结账 - <span id="checkout_price"></span></button>
           </li>
 
           <div id="shopping_cart_content">
@@ -89,10 +89,12 @@
             <ul class="navbar-nav ml-auto">
 
               <!-- Nav Item - Shoppingcart -->
-              <li class="nav-item no-arrow">
-                <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
-                  <i class="fa fa-shopping-cart"></i>
-                </button>
+              <li class="nav-item no-arrow dropdown mx-1">
+                <a class="nav-link dropdown-toggle" href="#" role="button" id="cart_button" onclick="cart_onclick()">
+                  <i class="fa fa-shopping-cart">
+                    <span class="badge badge-danger badge-counter" id="cart_quantity"></span>
+                  </i>
+                </a>
               </li>
 
               <div class="topbar-divider d-none d-sm-block"></div>
@@ -123,26 +125,31 @@
         <!-- Store_info Popup -->
       <div class="modal align-items-center justify-content-between" id="store_info">
         <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content card shadow">
-            <div class="card-header d-flex flex-row align-items-center">
+          <div class="modal-content shadow">
+            <div class="modal-header d-flex flex-row align-items-center">
               <a id="store_info_close" class="mr-5" onclick="store_info_close()"> <i class="fa fa-times"></i> </a>
               <h6 class="m-0 font-weight-bold text-primary">商家信息</h6>
             </div>
-            <div class="card-body">
+            <div class="modal-body">
+              <h5>餐厅简介</h5>
+              <div class="card" id="store_basic_info">
+
+                <!-- dynamically adding content -->
+
+              </div>
+              </br>
               <h5>联系方式</h5>
               <div class="card" id="store_contact_info">
-                <span>粥不出户</span>
 
                 <!-- dynamically adding content -->
 
               </div>
-            </br>
-              <h5>营业时间</h5>
-              <div class="card" id="store_open_info">
+              <!--h5>营业时间</h5>
+              <div class="card" id="store_open_info"-->
 
                 <!-- dynamically adding content -->
 
-              </div>
+              <!--/div-->
             </div>
           </div>
         </div>
@@ -150,22 +157,24 @@
 
 
       <!-- Dish_info Popup -->
-    <div class="modal align-items-center justify-content-between" id="dish_info">
+    <div class="modal" id="dish_info">
       <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content card shadow">
-          <div class="card-header d-flex flex-row align-items-center">
-            <a id="dish_info_close" class="mr-5" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
-            <h6 class="m-0 font-weight-bold text-primary" id="dish_name"></h6>
+        <div class="modal-content shadow">
+          <div class="modal-header">
+            <h6 class="modal-title m-0 font-weight-bold text-primary" id="dish_name"></h6>
+            <a id="dish_info_close" class="" onclick="dish_info_close()"> <i class="fa fa-times"></i> </a>
           </div>
-          <div class="card-body" id="dish_info_content">
-
-          <!-- dynamically adding content -->
-
+          <div class="modal-body" id="dish_info_content">
+            <!-- dynamically adding content -->
+            <img class="card-img" id="dish_info_img"></img>
+            <h5 class="mt-3">选项</h5>
+            <div id="dish_info_options">
+            </div>
           </div>
           <div class="card-header d-flex flex-row align-items-center justify-content-between">
             <div class="d-flex flex-row">
               <a class="mr-2" id="dish_quan_minus"><i class="fa fa-minus"></i></a>
-              <input id="dish_quantity" class="text-center" value="1" type="number" style="width: 2em;">
+              <input id="dish_quantity" value="1" class="text-center" type="number" style="width: 2em;">
               <a class="ml-2" id="dish_quan_plus"><i class="fa fa-plus"></i></a>
             </div>
             <button id="dish_submit" class="btn btn-primary">添加 - $<span id="dish_total_price"></span></button>
@@ -190,20 +199,33 @@
 
     </div>
     <!-- End of Page Wrapper -->
-    
+
     <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-      <i class="fas fa-angle-up"></i>
-    </a>
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
 
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 
   <script type="text/javascript">
+    var store_info_url = "{% url 'store_info' %}";
+    var shopping_cart_url = "{% url 'shopping_cart' %}";
+    var csrf_token = "{{csrf_token}}";
+    var checkout_url = "{% url 'checkout' 123 %}"
     function get_dishes_display(url){
       fetchJSON(url).then(display_dishes_by_kind);
     }
 
     get_dishes_display("{{fetch_url}}");
+    fetchOrders(shopping_cart_url).then((data) => {
+      if (data.order_num){
+        order_quantity = data.order_num;
+      } else {
+        order_quantity = 0;
+      }
+      cart_quantity.innerHTML = order_quantity;
+    });
+
   </script>
 <!--
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -216,9 +238,9 @@
     <script type="text/javascript" src="{% static 'Customer/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script type="text/javascript" src="{% static 'Customer/vendor/chart.js/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom Theme JavaScript -->
-	<script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
 </body>
 </html>
