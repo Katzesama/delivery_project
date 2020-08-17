@@ -9,5 +9,6 @@ urlpatterns = [
     re_path(r'^menu/order/', Orderhandler.add_order, name='add_order'),
     re_path(r'^menu/', views.render_menu, name='customer_menu'),
     re_path(r'^store_info/', views.Store.as_view(), name='store_info'),
-    re_path(r'^order/(?P<pk>\d+)/$', Orderhandler.CheckoutOrders.as_view(), name='checkout'),
+    re_path(r'^order/(?P<pk>[0-9a-f-]+)/api/$', Orderhandler.CheckoutOrders.as_view(), name='checkout_order'),
+    re_path(r'^order/(?P<pk>[0-9a-f-]+)/$', views.render_checkout, name='checkout'),
 ]

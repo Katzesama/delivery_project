@@ -19,3 +19,6 @@ class Store(APIView):
             store = Restaurant.objects.all()[0]
             serializer = ResSerializer(store)
             return Response(serializer.data, status=200)
+
+def render_checkout(request, pk):
+    return render(request, 'Customer/checkout.html', {'fetch_url': './api/'})

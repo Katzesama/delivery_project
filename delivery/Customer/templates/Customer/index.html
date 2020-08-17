@@ -89,12 +89,12 @@
             <ul class="navbar-nav ml-auto">
 
               <!-- Nav Item - Shoppingcart -->
-              <li class="nav-item no-arrow">
-                <button class="nav-link btn" role="button" id="cart_button" onclick="cart_onclick()">
+              <li class="nav-item no-arrow dropdown mx-1">
+                <a class="nav-link dropdown-toggle" href="#" role="button" id="cart_button" onclick="cart_onclick()">
                   <i class="fa fa-shopping-cart">
                     <span class="badge badge-danger badge-counter" id="cart_quantity"></span>
                   </i>
-                </button>
+                </a>
               </li>
 
               <div class="topbar-divider d-none d-sm-block"></div>
@@ -200,6 +200,11 @@
     </div>
     <!-- End of Page Wrapper -->
 
+    <!-- Scroll to Top Button-->
+  <a class="scroll-to-top rounded" href="#page-top">
+    <i class="fas fa-angle-up"></i>
+  </a>
+
   <script type="text/javascript" src="{% static 'Customer/js/main_helper.js' %}"></script>
 
   <script type="text/javascript">
@@ -233,9 +238,9 @@
     <script type="text/javascript" src="{% static 'Customer/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
     <!-- Metis Menu Plugin JavaScript -->
-    <script type="text/javascript" src="{% static 'Customer/vendor/chart.js/Chart.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
 
     <!-- Custom Theme JavaScript -->
-	<script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
+    <script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
 </body>
 </html>

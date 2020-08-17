@@ -54,8 +54,8 @@ class CartOrders(APIView):
         order.detail = json.dumps(detail)
         order.total_price = request.session['total_price']
         order.save()
-        orderid = str(order.id)
-        request.session['order_id'] = order.id
+        orderid = order.id
+        request.session['order_id'] = str(order.id)
         return Response({'id': orderid}, status=status.HTTP_200_OK)
 
 def add_order(request):
@@ -78,8 +78,16 @@ def set_order(request):
     request.session['number'] = request.session['number'] + 1
 
 class CheckoutOrders(APIView):
+    def get_object(self, pk):
+        try:
+            return Order.objects.get(id=pk)
+        except Order.DoesNotExist:
+            return HttpResponse(status=404)
+            
     def get(self, request, pk):
-        return Response(status=status.HTTP_200_OK)
+        order = self.get_object(pk)
+        serializer = OrderSerializer(order)
+        return Response(serializer.data, status=200)
 
     def put(self, request, pk):
         # when checkout done

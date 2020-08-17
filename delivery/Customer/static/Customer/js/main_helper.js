@@ -304,7 +304,6 @@ function display_dish_info(data){
   };
 
   minus_dish_button.onclick = function(){
-    console.log(dish_quantity.value)
     if (parseInt(dish_quantity.value, 10) > 1){
       dish_quantity.stepDown(1);
       total_price = parseInt(dish_quantity.value, 10) * dish_price;

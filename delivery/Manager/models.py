@@ -70,7 +70,7 @@ class Option(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
 class Order(models.Model):
-    id = models.AutoField(auto_created=True, primary_key=True, editable=False)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     total_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     ordered_time = models.DateTimeField(auto_now_add=True)
     #store list of dish name quantity price options (eg. '[["煲仔饭",  "x1",  "$15.00", "啤酒"], ["煲仔饭",  "1",  "15.00", "啤酒"]]')
@@ -78,7 +78,6 @@ class Order(models.Model):
     deliver_address = models.CharField(max_length=500, null=True, blank=True, default="")
     customer_phone = models.CharField(max_length=12, null=True, blank=True, default="")
     customer_email = models.CharField(max_length=50, null=True, blank=True, default="")
-    order_num = models.IntegerField(unique=False, null=True)
     ORDERSTATUS = (
         ('处理中', '处理中'),
         ('送餐中', '送餐中'),
