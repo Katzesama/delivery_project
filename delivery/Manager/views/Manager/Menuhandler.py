@@ -95,7 +95,6 @@ class Dish_Kinds(APIView):
     def put(self, request):
         kind = Kind.objects.create()
         data = json.loads(request.body)
-        print(data)
         serializer = KindSerializer(kind, data=data)
         if serializer.is_valid():
             serializer.save()
