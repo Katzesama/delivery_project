@@ -127,3 +127,15 @@ USE_L10N = True
 USE_TZ = True
 
 SESSION_COOKIE_AGE = 3600
+
+# https://blog.csdn.net/lm_is_dc/article/details/82864480
+#微信支付配置
+# ========支付相关配置信息===========
+_APP_ID = "你的appid"  # 公众账号appid
+_MCH_ID = "你的商户号"  # 商户号
+_API_KEY = "你的商户号密钥"  # 微信商户平台(pay.weixin.qq.com) -->账户设置 -->API安全 -->
+                            # 密钥设置，设置完成后把密钥复制到这里
+
+_UFDODER_URL = "https://api.mch.weixin.qq.com/pay/unifiedorder"; #url是微信下单api
+_NOTIFY_URL = "支付结果回调" # 微信支付结果回调接口，需要改为你的服务器上处理结果回调的方法路径
+_CREATE_IP = '你的ip'  # 发起支付请求的ip

@@ -78,6 +78,7 @@ class Order(models.Model):
     deliver_address = models.CharField(max_length=500, null=True, blank=True, default="")
     customer_phone = models.CharField(max_length=12, null=True, blank=True, default="")
     customer_email = models.CharField(max_length=50, null=True, blank=True, default="")
+    order_num = models.CharField(max_length=32, null=True, blank=True, default="")
     ORDERSTATUS = (
         ('处理中', '处理中'),
         ('送餐中', '送餐中'),
