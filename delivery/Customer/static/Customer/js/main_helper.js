@@ -45,30 +45,32 @@ function display_cart(data){
 
   if (data.order_num){
     checkout_button.disabled = false;
-    for (let [key, value] of  Object.entries(data.order_detail)){
+    for (let i =0; i <  data.order_detail.length; i++){
+      let orderitem = data.order_detail[i];
+      let detail = JSON.parse(orderitem.detail);
       let order = document.createElement("li");
       order.setAttribute("class", "nav-item active justify-content-between");
-      order.setAttribute('data-id' , key.toString());
+      order.setAttribute('data-id' , orderitem.num);
       cart_content.appendChild(order);
       // ['name']['price']['options']['quantity']
       let line1 = document.createElement("div");
       order.appendChild(line1);
       let quantity = document.createElement("span");
       quantity.setAttribute("class", "mr-2");
-      quantity.innerHTML = "x" + value['quantity'];
+      quantity.innerHTML = "x" + detail['quantity'];
       line1.appendChild(quantity);
       let name = document.createElement("span");
       name.setAttribute("class", "mr-5");
-      name.innerHTML = value["name"];
+      name.innerHTML = detail["name"];
       line1.appendChild(name);
       let price = document.createElement("span");
-      price.innerHTML = "$" + value["price"];
+      price.innerHTML = "$" + detail["price"];
       line1.appendChild(price);
       let line2 = document.createElement("div");
       order.appendChild(line2);
       let options = document.createElement("span");
       options.setAttribute("class", "font-weight-light font-italic text-gray-500");
-      options.innerHTML = value["options"];
+      options.innerHTML = detail["options"];
       line2.appendChild(options);
       let remove_button = document.createElement("a");
       remove_button.setAttribute("class", "ml-5");
@@ -76,10 +78,10 @@ function display_cart(data){
       line1.appendChild(remove_button);
       remove_button.addEventListener('click', function(e){
               e.preventDefault();
-              let remove_info = {'key': key, 'price': value['price']};
+              let remove_info = {'key': orderitem.num, 'price': detail['price']};
               removeOrders(shopping_cart_url, JSON.stringify(remove_info)).then(data => {
                 if (data === "sucess") {
-                  checkout_price.innerHTML = (parseFloat(checkout_price.innerHTML) - parseFloat(value['price'])).toFixed(2);
+                  checkout_price.innerHTML = (parseFloat(checkout_price.innerHTML) - parseFloat(detail['price'])).toFixed(2);
                   order.remove();
                   order_quantity = order_quantity - 1;
                   cart_quantity.innerHTML = order_quantity;
@@ -132,7 +134,7 @@ function removeOrders(url, remove_data) {
               body: remove_data,
               });
   return fetch(request).then((response) => {
-    if (response.status === 200) { // OK
+    if (response.status === 204) { // OK
       return "sucess"; // return a Promise
     } else {
       alert("网页出了问题，无法删除订单: " + response.status);

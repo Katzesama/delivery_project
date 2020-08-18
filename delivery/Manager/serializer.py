@@ -105,7 +105,20 @@ class OpenTimeSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    status = serializers.ChoiceField(choices=Order.ORDERSTATUS)
+    status = serializers.ChoiceField(choices=Order.ORDERSTATUS, required=False)
+    items = serializers.SerializerMethodField()
     class Meta:
         model = Order
         fields = "__all__"
+        extra_kwargs = {'payed': {'required': False}}
+
+    def get_items(self, obj):
+        items = OrderItem.objects.filter(order=obj).order_by('num')
+        serializer = OrderItemSerializer(items, many=True)
+        return serializer.data
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = "__all__"
+        extra_kwargs = {'order': {'required': False}}

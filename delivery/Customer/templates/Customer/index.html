@@ -17,6 +17,13 @@
     <!-- Page Wrapper -->
   <div id="wrapper">
 
+    {% if not res_open %}
+      <div class="align-items-center justify-content-center" style="display: flex;top:0;left:0;position:fixed; width: 100%; height: 100%;z-index: 2000; background-color: hsla(0,50%,5%,0.3);">
+        <h3 class="font-weight-bold text-black-50">商店不在营业范围，公众号：</h3>
+      </div>
+    {% endif %}
+
+
     <!-- Sidebar -->
     <ul class="navbar-nav sidebar accordion" id="category">
 

@@ -69,15 +69,17 @@ class Option(models.Model):
     # store the list in JSON
     price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
+
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
     total_price = models.DecimalField(max_digits=6, decimal_places=2, null=True)
+    CNY_total = models.DecimalField(max_digits=6, decimal_places=2, null=True)
     ordered_time = models.DateTimeField(auto_now_add=True)
     #store list of dish name quantity price options (eg. '[["煲仔饭",  "x1",  "$15.00", "啤酒"], ["煲仔饭",  "1",  "15.00", "啤酒"]]')
-    detail = models.CharField(max_length=2000, null=True, blank=False)
     deliver_address = models.CharField(max_length=500, null=True, blank=True, default="")
     customer_phone = models.CharField(max_length=12, null=True, blank=True, default="")
     customer_email = models.CharField(max_length=50, null=True, blank=True, default="")
+    # order_num might be used when the wechat native pay is implemented
     order_num = models.CharField(max_length=32, null=True, blank=True, default="")
     ORDERSTATUS = (
         ('处理中', '处理中'),
@@ -88,3 +90,9 @@ class Order(models.Model):
     )
     payed = models.BooleanField(default=False)
     status = models.CharField(default ="处理中", max_length=100, choices=ORDERSTATUS)
+
+class OrderItem(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    num = models.IntegerField(null=False, blank=False)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    detail = models.CharField(max_length=500, null=True, blank=False)

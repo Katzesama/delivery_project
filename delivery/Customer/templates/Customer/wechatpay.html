@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-  <title>结账</title>
+  <title>微信支付</title>
 
   <link rel="stylesheet" type="text/css" href="{% static 'Customer/vendor/fontawesome-free/css/all.min.css'%} ">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -33,12 +33,6 @@
         <!-- Topbar -->
         <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-          <!-- Sidebar Toggle (Topbar) -->
-          <a href="{% url 'customer_menu' %}" class="btn btn-link rounded-circle mr-3">
-            <i class="fa fa-arrow-left"></i> <span>回到菜单</span>
-          </a>
-
-
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto mr-auto">
             <a class="d-flex justify-content-center" href="#">
@@ -54,48 +48,14 @@
         <div class="container-fluid">
 
 
-      <div class="mb-3 mt-3">
-        <div class="mr-5">
-          <h5 class="mt-3 mb-3 text-gray-800">联系方式</h5>
-        </div>
-        <div id="custormer_info_holder">
-          <form id="customer_info_form" method="POST" action="./api/">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>地址</label>
-                <br>
-                <input id="deliver_address" name="deliver_address" class="form-control col-md-4" placeholder="输入地址" required>
-            </div>
-            <div class="form-group">
-                <label>电话</label>
-                <br>
-                <input id="customer_phone" name="customer_phone" type="tel" class="form-control col-md-3" placeholder="输入电话号码" required>
-            </div>
-            <div class="form-group">
-                <label>邮箱</label>
-                <br>
-                <input id="customer_email" name="customer_email" class="form-control col-md-3" type="email" placeholder="输入邮箱">
-            </div>
-            <input type="submit" id="submit_customer_info_form" style="display:none;">
-          </form>
-
-        </div>
+      <div class="mb-5 mt-5 justify-content-center">
+        <img src="https://qpsoftware.net/sites/default/files/articles/small/qr_wechat.jpg">
+        <p class="font-weight-bold text-black-50">请在付款备注里留下你上页所填的一致的手机号码</p>
       </div>
 
-      <hr>
-
-      <div class="mb-5 mt-3">
-        <div class="mr-5">
-          <h5 class="mt-3 mb-3 text-gray-800">订单详情</h5>
-        </div>
-        <div id="orderdetail_holder">
-
-
-        </div>
-      </div>
 
       <div id="buttons_holder" class="row justify-content-center">
-        <label for="submit_customer_info_form" class="btn btn-success col-md-3">结账-微信支付</label>
+        <button id="pay_done" class="btn btn-success col-md-3">完成付款</button>
       </div>
 
         </div>
@@ -117,19 +77,23 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
-  <script type="text/javascript" src="{% static 'Customer/js/checkout_helper.js' %}"></script>
-
   <script type="text/javascript">
-    var shopping_cart_url = "{% url 'shopping_cart' %}";
-    var csrf_token = "{{csrf_token}}";
-    var menu_url = "{% url 'customer_menu' %}";
-    var order_info = document.getElementById("orderdetail_holder");
-    function get_order_display(url){
-      fetchOrders(url).then(display_content);
-    }
-
-    get_order_display("{{fetch_url}}");
-
+      var pay_done = document.getElementById("pay_done");
+      pay_done.onclick = function(){
+        var request = new Request(".", {
+                    method: 'PUT',
+                    headers: {
+                         'Content-Type': 'application/json',
+                         'X-CSRFToken': "{{csrf_token}}"
+                    },
+                    });
+        return fetch(request).then((response) => {
+          if (response.status === 200) { // OK
+            alert("完成付款，将转回菜单页面");
+            location.href = "{% url 'customer_menu' }";
+          }
+        });
+      };
 
   </script>
 
@@ -147,5 +111,3 @@
   <script type="text/javascript" src="{% static 'Customer/js/sb-admin-2.js' %}"></script>
 
 </body>
-
-</html>
