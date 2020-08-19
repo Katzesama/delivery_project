@@ -37,7 +37,7 @@ function show_order(data) {
     order.appendChild(body);
     // display the information of the order
     let order_info = document.createElement("div");
-    order_info.setAttribute("class", "mr-2");
+    order_info.setAttribute("class", "col-md-8 mr-2");
     body.appendChild(order_info);
     // deliver address of the order
     let deliver_addr = document.createElement("div");
@@ -47,7 +47,7 @@ function show_order(data) {
     // phone number and the email address of the custormer
     let customer_phone = document.createElement("div");
     customer_phone.setAttribute("class", "h6 font-weight-bold text-gray-800 mb-1");
-    customer_phone.innerHTML = "顾客号码：" + data.orders[i].customer_phone;
+    customer_phone.innerHTML = "电话号码：" + data.orders[i].customer_phone;
     order_info.appendChild(customer_phone);
     let customer_email = document.createElement("div");
     customer_email.setAttribute("class", "h6 font-weight-bold text-gray-800 mb-1");
@@ -71,18 +71,25 @@ function show_order(data) {
     detail_header.setAttribute("class", "h6 text-gray-800");
     detail_header.innerHTML = "详情："
     more_detail.appendChild(detail_header);
-    console.log(data.orders[i].detail);
-    console.log(typeof data.orders[i].detail);
     // get and paste a list of dish name, quantity, price (eg. ["rice", "2", "5.00"])
-    let dish_list = JSON.parse('[["煲仔饭",  "x1",  "$15.00", "啤酒,kekeekekekkekeekkekekekeke"], ["煲仔饭",  "1",  "15.00", "啤酒"]]');
-    for(let j = 0, count = dish_list.length; j < count; j++) {
-        let dish = dish_list[j];
+    for(let j = 0, count = data.orders[i].items.length; j < count; j++) {
+        let dish_list = JSON.parse(data.orders[i].items[j].detail);
+        console.log(typeof dish_list);
         let dish_holder = document.createElement("p");
         more_detail.appendChild(dish_holder);
-        for(let k = 0, count = dish.length; k < count; k++){
+        for(let key in dish_list){
           let dish_info = document.createElement("span");
           dish_info.setAttribute("class", "mr-3");
-          dish_info.innerHTML = dish[k];
+          if (key == "price"){
+            dish_info.innerHTML = "$" + dish_list[key];
+          } else if (key == "quantity") {
+            dish_info.innerHTML = "x" + dish_list[key];
+          } else{
+            dish_info.innerHTML = dish_list[key];
+          }
+          if (key == "options"){
+            dish_info.setAttribute("class", "font-italic text-gray-500")
+          }
           dish_holder.appendChild(dish_info);
         }
     }
@@ -101,11 +108,14 @@ function show_order(data) {
     }
     order_detail.appendChild(show_more);
 
-    body.appendChild(document.createElement("br"));
+    // display the information of the order
+    let status_block = document.createElement("div");
+    status_block.setAttribute("class", "mr-2");
+    body.appendChild(status_block);
     // select the status of the order
     let order_status = document.createElement("select");
-    order_status.setAttribute("class", "mr-2 mt-2");
-    body.appendChild(order_status);
+    order_status.setAttribute("class", "mr-5 mt-2");
+    status_block.appendChild(order_status);
     let processing = document.createElement("option");
     processing.value = "处理中";
     processing.innerHTML = "处理中";
@@ -123,6 +133,29 @@ function show_order(data) {
     refunded.innerHTML = "已退款";
     switch(data.orders[i].status){
       case "处理中":
+        var if_pay = document.createElement('input');
+        if_pay.type = "checkbox";
+        if_pay.id = "payed";
+        if_pay.name = "payed";
+        let payedlabel = document.createElement('label');
+        payedlabel.for = "payed";
+        payedlabel.innerHTML = "已付款";
+        if (data.orders[i].payed) {
+          if_pay.value = true;
+          if_pay.checked = true;
+        } else {
+          if_pay.value = false;
+          if_pay.checked = false;
+        }
+        if_pay.onclick = function(){
+          if (this.checked){
+            this.value = true;
+          } else {
+            this.value = false;
+          }
+        };
+        status_block.appendChild(if_pay);
+        status_block.appendChild(payedlabel);
         processing.selected = true;
         break;
       case "送餐中":
@@ -147,6 +180,7 @@ function show_order(data) {
     let order_footer = document.createElement("div");
     order_footer.setAttribute("class", "card-footer");
     order.appendChild(order_footer);
+
     // buttons to manipulate the dish info
     var save_button = document.createElement("button");
     save_button.innerHTML = '储存';
@@ -157,6 +191,9 @@ function show_order(data) {
       // https://stackoverflow.com/questions/17832194/get-javascript-variables-value-in-django-url-template-tag
       let order_data = new FormData();
       order_data.append('status', order_status.options[order_status.selectedIndex].value);
+      if (data.orders[i].status === "处理中"){
+        order_data.append('payed', if_pay.value);
+      }
 
       updateOrder(order_url, order_data);
     };

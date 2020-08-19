@@ -87,12 +87,11 @@
               <i class="fa fa-bars"></i>
             </button>
             <!-- Topbar Search -->
-           <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search"
-           onsubmit="searchOrder()" method="GET" id="searchbar">
+           <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="searchbar">
              <div class="input-group">
-               <input name='search_number' type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+               <input name='search_number' type="text" class="form-control bg-light border-0 small" placeholder="输入电话号码查询订单" aria-label="Search" aria-describedby="basic-addon2">
                <div class="input-group-append">
-                 <button class="btn btn-primary" type="button">
+                 <button class="btn btn-primary" type="button" onclick="searchOrder()">
                    <i class="fas fa-search fa-sm"></i>
                  </button>
                </div>
@@ -151,7 +150,7 @@
 
     </div>
     <!-- End of Page Wrapper -->
-    
+
     <!-- Scroll to Top Button-->
     <a class="scroll-to-top rounded" href="#page-top">
       <i class="fas fa-angle-up"></i>
@@ -165,9 +164,9 @@
   <script type="text/javascript">
     function searchOrder(){
       var search_form = document.getElementById('searchbar');
-      var input_value = search_form.getElementsByName("search_number")[0].value;
+      var input_value = search_form.getElementsByTagName("input")[0].value;
       var action_src = "{% url 'search_order_render' 123 %}".replace(/123/, input_value);
-      search_form.action = action_src ;
+      location.href = action_src ;
     }
  </script>
 

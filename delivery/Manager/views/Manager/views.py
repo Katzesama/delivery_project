@@ -33,8 +33,8 @@ def deliverorder_render(request):
 def historyorder_render(request):
     return render(request, 'Manager/orderHistory.html', {'fetch_url': './api/'})
 
-def search_order_render(request, ordernum):
-    return render(request, 'Manager/searchOrder.html', {'fetch_url': '/orders/search/api/'+ str(ordernum) + '/'})
+def search_order_render(request, phonenum):
+    return render(request, 'Manager/searchOrder.html', {'fetch_url': './api/'})
 
 def home(request):
     return render(request, 'Manager/home.html')
