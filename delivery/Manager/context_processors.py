@@ -17,6 +17,6 @@ def get_basic_information(request):
     return {
         'profile_id': profile_id,
         'profile_img': profile_img,
-        'orders_count': Order.objects.filter(Q(status='处理中') | Q(payed=True)).count(),
+        'orders_count': Order.objects.filter(status='处理中').count(),
         'res_open': restaurant.open
     }

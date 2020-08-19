@@ -51,6 +51,7 @@
       <div class="mb-5 mt-5 justify-content-center">
         <img src="https://qpsoftware.net/sites/default/files/articles/small/qr_wechat.jpg">
         <p class="font-weight-bold text-black-50">请在付款备注里留下你上页所填的一致的手机号码</p>
+        <p class="font-weight-bold text-black-50">以便商家核对付款信息</p>
       </div>
 
 
@@ -89,7 +90,7 @@
                     });
         return fetch(request).then((response) => {
           if (response.status === 200) { // OK
-            alert("完成付款，将转回菜单页面");
+            alert("完成付款，您的订单将会由商家核对后送餐，将转回菜单页面");
             location.href = "{% url 'customer_menu' }";
           }
         });

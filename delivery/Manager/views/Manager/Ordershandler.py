@@ -33,7 +33,7 @@ class DeliverOrdersList(APIView):
 
 class ProceOrdersList(APIView):
     def get(self, request, **kwargs):
-        orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中') | Q(payed=True)).order_by('-ordered_time')
+        orders = Order.objects.filter(Q(status='处理中') | Q(status='退款中')).order_by('-ordered_time')
         pg_obj=PaginationModel()
         pg_res=pg_obj.paginate_queryset(queryset=orders, request=request)
         res=OrderSerializer(instance=pg_res, many=True)
@@ -69,9 +69,9 @@ class OrderDetail(APIView):
 
 class SearchOrder(APIView):
     def get(self, request, **kwargs):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect('login')
         else:
-            orders = Order.objects.filter(order_num=kwargs['ordernum']).order_by('-ordered_time')
+            orders = Order.objects.filter(customer_phone=kwargs['phonenum']).order_by('-ordered_time')
             serializer = OrderSerializer(orders, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)

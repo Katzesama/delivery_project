@@ -9,9 +9,6 @@ from delivery import settings
 import uuid
 import json
 from django.db.models import Q
-import os
-from random import Random
-import time
 
 class CartOrders(APIView):
     def get(self, request):
